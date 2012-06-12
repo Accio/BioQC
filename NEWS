@@ -1,0 +1,4 @@
+Version 1.0-0 (Jun 12, 2012)
++ Establish the ribiosBioQC package
++ Add methods wmwTest for Wilcoxon-Mann-Whitney test for several data structures used by BIO-QC procedures
++ wmwTest was (almost) fully documented
