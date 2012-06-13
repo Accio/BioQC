@@ -1,6 +1,7 @@
 MCCORE <- 6L
 
 wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), statistic=FALSE) {
+  if(!any(sub)) return(ifelse(statistic, 0, 1))
   wt <- wilcox.test(x[sub],
                     x[!sub], alternative=alternative)
   return(ifelse(statistic, wt$statistic, wt$p.value))
