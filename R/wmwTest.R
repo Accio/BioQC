@@ -52,7 +52,7 @@ setMethod("wmwTest", signature=c("ExpressionSet", "list", "character", "logical"
               oexp <- exprs(object)
               myfun <- function(x) wmwTest(oexp, gb %in% x$genes, alternative=alternative, statistic=statistic)
               
-              if(require(multicore)) {
+              if(suppressMessages(require(multicore))) {
                 res.raw <- mclapply(sub, myfun, mc.cores=MCCORE)
               } else {
                 res.raw <- lapply(sub,myfun)
