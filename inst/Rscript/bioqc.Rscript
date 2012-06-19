@@ -20,7 +20,7 @@ if (is.null(infile) || getHelp) {
         status=1L)
 }
 
-libordie(ribiosIO)
+libordie(ribiosIO, minVer="1.0-12")
 libordie(ribiosBioQC)
 libordie(ribiosExpression)
 
@@ -30,9 +30,9 @@ chiptype <- NULL
 if(hasChiptype) {
   chiptype <- getArg("chiptype", onlyArg=NULL, missingArg=NULL)
   supported.ct1 <- c("GeneID", "GeneSymbol")
-  if(!chiptype %in% supported.ct1) {
+  supported.ct2 <- NULL
+  if(!chiptype %in% supported.ct1)
     supported.ct2 <- gtiChiptypes()
-  }
   supported.ct <- c(supported.ct1, supported.ct2)
   if(!chiptype %in% supported.ct)
     qqmsg(paste("ERROR: not supported chiptype. Following are supported:\n",
@@ -64,6 +64,7 @@ if(!file.exists(infile)) {
     }
   } else {
     eset <- ChipFetcher2ExpressionSet(infile)
+    fData(eset) <- annotateProbesets(featureNames(eset), orthologue=TRUE)
   }
 }
 

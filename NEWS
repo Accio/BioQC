@@ -1,4 +1,11 @@
+Version 1.0-2 (Jun 19, 2012)
+  + bioqc.Rscript: Fix supported.ct2 bug seen on the UDIS machine
+  + bioqc.Rscript: ribiosIO minimum version 1.0-12 added
+Version 1.0-1 (Jun 13, 2012)
+  + wmw.test has been made more robust: in case no TRUE exists in sub, the function does not fail and return 0 (statistic) or 1 (p-value)
+  + bioqc.Rscript has been added and published under /SOFT/bi/apps/ribios/scripts
+
 Version 1.0-0 (Jun 12, 2012)
-+ Establish the ribiosBioQC package
-+ Add methods wmwTest for Wilcoxon-Mann-Whitney test for several data structures used by BIO-QC procedures
-+ wmwTest was (almost) fully documented
+  + Establish the ribiosBioQC package
+  + Add methods wmwTest for Wilcoxon-Mann-Whitney test for several data structures used by BIO-QC procedures
+  + wmwTest was (almost) fully documented
