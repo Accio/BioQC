@@ -24,25 +24,10 @@ libordie(ribiosIO, minVer="1.0-12")
 libordie(ribiosBioQC)
 libordie(ribiosExpression)
 
-## chiptype: only needed for GCT files. Can be missing
-hasChiptype <- existArg("chiptype")
-chiptype <- NULL
-if(hasChiptype) {
-  chiptype <- getArg("chiptype", onlyArg=NULL, missingArg=NULL)
-  supported.ct1 <- c("GeneID", "GeneSymbol")
-  supported.ct2 <- NULL
-  if(!chiptype %in% supported.ct1)
-    supported.ct2 <- gtiChiptypes()
-  supported.ct <- c(supported.ct1, supported.ct2)
-  if(!chiptype %in% supported.ct)
-    qqmsg(paste("ERROR: not supported chiptype. Following are supported:\n",
-                paste(supported.ct, collapse="\n"), "\n", sep=""), status=2L)
-}
-
-## If chiptype is NOT GeneSymbol, ribiosAnnotation is needed to annotate
-if(is.null(chiptype) || chiptype != "GeneSymbol") {
-  libordie(ribiosAnnotation)
-}
+## Chip type, can be missing. ribiosAnnotation is only needed when chiptype is not GeneSymbol
+chiptype <- getArg("chiptype", onlyArg="", missingArg="")
+if(chiptype!="GeneSymbol")
+  libordie(ribiosAnnotation, minVer="2.0-0")
 
 ## infile -> annotated ExpressionSet
 if(!file.exists(infile)) {
@@ -50,25 +35,23 @@ if(!file.exists(infile)) {
 } else {
   if(isGctFile(infile)) {
     eset <- readGct(infile)
-    if(is.null(chiptype)) {
-      fData(eset) <- annotateProbesets(featureNames(eset),orthologue=TRUE)
-    } else if(chiptype=="GeneID") { ## map geneid
-      ## TODO: NOT TESTED, note ORTHOLOGS
-      orig.geneids <- featureNames(eset)
-      human.orthos <- humanUniqOrtholog(orig.geneids)
-      fData(eset) <- annotateGeneIDs(human.orthos)
-    } else if (chiptype=="GeneSymbol") {
+    if (chiptype=="GeneSymbol") {
       fData(eset)$GeneSymbol <- featureNames(eset)
-    } else { ## specified probesets
-      eset <- annotate(eset, chiptype)
+    } else if(chiptype=="GeneID") {
+      fData(eset) <- annotateGeneIDs(featureNames(eset), orthologue=TRUE, multiOrth=FALSE)
+    } else {
+      fData(eset) <- annotateProbesets(featureNames(eset), chip=chiptype, orthologue=TRUE)
     }
   } else {
-    eset <- ChipFetcher2ExpressionSet(infile)
-    fData(eset) <- annotateProbesets(featureNames(eset), orthologue=TRUE)
+    ## TODO: test /ChipFetcher2ExpressionSet should add orthologue in the parameter
+    eset <- ChipFetcher2ExpressionSet(infile, chiptype)
+    fData(eset) <- annotateProbesets(featureNames(eset), chip=chiptype, orthologue=TRUE)
   }
 }
 
 ## remove redundant mapping genes
+if(all(is.na(fData(eset)$GeneSymbol)))
+  qqmsg("ERROR: Probests could not be mapped to GeneSymbols. Please check the chiptype\n", status=2L)
 eset <- keepMaxStatProbe(eset, probe.index.name="GeneSymbol", keepNAprobes=FALSE, stat=function(x) mean(x, na.rm=TRUE))
 
 ## GMT file
