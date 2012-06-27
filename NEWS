@@ -1,3 +1,7 @@
+Version 1.0-4 (Jun 27, 2012)
+  + exp.tissuemark.affy.roche.symbols.gmt were updated by L. Badi, removing suspected contaminated samples
+  + bioqc.Rscript maps genes to human orthologues from ChipFetcher-exported files
+
 Version 1.0-3 (Jun 21, 2012)
   + bioqc.Rscript: the dependence on ribiosAnnotation has been simplified: only when chiptype is GeneSymbol, the script does not need ribiosAnnotation
   + bioqc.Rscript: annotate GeneID and Probesets have been simplified by using syntax from ribiosAnnotation >= 2.0-0
