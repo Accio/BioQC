@@ -43,9 +43,7 @@ if(!file.exists(infile)) {
       fData(eset) <- annotateProbesets(featureNames(eset), chip=chiptype, orthologue=TRUE)
     }
   } else {
-    ## TODO: test /ChipFetcher2ExpressionSet should add orthologue in the parameter
-    eset <- ChipFetcher2ExpressionSet(infile, chiptype)
-    fData(eset) <- annotateProbesets(featureNames(eset), chip=chiptype, orthologue=TRUE)
+    eset <- ChipFetcher2ExpressionSet(infile, chip=chiptype, orthologue=TRUE)
   }
 }
 
