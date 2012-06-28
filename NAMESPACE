@@ -1,1 +1,5 @@
 exportMethods("wmwTest")
+
+export(absLog10p)
+
+export(filterPmat)
