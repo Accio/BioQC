@@ -15,13 +15,14 @@ if (is.null(infile) || getHelp) {
               "Optional parameters:\n",
               "-outfile FILE\tOutput file name. Writing to standard output if missing\n",
               "-chiptype TYPE\tChip type supported by GTI. Needed for GCT files\n",
+              "-threshold NUM\tSignificance level significance. Signatures without any significant hits are removed. For example: 0.01.\n",
               "-gmt FILE\tUse specified GMT file other than the tissue marker genes provided by the package\n",
               sep=""),
         status=1L)
 }
 
 libordie(ribiosIO, minVer="1.0-12")
-libordie(ribiosBioQC)
+libordie(ribiosBioQC, minVer="1.0-6")
 libordie(ribiosExpression)
 
 ## Chip type, can be missing. ribiosAnnotation is only needed when chiptype is not GeneSymbol
@@ -47,6 +48,9 @@ if(!file.exists(infile)) {
   }
 }
 
+## threshold
+threshold <- parseNumVec(getArg("threshold", onlyArg=NULL, missingArg=NULL),
+                         expLen=1L, failVal=NULL)
 ## remove redundant mapping genes
 if(all(is.na(fData(eset)$GeneSymbol)))
   qqmsg("ERROR: Probests could not be mapped to GeneSymbols. Please check the chiptype\n", status=2L)
@@ -55,7 +59,7 @@ eset <- keepMaxStatProbe(eset, probe.index.name="GeneSymbol", keepNAprobes=FALSE
 ## GMT file
 default.gmt <- system.file("/extdata/exp.tissuemark.affy.roche.symbols.gmt",
                            package="ribiosBioQC")
-gmtfile <- getArg("gmtfile", onlyArg=default.gmt, missingArg=default.gmt)
+gmtfile <- getArg("gmt", onlyArg=default.gmt, missingArg=default.gmt)
 gmtList <- read_gmt_list(gmtfile)
 
 ## outfile
@@ -63,7 +67,8 @@ outfile <- getArg("outfile", onlyArg="", missingArg="")
 
 ## logic
 mat <- wmwTest(eset, gmtList, alternative="greater", statistic=FALSE)
-mat.q <- -log(mat)
+mat <- filterPmat(mat, threshold=threshold)
+mat.q <- absLog10p(mat)
 
 ## output file
 write.table(mat.q, file=outfile, quote=FALSE, sep="\t", col.names=NA)
