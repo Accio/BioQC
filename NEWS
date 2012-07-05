@@ -1,3 +1,6 @@
+Version 1.0-7 (Jul 05, 2012)
+  + bioqc.Rscript rounds output to two digits
+
 Version 1.0-6 (Jun 28, 2012)
   + Add absLog10p function to take the absolute base-10 logarithm of p-values
   + Add filterPmat 

@@ -69,6 +69,7 @@ outfile <- getArg("outfile", onlyArg="", missingArg="")
 mat <- wmwTest(eset, gmtList, alternative="greater", statistic=FALSE)
 mat <- filterPmat(mat, threshold=threshold)
 mat.q <- absLog10p(mat)
+mat.q <- round(mat.q, 2L)
 
 ## output file
 write.table(mat.q, file=outfile, quote=FALSE, sep="\t", col.names=NA)
