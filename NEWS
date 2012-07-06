@@ -1,4 +1,7 @@
-Version 1.0-7 (Jul 05, 2012)
+Version 1.0-8 (Jun 07, 2012)
+  + filterPmat fixes the warning message when threshold is NULL: it is tested before is.na
+
+Version 1.0-7 (Jul 06, 2012)
   + bioqc.Rscript rounds output to two digits
 
 Version 1.0-6 (Jun 28, 2012)
