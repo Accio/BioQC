@@ -15,7 +15,7 @@ if (is.null(infile) || getHelp) {
               "Optional parameters:\n",
               "-outfile FILE\tOutput file name. Writing to standard output if missing\n",
               "-chiptype TYPE\tChip type supported by GTI. Needed for GCT files\n",
-              "-threshold NUM\tSignificance level significance. Signatures without any significant hits are removed. For example: 0.01.\n",
+              "-threshold NUM\tSignificance level significance. Signatures without any significant hits are removed. The value is the -log10(p) For example: 3 filters p>0.001.\n",
               "-gmt FILE\tUse specified GMT file other than the tissue marker genes provided by the package\n",
               sep=""),
         status=1L)
@@ -51,6 +51,10 @@ if(!file.exists(infile)) {
 ## threshold
 threshold <- parseNumVec(getArg("threshold", onlyArg=NULL, missingArg=NULL),
                          expLen=1L, failVal=NULL)
+if(!is.null(threshold)) {
+  threshold <- 10^(-threshold)
+}
+
 ## remove redundant mapping genes
 if(all(is.na(fData(eset)$GeneSymbol)))
   qqmsg("ERROR: Probests could not be mapped to GeneSymbols. Please check the chiptype\n", status=2L)
