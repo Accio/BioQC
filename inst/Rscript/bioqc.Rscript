@@ -13,9 +13,9 @@ if (is.null(infile) || getHelp) {
               "Mandatory parameters:\n",
               "-infile FILE\tGene expression in GCT or ChipFetcher format\n\n",
               "Optional parameters:\n",
+              "-chiptype TYPE\tChip type supported by GTI. Needed for GCT files\n\t\tAccepts all GTI supported chip types, and 'GeneID' or 'GeneSymbol' (case insensitive)\n\t\tSetting 'GeneSymbol' will assume that input features are human gene symbols.\n\t\tIf missing, input features are assumed to be probesets and the annotation is done automatically\n",
               "-outfile FILE\tOutput file name. Writing to standard output if missing\n",
-              "-chiptype TYPE\tChip type supported by GTI. Needed for GCT files\n",
-              "-threshold NUM\tSignificance level significance. Signatures without any significant hits are removed. The value is the -log10(p) For example: 3 filters p>0.001.\n",
+              "-threshold NUM\tSignificance level significance. Signatures without any significant hits are removed. \n\t\tThe threshold is given by -log10(p). For example: -threshold 3 filters p>0.001.\n",
               "-gmt FILE\tUse specified GMT file other than the tissue marker genes provided by the package\n",
               sep=""),
         status=1L)
@@ -27,7 +27,8 @@ libordie(ribiosExpression)
 
 ## Chip type, can be missing. ribiosAnnotation is only needed when chiptype is not GeneSymbol
 chiptype <- getArg("chiptype", onlyArg="", missingArg="")
-if(chiptype!="GeneSymbol")
+chiptype.tl <- tolower(chiptype)
+if(chiptype.tl!="genesymbol")
   libordie(ribiosAnnotation, minVer="2.0-0")
 
 ## infile -> annotated ExpressionSet
@@ -36,9 +37,9 @@ if(!file.exists(infile)) {
 } else {
   if(isGctFile(infile)) {
     eset <- readGct(infile)
-    if (chiptype=="GeneSymbol") {
+    if (chiptype.tl=="genesymbol") {
       fData(eset)$GeneSymbol <- featureNames(eset)
-    } else if(chiptype=="GeneID") {
+    } else if(chiptype.tl=="geneid") {
       fData(eset) <- annotateGeneIDs(featureNames(eset), orthologue=TRUE, multiOrth=FALSE)
     } else {
       fData(eset) <- annotateProbesets(featureNames(eset), chip=chiptype, orthologue=TRUE)
