@@ -1,3 +1,6 @@
+Version 1.0-11 (Sep 20, 2012)
+  + bioqc.Rscript: add command-line option '-appendGmtDesc' to append DESC column in the GMT file to outputs.
+
 Version 1.0-10 (Sep 3, 2012)
   + bioqc.Rscript: add details in the help information of 'chiptype' option
   + bioqc.Rscript: accepts 'GeneID' and 'GeneSymbol' as chiptype in a case-insensitive manner

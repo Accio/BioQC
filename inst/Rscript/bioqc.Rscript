@@ -17,6 +17,7 @@ if (is.null(infile) || getHelp) {
               "-outfile FILE\tOutput file name. Writing to standard output if missing\n",
               "-threshold NUM\tSignificance level significance. Signatures without any significant hits are removed. \n\t\tThe threshold is given by -log10(p). For example: -threshold 3 filters p>0.001.\n",
               "-gmt FILE\tUse specified GMT file other than the tissue marker genes provided by the package\n",
+	      "-appendGmtDesc\tAppend description line to GMT gene list names.\n",
               sep=""),
         status=1L)
 }
@@ -30,6 +31,7 @@ chiptype <- getArg("chiptype", onlyArg="", missingArg="")
 chiptype.tl <- tolower(chiptype)
 if(chiptype.tl!="genesymbol")
   libordie(ribiosAnnotation, minVer="2.0-0")
+appendGmtDesc <- existArg("appendGmtDesc")
 
 ## infile -> annotated ExpressionSet
 if(!file.exists(infile)) {
@@ -77,6 +79,10 @@ mat.q <- absLog10p(mat)
 mat.q <- round(mat.q, 2L)
 
 ## output file
+if(appendGmtDesc)
+  rownames(mat.q) <- paste(rownames(mat.q),
+                           sapply(gmtList, function(x) x$description),
+                           sep="#")
 write.table(mat.q, file=outfile, quote=FALSE, sep="\t", col.names=NA)
 
 qqmsg(status=0L)
