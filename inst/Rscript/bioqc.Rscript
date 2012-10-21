@@ -75,7 +75,11 @@ outfile <- getArg("outfile", onlyArg="", missingArg="")
 ## logic
 mat <- wmwTest(eset, gmtList, alternative="greater", statistic=FALSE)
 mat <- filterPmat(mat, threshold=threshold)
+
+## p-value transform
 mat.q <- absLog10p(mat)
+## if p value is approximately 0, the lowest threshold (10E-320) is used
+mat.q[is.infinite(mat.q)] <- 320
 mat.q <- round(mat.q, 2L)
 
 ## output file
@@ -86,4 +90,3 @@ if(appendGmtDesc)
 write.table(mat.q, file=outfile, quote=FALSE, sep="\t", col.names=NA)
 
 qqmsg(status=0L)
-

@@ -1,3 +1,6 @@
+Version 1.0-12 (Oct 21, 2012)
+  + If the p-value is lower than than the threshold of R (about 10E-320) and thus produces a score of -Inf, the value of 320 is used to avoid -Inf as output.
+
 Version 1.0-11 (Sep 20, 2012)
   + bioqc.Rscript: add command-line option '-appendGmtDesc' to append DESC column in the GMT file to outputs.
 
