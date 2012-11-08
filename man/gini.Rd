@@ -7,11 +7,12 @@
   Calculate the Gini index of a numeric veector
 }
 \usage{
-gini(x)
+gini(x, na.rm=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{A numeric vector}
+  \item{x}{A numeric vector.}
+  \item{na.rm}{Logical. If set to \code{TRUE}, \code{NA} values are omitted.}
 }
 \details{
   The Gini index (Gini coefficient) is a measure of statistical dispersion. A Gini
@@ -29,6 +30,7 @@ gini(x)
   Jitao David Zhang
 }
 \examples{
+
 testValues <- runif(100)
 gini(testValues)
 }
