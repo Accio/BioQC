@@ -3,3 +3,7 @@ exportMethods("wmwTest")
 export(absLog10p)
 
 export(filterPmat)
+
+export(gini)
+
+useDynLib(ribiosBioQC)

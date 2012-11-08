@@ -1,8 +1,8 @@
 Package: ribiosBioQC
 Type: Package
 Title: BioQC procedures in the ribios software package
-Version: 1.0-12
-Date: 2012-10-21
+Version: 1.0-13
+Date: 2012-11-08
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>, with inputs from Laura Badi
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
 Description: ribiosBioQC performs biological-QC for expression data based on gene signature lists, for example tissue-specific genes.
