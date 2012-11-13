@@ -6,4 +6,9 @@ export(filterPmat)
 
 export(gini)
 
+export(entropy,
+       entropyDiversity,
+       entropySpecificity,
+       sampleSpecialization)
+
 useDynLib(ribiosBioQC)
