@@ -1,9 +1,25 @@
-include $(BIOINFOCONFDIR)/prpidefs.make
+ifndef BIOINFOCONFDIR
+       echo "BIOINFOCONFDIR not defined"
+       exit 1
+endif
 
-## No R specific settings are needed, they are automatically handled by R CMD SHLIB
-R_INC=$(R_HOME)/src/include/
+## determine details of the BIOS library
+BIOS_INT_DEFS:=$(BIOINFOCONFDIR)/prpidefs.make
+BIOS_EXT_DEFS:=$(BIOINFOCONFDIR)/biosdefs.make
 
-PKG_CFLAGS=$(PRPIINC)
+ifneq ($(wildcard $(BIOS_INT_DEFS)),)
+      include $(BIOS_INT_DEFS)
+      SRCDIR:=$(PRPISRC)
+      INCDIR:=$(PRPIINC)
+else ifneq ($(wildcard $(BIOS_EXT_DEFS)),)
+     include $(BIOS_EXT_DEFS)
+     SRCDIR:=$(BIOSKERNSRC)
+     INCDIR:=$(BIOSINC)
+else
+## TODO: what if neither BIOS libraries are available?
+endif
+
+PKG_CFLAGS=$(INCDIR)
 
 ## Since BIOS uses static libraries and it is not possible to be linked to a static library, re-link
-PKG_LIBS=$(CPICFLAGS) $(BICOSINC) $(PRPISRC)/log.c $(PRPISRC)/format.c $(PRPISRC)/hlrmisc.c $(PRPISRC)/array.c $(PRPISRC)/matvec.c $(PRPISRC)/combi.c $(PRPISRC)/recipes.c $(PRPISRC)/statistics.c
+PKG_LIBS=$(CPICFLAGS) $(CFLAGS) $(BICOSINC) $(SRCDIR)/log.c $(SRCDIR)/format.c $(SRCDIR)/hlrmisc.c $(SRCDIR)/array.c $(SRCDIR)/matvec.c $(SRCDIR)/combi.c $(SRCDIR)/recipes.c $(SRCDIR)/statistics.c
