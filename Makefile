@@ -13,7 +13,11 @@
 ################################################################################
 ## conditional: choose R version depending on the BICOSN value
 ifneq ($(BICOSN), bas)
-	R:= /SOFT/bi/apps/R/devel/trunk/bin/R
+	RBIN:= "/SOFT/bi/apps/R/devel/trunk/bin/R"
+	ifeq ($(wildcard RBIN),)
+		RBIN:="R"
+	endif
+	R:=$(RBIN)
 	CHECKADD:= ${CHECKADD} --no-manual ## for envcheck
 else
 	R:= R
