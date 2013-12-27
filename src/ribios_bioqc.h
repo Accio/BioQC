@@ -4,7 +4,6 @@
 
 #include <R.h>
 #include <Rinternals.h>
-#include "statistics.h"
 
 #define CALLMETHOD_DEF(fun, numArgs) {#fun, (DL_FUNC) &fun, numArgs}
 

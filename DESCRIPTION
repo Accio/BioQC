@@ -6,6 +6,6 @@ Date: 2012-11-13
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>, with inputs from Laura Badi
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
 Description: ribiosBioQC performs biological-QC for expression data based on gene signature lists, for example tissue-specific genes.
-Depends: ribiosUtils, methods
-Suggests: ribiosIO, ribiosExpression, Biobase, ribiosAnnotation, multicore
+Depends: methods
+Suggests: Biobase, multicore
 License: LGPL (>=2)
