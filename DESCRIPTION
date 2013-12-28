@@ -1,8 +1,8 @@
 Package: ribiosBioQC
 Type: Package
-Title: BioQC procedures in the ribios software package
-Version: 1.0-14
-Date: 2012-11-13
+Title: Detect tissue heterogeneity in expression profiles with gene sets
+Version: 1.1-0
+Date: 2013-12-27
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>, with inputs from Laura Badi
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
 Description: ribiosBioQC performs biological-QC for expression data based on gene signature lists, for example tissue-specific genes.

@@ -1,3 +1,7 @@
+Version 1.1-0 (Dec 27, 2013)
+  + Dependencies on BIOS has been resolved by copying the C functions into the package, in order to prepare ribiosBioQC for public release. It can now be installed on systems where BIOS is not available.
+  + Clean-ups and updates of documentations.
+  
 Version 1.0-14 (Nov 14, 2012)
   + Add a series of functions related to Shannon entropy: entropy, entropyDiversity, entropySpecificity, sampleSpecialization
 
