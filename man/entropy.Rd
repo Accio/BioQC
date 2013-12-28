@@ -7,7 +7,9 @@
   Shannon entropy and related concepts
 }
 \description{
-  These functions calculate Shannon entropy  and related concepts.
+  These functions calculate Shannon entropy and related concepts,
+  including diversity, specificity, and specialization. They can be used
+  to quantify gene expression profiles.
 }
 \usage{
 entropy(vector)
@@ -28,7 +30,8 @@ sampleSpecialization(mat, norm=TRUE)
   specificity, as well as measures of tissue diversity and
   specialization. See references below.
 
-  We use \code{2} as base for the entropy calculation.
+  We use \code{2} as base for the entropy calculation, because in this
+  base the unit of entropy is \emph{bit}.
 }
 \value{
   \code{entropy} returns one entropy value. \code{entropyDiversity} and

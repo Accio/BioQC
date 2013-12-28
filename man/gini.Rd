@@ -30,7 +30,6 @@ gini(x, na.rm=FALSE)
   Jitao David Zhang
 }
 \examples{
-
 testValues <- runif(100)
 gini(testValues)
 }

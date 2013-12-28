@@ -1,18 +1,18 @@
 \name{filterPmat}
 \alias{filterPmat}
 \title{
-  Filter rows of p-value matrix under significance threshold
+  Filter rows of p-value matrix under the significance threshold
 }
 \description{
-  Given a p-value matrix, \code{filterPmat} removes rows where there is
-  no p-values lower than the given threshold.
+  Given a p-value matrix and a threshold value, \code{filterPmat}
+  removes rows where there is no p-values lower than the given
+  threshold.
 }
 \usage{
 filterPmat(x, threshold)
 }
 \arguments{
-  \item{x}{A matrix of p-values. It should not be transformed,
-    e.g. logarithmic.}
+  \item{x}{A matrix of p-values. It must be raw p-values and should not be transformed (e.g. logarithmic).}
   \item{threshold}{A numeric value, the minimal p-value used to filter
     rows. If missing, given the values of \code{NA}, \code{NULL} or
     number \code{0}, no filtering will be done and the input matrix will

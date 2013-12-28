@@ -14,36 +14,20 @@
 \alias{wmwTest,ANY,ANY,missing,missing-method}
 \title{Wilcoxon-Mann-Whitney test for gene signatures}
 \description{
-  The Wilcoxon-Mann-Whitney Test (WMW-Test) is a non-parameteric statistic tool to
-  examine whether one of the two samples of independent observations
-  tends to have larger values than the other. It can be used in cases
-  where higher (and/or lower) rankings of a group of genes are of
-  interest. We illustrate the use of the function with the example of
-  using tissue-specific marker genes to predict source organ of
-  microarray samples.
+  The Wilcoxon-Mann-Whitney Test (WMW-Test) is a non-parameteric statistic tool to examine whether one of the two samples of independent observations tends to have larger values than the other. It can be used in cases where higher (and/or lower) rankings of a group of genes are of interest. We illustrate the use of the function with the example of using tissue-specific marker genes to predict source organ of microarray samples.
 
-  The basic form of \emph{wmwTest} function takes a numeric vector (\code{object}) and a
-  boolean vector (\code{sub}) indicating which genes belong to the markers (and which
-  not). In the context of our example, the numeric vector contains
-  expression values of all genes in a sample, and the \code{TRUE} values
-  in \code{sub} specify tissue-specific marker genes. Then the rank of
-  these tissue-specific genes are compared to the rest of genes using
-  the Wilcoxon-Mann-Whitney test. If they are generally higher expressed
-  than other genes, there is higher possibility that the tested sample
-  may come from the same tissue where the marker genes were
-  derived. Running the test over a set of tissue gene markers, and
-  comparing statistics or p-values, then provides a naive way to predict
-  the most probable tissue(s) from which the sample was taken.
+  The basic form of \emph{wmwTest} function takes a numeric vector (\code{object}) and a  boolean vector (\code{sub}) indicating which genes belong to the markers (\code{TRUE}) and which not (\code{FALSE}). In the context of our example, the numeric vector contains expression values of all genes in a sample, and the \code{TRUE} values in \code{sub} specify tissue-specific marker genes. Then the rank of these tissue-specific genes are compared to the rest of genes using the Wilcoxon-Mann-Whitney test. If they are generally higher expressed than other genes, there is higher possibility that the tested sample may come from the same tissue where the marker genes were derived. Running the test over a set of tissue gene markers, and comparing statistics or p-values, then provides a naive way to predict the most probable tissue(s) from which the sample was taken.
 
-  In case only a over-presentation of genes in highly expressed
-  list is of interest (as in the tissue-prediction example), one-sided
-  alternative \code{greater} should be used. Otherwise \code{two.sided}
-  or \code{less}.
-  The function returns the \code{p value} of the MWM-test if the option \code{statistic} is set to
-  \code{FALSE}, otherwise the statistic \code{W} is returned.
+  In case only the over-presentation of genes is of interest (as in the
+  tissue-heterogeneity detection example), one-sided alternative
+  hypothesis \code{greater} should be used. The
+  \code{two.sided} hypothesis or the other one-sided hypothesis
+  (\code{less}) can be used depending on the purpose of test.
+  
+  The function returns the \code{p value} of the MWM-test if the option \code{statistic} is set to \code{FALSE}, otherwise the statistic \code{W} is returned.
 
   Other forms of the methods are provided as wrappers for more
-  complicated data structures.
+  complex data structures.
 }
 \section{Methods}{
 \describe{
