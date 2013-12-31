@@ -18,10 +18,10 @@ ifneq ($(BICOSN), bas)
 		RBIN:="R"
 	endif
 	R:=$(RBIN)
-	CHECKADD:= ${CHECKADD} --no-latex ## for envcheck
+	CHECKADD:= ${CHECKADD} ## for envcheck
 else
 	R:= R
-	CHECKADD:= ${CHECKADD} --no-latex
+	CHECKADD:= ${CHECKADD}
 endif 
 
 PKG          := $(shell awk 'BEGIN{FS=":"}{if ($$1=="Package") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION)
