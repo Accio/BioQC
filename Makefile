@@ -18,7 +18,7 @@ ifneq ($(BICOSN), bas)
 		RBIN:="R"
 	endif
 	R:=$(RBIN)
-	CHECKADD:= ${CHECKADD} --no-manual ## for envcheck
+	CHECKADD:= ${CHECKADD} --no-latex ## for envcheck
 else
 	R:= R
 	CHECKADD:= ${CHECKADD} --no-latex
