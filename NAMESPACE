@@ -1,10 +1,12 @@
 exportMethods("wmwTest")
 
+export(gini)
+
 export(absLog10p)
 
 export(filterPmat)
 
-export(gini)
+export(read_gmt)
 
 export(entropy,
        entropyDiversity,
