@@ -6,7 +6,7 @@ export(absLog10p)
 
 export(filterPmat)
 
-export(read_gmt)
+export(readGmt)
 
 export(entropy,
        entropyDiversity,
