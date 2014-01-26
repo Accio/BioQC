@@ -1,0 +1,47 @@
+%\VignetteIndexEntry{BioQC: The kidney expression example}
+%\VignetteDepends{Biobase}
+%\VignettePackage{ribiosBioQC}
+
+\documentclass[11pt]{article}
+
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage[pdftex]{graphicx}
+\SweaveOpts{keep.source=TRUE,eps=FALSE,pdf=TRUE,prefix=TRUE} 
+
+% R part
+\newcommand{\R}[1]{{\textsf{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Metas}[1]{{\texttt{#1}}}
+
+\begin{document}
+\setkeys{Gin}{width=0.8\textwidth}
+\title{Case study of BioQC: detecting tissue heterogeneity in a kidney expression dataset}
+\author{Jitao David Zhang}
+
+\maketitle
+
+\begin{abstract}
+  In this vignette we demonstrate the use of BioQC with a biological dataset, where mouse kidney samples were profiled for gene expression. Results of BioQC pointed to potential tissue heterogeneity caused by pancreas, which was confirmed by qRT-PCR.
+\end{abstract}
+
+\section{Data read in}
+
+\section{Run BioQC}
+
+\section{Results visualization}
+
+\section{Biological validation}
+
+\section{Session Info}
+The script runs within the following session:
+<<sessionInfo, echo=FALSE, results=verbatim>>=
+sessionInfo()
+@ 
+
+\end{document}
