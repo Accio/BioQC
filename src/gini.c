@@ -1,4 +1,4 @@
-#include "ribios_bioqc.h"
+#include "bioqc.h"
 
 /* sortAscending and stat_gini procedures are copied from BIOS library */
 

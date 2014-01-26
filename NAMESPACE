@@ -13,4 +13,4 @@ export(entropy,
        entropySpecificity,
        sampleSpecialization)
 
-useDynLib(ribiosBioQC)
+useDynLib(BioQC)

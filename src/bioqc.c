@@ -1,5 +1,5 @@
 #include <R_ext/Rdynload.h>
-#include "ribios_bioqc.h"
+#include "bioqc.h"
 
 static const R_CallMethodDef callMethods[] = {
   CALLMETHOD_DEF("gini", 1),

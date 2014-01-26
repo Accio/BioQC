@@ -1,6 +1,6 @@
-/* Common definitions of ribiosBioQC */
-#ifndef RIBIOS_BIOQC_H
-#define RIBIOS_BIOQC_H
+/* Common definitions of BioQC */
+#ifndef BIOQC_H
+#define BIOQC_H
 
 #include <R.h>
 #include <Rinternals.h>

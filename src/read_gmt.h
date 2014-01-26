@@ -1,5 +1,5 @@
- #ifndef RIBIOSQC_READ_GMT
- #define RIBIOSQC_READ_GMT
+ #ifndef BIOQC_READ_GMT
+ #define BIOQC_READ_GMT
 
  #include <string>
  #include <vector>
