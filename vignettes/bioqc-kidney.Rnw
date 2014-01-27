@@ -32,8 +32,28 @@
 
 \section{Data read in}
 
+<<libLoad>>=
+library(Biobase)
+library(BioQC)
+@ 
+
+<<dataReadIn>>=
+file <- "/home/david/Dokumente/programming/ribios/github/Terzi-data/Terzi/5_6_nephrectomy_terzi.RData"
+load(file)
+@ 
+
+<<gmtReadin>>=
+gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
+gmt <- readGmt(gmtFile)
+@ 
+
 \section{Run BioQC}
 
+<<runBioQC>>=
+system.time(bioqcRes <- wmwTest(eset, sub=gmt, 
+                                alternative="greater", statistic=FALSE))
+bioqcResFil <- filterPmat(bioqcRes, 1E-5)
+@ 
 \section{Results visualization}
 
 \section{Biological validation}
