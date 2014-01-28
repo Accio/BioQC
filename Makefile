@@ -33,7 +33,7 @@ PKG_SRC_DIR := $(PKG_ROOT_DIR)/src
 
 dist:	clean
 	@echo '====== Building Distribution ======'
-	@(cd ..; ${R} CMD build $(PKG))
+	@(cd ..; ${R} CMD build $(PKG) --no-build-vignettes)
 	@echo '====== Building finished ======'
 	@echo ' '
 
