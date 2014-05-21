@@ -1,5 +1,3 @@
-MCCORE <- 6L
-
 wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), statistic=FALSE) {
   if(!any(sub)) return(ifelse(statistic, 0, 1))
   wt <- wilcox.test(x[sub],
@@ -53,7 +51,7 @@ setMethod("wmwTest", signature=c("ExpressionSet", "list", "character", "logical"
               myfun <- function(x) wmwTest(oexp, gb %in% x$genes, alternative=alternative, statistic=statistic)
               
               if(suppressMessages(require(multicore))) {
-                res.raw <- mclapply(sub, myfun, mc.cores=MCCORE)
+                res.raw <- mclapply(sub, myfun)
               } else {
                 res.raw <- lapply(sub,myfun)
               }

@@ -18,6 +18,6 @@ Gene set list
 Jitao David Zhang <jitao_david.zhang@roche.com>
 }
 \examples{
-gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="ribiosBioQC")
+gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
 gmt_list <- readGmt(gmt_file)
 }

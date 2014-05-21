@@ -7,6 +7,6 @@ static const R_CallMethodDef callMethods[] = {
   {NULL, NULL, 0}
 };
 
-void R_init_ribiosBioQC(DllInfo *info) {
+void R_init_BioQC(DllInfo *info) {
   R_registerRoutines(info, NULL, callMethods, NULL, NULL);
 }

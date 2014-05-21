@@ -1,5 +1,5 @@
 Version 1.1-0 (Dec 27, 2013)
-  + Dependencies on BIOS has been resolved by copying the C functions into the package, in order to prepare ribiosBioQC for public release. It can now be installed on systems where BIOS is not available.
+  + Dependencies on BIOS has been resolved by copying the C functions into the package, in order to prepare BioQC for public release. It can now be installed on systems where BIOS is not available.
   + Clean-ups and updates of documentations.
   
 Version 1.0-14 (Nov 14, 2012)
@@ -53,6 +53,6 @@ Version 1.0-1 (Jun 13, 2012)
   + bioqc.Rscript has been added and published under /SOFT/bi/apps/ribios/scripts
 
 Version 1.0-0 (Jun 12, 2012)
-  + Establish the ribiosBioQC package
+  + Establish the BioQC package
   + Add methods wmwTest for Wilcoxon-Mann-Whitney test for several data structures used by BIO-QC procedures
   + wmwTest was (almost) fully documented

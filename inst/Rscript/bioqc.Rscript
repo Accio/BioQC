@@ -23,7 +23,7 @@ if (is.null(infile) || getHelp) {
 }
 
 libordie(ribiosIO, minVer="1.0-12")
-libordie(ribiosBioQC, minVer="1.0-6")
+libordie(BioQC, minVer="1.0-6")
 libordie(ribiosExpression)
 
 ## Chip type, can be missing. ribiosAnnotation is only needed when chiptype is not GeneSymbol
@@ -65,7 +65,7 @@ eset <- keepMaxStatProbe(eset, probe.index.name="GeneSymbol", keepNAprobes=FALSE
 
 ## GMT file
 default.gmt <- system.file("/extdata/exp.tissuemark.affy.roche.symbols.gmt",
-                           package="ribiosBioQC")
+                           package="BioQC")
 gmtfile <- getArg("gmt", onlyArg=default.gmt, missingArg=default.gmt)
 gmtList <- read_gmt_list(gmtfile)
 

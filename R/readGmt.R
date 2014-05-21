@@ -8,7 +8,7 @@ setClass("gslist",  contains="list")
 setAs(from="list", to="gslist", def=function(from, to) {
     new(to, from)
 })
-as.data.frame.gslist <- function(x) {
+as.data.frame.gslist <- function(x, row.names, optional,...) {
     genes <- gsGenes(x)
     sets <- rep(gsName(x), sapply(genes, length))
     unique(data.frame(GeneSet=unlist(sets), Genes=unlist(genes)))
@@ -20,7 +20,7 @@ setAs(from="data.frame", to="gslist", def=function(from, to) {
     ## TODO: implement from data.frame to gslist
     stop("Not implemented yet.")
 })
-as.matrix.gslist <- function(x) { ## r/c: genes/gene sets
+as.matrix.gslist <- function(x,...) { ## r/c: genes/gene sets
     genes <- gsGenes(x)
     uniqGenes <- gsUniqGenes(x)
     res <- sapply(genes, function(xx) uniqGenes %in% xx)

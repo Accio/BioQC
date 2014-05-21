@@ -1,6 +1,6 @@
 %\VignetteIndexEntry{BioQC: The kidney expression example}
 %\VignetteDepends{Biobase}
-%\VignettePackage{ribiosBioQC}
+%\VignettePackage{BioQC}
 
 \documentclass[11pt]{article}
 
