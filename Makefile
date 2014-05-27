@@ -33,13 +33,13 @@ PKG_SRC_DIR := $(PKG_ROOT_DIR)/src
 
 dist:	clean
 	@echo '====== Building Distribution ======'
-	@(cd ..; ${R} CMD build $(PKG) --no-build-vignettes)
+	@(cd ..; ${R} CMD build $(PKG) )
 	@echo '====== Building finished ======'
 	@echo ' '
 
 install: dist
 	@echo '====== Installing Package ======'
-	@(cd ..; ${R} CMD INSTALL ${PKG}_${PKG_VERSION}.tar.gz)
+	(cd ..; ${R} CMD INSTALL ${PKG}_${PKG_VERSION}.tar.gz) --no-docs
 	@echo '====== Installing finished ======'
 	@echo ' '
 

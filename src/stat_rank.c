@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "stat_rank.h"
 
@@ -32,18 +33,12 @@ void destroyDRank(DRank it) {
 /*! \brief compare item objects by value */
 int compareDRank (const void* a, const void* b) // dereference void pointer: *((T*)ptr)
 {
-  // const DRank *ap=(DRank*)a;
-  // const DRank *bp=(DRank*)b;
-  //return ((*ap)->value-(*bp)->value);
   return ((*(DRank*)a)->value-(*(DRank*)b)->value);
 }
 
 /*! \brief compare item objects by input index */
 int compareDRankIndex (const void* a, const void* b) // dereference void pointer: *((T*)ptr)
 {
-  // const DRank *ap=(DRank*)a;
-  // const DRank *bp=(DRank*)b;
-  //return ((*ap)->value-(*bp)->value);
   return ((*(DRank*)a)->index-(*(DRank*)b)->index);
 
 }
@@ -54,15 +49,21 @@ int compareDRankIndex (const void* a, const void* b) // dereference void pointer
 */
 DRankList createDRankList(const double* array, int len) {
   int i;
-  DRank *ilist=(DRank*)malloc(len*sizeof(DRank));
-  for(i=0;i<len;++i) {
-    ilist[i]=createDRank(array[i], i);
-  }
   DRankList res=(DRankList)malloc(sizeof(DRankListStruct));
-  res->list=ilist;
   res->len=len;
   res->ulen=-1;
+  res->list=(DRank*)malloc(len*sizeof(DRank));
+  for(i=0;i<len;++i) {
+    res->list[i]=createDRank(array[i], i);
+  }
   return(res);
+}
+
+void destroyDRankList(DRankList list) {
+  int i;
+  for(i=0;i<list->len;i++)
+    destroyDRank(list->list[i]);
+  free(list);
 }
 
 /*! \brief print an DRankList object
@@ -103,6 +104,7 @@ void sortRankDRankList(DRankList list) {
   for(i=0;i<len; ++i)
     backup[i]=ll[i]->value;
 
+  // qsort does not work properly!
   qsort(ll, len, sizeof(DRank), compareDRank);
 
   for(i=0; i<len;i=j+1) {
@@ -152,4 +154,68 @@ void sortDRankList(DRankList list) {
   DRank* ll=list->list;
   int len=list->len;
   qsort(ll, len, sizeof(DRank), compareDRank);
+}
+
+
+iArray iArrayCreate(int n) {
+  iArray res=(iArray)malloc(sizeof(intArrayStruct));
+  res->len=n;
+  res->value=(int*)malloc(n*sizeof(int));
+  return(res);
+}
+iArray iArrayCreateDef(int n, int val) {
+  int i;
+  iArray res=iArrayCreate(n);
+  for(i=0;i<n;i++)
+    res->value[i]=val;
+  return(res);
+}
+
+void iArrayDestroy(iArray array) {
+  array->len=0;
+  free(array->value);
+  free(array);
+}
+void iArrayPrint(const iArray array) {
+  int i=0;
+  for(i=0;i<array->len;++i) {
+    printf("%d", array->value[i]);
+    if(i!=array->len) {
+      printf(" ");
+    }
+  }
+  puts("");
+}
+
+inline void dArraySetValue(dArray array, int index, double value) {array->value[index]=value;}
+inline double dArrayGetValue(const dArray array, int index) {return(array->value[index]);}
+
+dArray dArrayCreate(int n) {
+  dArray res=(dArray)malloc(sizeof(doubleArrayStruct));
+  res->len=n;
+  res->value=(double*)malloc(n*sizeof(double));
+  return(res);
+}
+dArray dArrayCopy(const double* array, int len) {
+  int i;
+  dArray res=dArrayCreate(len);
+  for(i=0;i<len;i++) 
+    *(res->value++)=*(array++); 
+  return(res);
+}
+
+void dArrayDestroy(dArray array) {
+  array->len=0;
+  free(array->value);
+  free(array);
+}
+void dArrayPrint(const dArray array) {
+  int i=0;
+  for(i=0;i<array->len;++i) {
+    printf("%g", array->value[i]);
+    if(i!=array->len) {
+      printf(" ");
+    }
+  }
+  puts("");
 }

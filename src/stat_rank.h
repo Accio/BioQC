@@ -47,6 +47,28 @@ void sortRankDRankList(DRankList list);
 void rankDRankList(DRankList list);
 /*! \brief sort the DRankList */
 void sortDRankList(DRankList list);
+/*! \brief destroy the DRankList */
+void destroyDRankList(DRankList list);
+
+typedef struct  {
+  size_t len;
+  int* value;
+} intArrayStruct, *iArray;
+
+iArray iArrayCreate(int n);
+iArray iArrayCreateDef(int n, int val);
+void iArrayDestroy(iArray array);
+void iArrayPrint(const iArray array);
+
+typedef struct {
+  size_t len;
+  double* value;
+} doubleArrayStruct , *dArray;
+
+dArray dArrayCreate(int n);
+dArray dArrayCopy(const double *array, int len);
+void dArrayDestroy(dArray array);
+void dArrayPrint(const dArray array);
 
 /* private */
 DRank createDRank(double, int);

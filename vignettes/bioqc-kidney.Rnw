@@ -9,7 +9,7 @@
 \usepackage{geometry}
 \usepackage{longtable}
 \usepackage[pdftex]{graphicx}
-\SweaveOpts{keep.source=TRUE,eps=FALSE,pdf=TRUE,prefix=TRUE} 
+\SweaveOpts{keep.source=TRUE,eps=FALSE,pdf=TRUE,prefix=TRUE,eval=FALSE} 
 
 % R part
 \newcommand{\R}[1]{{\textsf{#1}}}
@@ -32,13 +32,12 @@
 
 \section{Data read in}
 
-<<libLoad>>=
-library(Biobase)
-library(BioQC)
-@ 
+First we load BioQC library and the expression data into the R session. 
 
 <<dataReadIn>>=
-file <- "/home/david/Dokumente/programming/ribios/github/Terzi-data/Terzi/5_6_nephrectomy_terzi.RData"
+library(Biobase)
+library(BioQC)
+file <- system.file("extdata/bioqc-nephrectomy.RData", package="BioQC")
 load(file)
 @ 
 
@@ -54,6 +53,7 @@ system.time(bioqcRes <- wmwTest(eset, sub=gmt,
                                 alternative="greater", statistic=FALSE))
 bioqcResFil <- filterPmat(bioqcRes, 1E-5)
 @ 
+
 \section{Results visualization}
 
 \section{Biological validation}
