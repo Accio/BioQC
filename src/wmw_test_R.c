@@ -23,31 +23,24 @@ double do_wmw_test(const int* indices,
   int i,j;
   int n2=n-n1;
   double irsum=0; // sum of rank of index
-  double U, mu, sigma2,zlt, zut, plt, put, tmp;
+  double U, mu, sigma2,zlt, zut, plt, pgt, tmp;
   int ulen=0;
 
   DRankList list=createDRankList(stats, n);
-  printDRankList(list);
-  sortDRankList(list);
-  Rprintf("After sorting\n");
-  printDRankList(list);
-
+  rankDRankList(list);
 
   // sum of the ranks of indexed elements
-  for(i=0;i<n1;++i) {
-    Rprintf("irsum[%d]=%.2f\n", i, list->list[ indices[i] ]->rank);
+  for(i=0;i<n1;++i)
     irsum+=list->list[ indices[i] ]->rank;
-  }
   ulen=list->ulen;
-  
+
   U=n1*n2+n1*(n1+1.0)*0.5-irsum; 
   if(val_type==0) {
-    Rprintf("n1=%d, n2=%d, irsum=%.2f\n", n1, n2, irsum);
     destroyDRankList(list);
     return(U);
   }
   
-  mu=(double)n1*n2/2;
+  mu=(double)n1*n2*0.5;
   sigma2=n1*n2*(n+1.0)/12;
   
   if(ulen!=n) { // has ties
@@ -71,13 +64,11 @@ double do_wmw_test(const int* indices,
   if(val_type==1) {
     zut=(U-0.5-mu)/sqrt(sigma2);
     pnorm_both(zut, &tmp, &plt, 1, 0);
-    //plt = pt(zut, df, 0, 0);
     return(plt);
   } else if (val_type==2) {
     zlt=(U+0.5-mu)/sqrt(sigma2);
-    pnorm_both(zlt, &put, &tmp, 1, 0);
-    //put = pt(zlt, df, 1, 0);
-    return(put);
+    pnorm_both(zlt, &pgt, &tmp, 0, 0);
+    return(pgt);
   } else {
     error("Should not happen");
     return(-1);
@@ -95,12 +86,11 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 			  length(indlist), 
 			  NCOL(matrix)));
   double *resp=REAL(res);
-  for(i=0; i<NCOL(matrix)-1;++i) {
-    for(j=0;j<length(indlist)-1;++j) {
+  for(i=0; i<NCOL(matrix);++i) {
+    for(j=0;j<length(indlist);++j) {
       ip=INTEGER(VECTOR_ELT(indlist,j));
       ilen=length(VECTOR_ELT(indlist,j));
-      resp[j+i*NROW(matrix)]=do_wmw_test(ip, ilen, 
-					 sp, slen, type);
+      resp[j+i*length(indlist)]=do_wmw_test(ip, ilen, sp, slen, type); // notice the pointer should be j+i*length(indlist) [row count + column count * nrow]
     }
     sp+=NROW(matrix);
   }
