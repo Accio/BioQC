@@ -33,7 +33,9 @@ void destroyDRank(DRank it) {
 /*! \brief compare item objects by value */
 int compareDRank (const void* a, const void* b) // dereference void pointer: *((T*)ptr)
 {
-  return ((*(DRank*)a)->value-(*(DRank*)b)->value);
+  if((*(DRank*)a)->value>(*(DRank*)b)->value) return 1;
+  if((*(DRank*)a)->value==(*(DRank*)b)->value) return 0;
+  if((*(DRank*)a)->value<(*(DRank*)b)->value) return -1; // long debug needed: note it must return an integer!
 }
 
 /*! \brief compare item objects by input index */
@@ -107,27 +109,17 @@ void sortRankDRankList(DRankList list) {
   // qsort does not work properly!
   qsort(ll, len, sizeof(DRank), compareDRank);
 
+
   for(i=0; i<len;i=j+1) {
     j=i;
-#ifdef DEBUG
-    if(j<len-1)
-      printf("[DEBUG] i=%d, j=%d, ind1=%d, ind2=%d, val1=%.1f, val2=%.1f\n", 
-	     i, j, 
-	     ll[j]->index, ll[j+1]->index, 
-	     backup[ll[j]->index],
-	     backup[ll[j+1]->index]);
-#endif
-
     while((j<len-1) && backup[ll[j]->index] == backup[ll[j+1]->index]) {
       j++;
     }
     for(k=i;k<=j;k++)
-      ll[k]->rank=(i+j+2)/2.;
+      ll[k]->rank=(i+j+2)*0.5;
     ucount++;
   }
-  //for(i=0;i<len;++i) {
-  //  (ll[i]->index)++; // index starts from 1
-  //}
+
   free(backup);
   list->ulen=ucount;
 }
@@ -176,16 +168,6 @@ void iArrayDestroy(iArray array) {
   free(array->value);
   free(array);
 }
-void iArrayPrint(const iArray array) {
-  int i=0;
-  for(i=0;i<array->len;++i) {
-    printf("%d", array->value[i]);
-    if(i!=array->len) {
-      printf(" ");
-    }
-  }
-  puts("");
-}
 
 inline void dArraySetValue(dArray array, int index, double value) {array->value[index]=value;}
 inline double dArrayGetValue(const dArray array, int index) {return(array->value[index]);}
@@ -208,14 +190,4 @@ void dArrayDestroy(dArray array) {
   array->len=0;
   free(array->value);
   free(array);
-}
-void dArrayPrint(const dArray array) {
-  int i=0;
-  for(i=0;i<array->len;++i) {
-    printf("%g", array->value[i]);
-    if(i!=array->len) {
-      printf(" ");
-    }
-  }
-  puts("");
 }
