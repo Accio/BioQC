@@ -58,7 +58,6 @@ typedef struct  {
 iArray iArrayCreate(int n);
 iArray iArrayCreateDef(int n, int val);
 void iArrayDestroy(iArray array);
-void iArrayPrint(const iArray array);
 
 typedef struct {
   size_t len;
@@ -68,7 +67,6 @@ typedef struct {
 dArray dArrayCreate(int n);
 dArray dArrayCopy(const double *array, int len);
 void dArrayDestroy(dArray array);
-void dArrayPrint(const dArray array);
 
 /* private */
 DRank createDRank(double, int);
