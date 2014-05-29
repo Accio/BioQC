@@ -21,7 +21,7 @@
  *  
  * \param indlist: A list of integers giving the index of gene sets
  * \param matrix: an expression matrix with features in rows and samples in columns
- * \param val_type: 0=U, 1=p(left), 2=p(right), 3=p(two.sided)
+ * \param val_type: 0=p(left), 1=p(right), 2=p(two.sided), 3=U
  *
  * This implementation uses normal approximation, which works reasonably well if sample size > 100
  * Empirical test revealed that if sample size>100, the difference of resulting p-values from the R-native implementation is smaller than 1E-5
@@ -36,10 +36,9 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 
   DRankList list;
   double irsum; // sum of rank of index
-  double tmp;
   double U;
   double mu, sigma2;
-  double zval, pval, pval2;
+  double zval, plt, pgt;
 
   // for ties
   double tiecoef;
@@ -81,24 +80,24 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 	irsum+=list->list[ip[k]]->rank;
 
       U=n1*n2+n1*(n1+1.0)*0.5-irsum; 
-      if(type==0) {
+      if(type==3) {
 	resp[j+i*length(indlist)]=U;
       } else {
 	mu=(double)n1*n2*0.5; // mu=n1*n2*0.5
 	sigma2=n1*n2*(slen+1.0)/12*tiecoef; //sigma2 = n1*n2*(n+1)/12*tiecoef
 
-	if(type==1) {
-	  zval=(U-0.5-mu)/sqrt(sigma2);
-	  pnorm_both(zval, &tmp, &pval, 1, 0);
-	  resp[j+i*length(indlist)]=pval;
-	} else if (type==2) {
+	if(type==0) { /* greater */
 	  zval=(U+0.5-mu)/sqrt(sigma2);
-	  pnorm_both(zval, &pval, &tmp, 0, 0);
-	  resp[j+i*length(indlist)]=pval;
-	} else if (type==3) {
+	  pnorm_both(zval, &plt, &pgt, 0, 0);
+	  resp[j+i*length(indlist)]=plt;
+	} else if (type==1) { /* less */
+	  zval=(U-0.5-mu)/sqrt(sigma2);
+	  pnorm_both(zval, &plt, &pgt, 1, 0);
+	  resp[j+i*length(indlist)]=pgt;
+	} else if (type==2) { /* two sided*/
 	  zval=(U-mu- (U>mu ? 0.5 : -0.5))/sqrt(sigma2);
-	  pnorm_both(zval, &pval, &pval2, 2, 0);
-	  resp[j+i*length(indlist)]=2.0*MIN(pval, pval2);
+	  pnorm_both(zval, &plt, &pgt, 2, 0);
+	  resp[j+i*length(indlist)]=2.0*MIN(plt, pgt);
 	} else {
 	  error("Unrocognized val_type. Should not happen\n");
 	}
