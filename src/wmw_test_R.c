@@ -23,7 +23,8 @@ double do_wmw_test(const int* indices,
   int i,j;
   int n2=n-n1;
   double irsum=0; // sum of rank of index
-  double U, mu, sigma2,zlt, zut, plt, pgt, tmp;
+  static double tmp;
+  double U, mu, sigma2,zlt, zut, plt, pgt;
   int ulen=0;
 
   DRankList list=createDRankList(stats, n);
