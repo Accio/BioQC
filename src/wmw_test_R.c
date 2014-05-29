@@ -50,7 +50,7 @@ double do_wmw_test(const int* indices,
     sortDRankList(list);
     for(i=0;i<n;i=j+1) {
       j=i;
-      while(j<n-1 && (list->list[j+1]->value==list->list[j]->value)) ++j;
+      while(j<n-1 && (*(list->list[j+1]->vPtr)==*(list->list[j]->vPtr))) ++j;
       tbl[ncount++]=j-i+1;
     }
     for(i=0;i<ulen;++i)

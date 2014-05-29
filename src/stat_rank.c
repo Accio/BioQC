@@ -17,25 +17,26 @@
  * The rank is initialized with -1, and changed to a positive one (starting from 1) by sortRankDRankList. This is used to check whether that function has been run or not, so please do not change the initial value of rank.
  */
 
-DRank createDRank(double value, int index) {
+DRank createDRank(const double* ptr, int index) {
   DRank it=(DRank)malloc(sizeof(DRankStruct)); // TAKE CARE: use sizeof(DRank) here will produce bugs that are very difficult to debug
   it->index=index;
-  it->value=value;
+  it->vPtr=ptr;
   it->rank=-1.0;
   return(it);
 }
 
 /*! \brief destroy an item object */
 void destroyDRank(DRank it) {
+  it->vPtr=NULL;
   free(it);
 }
 
 /*! \brief compare item objects by value */
 int compareDRank (const void* a, const void* b) // dereference void pointer: *((T*)ptr)
 {
-  if((*(DRank*)a)->value>(*(DRank*)b)->value) return 1;
-  if((*(DRank*)a)->value==(*(DRank*)b)->value) return 0;
-  if((*(DRank*)a)->value<(*(DRank*)b)->value) return -1; // long debug needed: note it must return an integer!
+  if(*(*(DRank*)a)->vPtr>*(*(DRank*)b)->vPtr) return 1;
+  if(*(*(DRank*)a)->vPtr==*(*(DRank*)b)->vPtr) return 0;
+  if(*(*(DRank*)a)->vPtr<*(*(DRank*)b)->vPtr) return -1; // long debug needed: note it must return an integer!
 }
 
 /*! \brief compare item objects by input index */
@@ -56,7 +57,7 @@ DRankList createDRankList(const double* array, int len) {
   res->ulen=-1;
   res->list=(DRank*)malloc(len*sizeof(DRank));
   for(i=0;i<len;++i) {
-    res->list[i]=createDRank(array[i], i);
+    res->list[i]=createDRank(array+i, i);
   }
   return(res);
 }
@@ -77,7 +78,7 @@ void printDRankList(const DRankList list) {
   for(i=0;i<list->len;i++)
     printf("ilist[%d]=%.2f, index=%d, rank=%.1f\n",
 	   i, 
-	   list->list[i]->value, 
+	   *(list->list[i]->vPtr), 
 	   list->list[i]->index,
 	   list->list[i]->rank);
 }
@@ -104,7 +105,7 @@ void sortRankDRankList(DRankList list) {
   int ucount=0;
   double *backup=(double*)malloc(len * sizeof(double));
   for(i=0;i<len; ++i)
-    backup[i]=ll[i]->value;
+    backup[i]=*(ll[i]->vPtr);
 
   // qsort does not work properly!
   qsort(ll, len, sizeof(DRank), compareDRank);

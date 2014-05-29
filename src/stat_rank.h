@@ -14,7 +14,7 @@
  */
 typedef struct {
   int index; /*!< Input index (starting from 0) */
-  double value; /*!< Pointer to the value (to use with R) */
+  const double* vPtr; /*!< Pointer to the value (to use with R) */
   double rank; /*!< Fractional ranking (starting from 1) */
 } DRankStruct, *DRank;
 
@@ -51,7 +51,7 @@ void sortDRankList(DRankList list);
 void destroyDRankList(DRankList list);
 
 /* private */
-DRank createDRank(double, int);
+DRank createDRank(const double*, int);
 void destroyDRank(DRank it);
 int isRanked(const DRankList list);
 
