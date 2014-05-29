@@ -66,6 +66,7 @@ void destroyDRankList(DRankList list) {
   int i;
   for(i=0;i<list->len;i++)
     destroyDRank(list->list[i]);
+  free(list->list);
   free(list);
 }
 
