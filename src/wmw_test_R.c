@@ -5,15 +5,27 @@
 
 #include "stat_rank.h"
 
+#define MIN(x,y) ((x) > (y) ? (y) : (x));
+#define NROW(x) INTEGER(GET_DIM((x)))[0]
+#define NCOL(x) INTEGER(GET_DIM((x)))[1]
+
+/*
+ * void pnorm_both(double x, double *cum, double *ccum, int i_tail, int log_p)
+ 
+ * i_tail in {0,1,2} means: "lower", "upper", or "both" :
+ * if(lower) return  *cum := P[X <= x]
+ * if(upper) return *ccum := P[X >  x] = 1 - P[X <= x]
+*/
+
 /*! \brief Wilcoxon-Mann-Whitney Test
  *  
  * \param indlist: A list of integers giving the index of gene sets
  * \param matrix: an expression matrix with features in rows and samples in columns
  * \param val_type: 0=U, 1=p(left), 2=p(right), 3=p(two.sided)
+ *
+ * This implementation uses normal approximation, which works reasonably well if sample size > 100
+ * Empirical test revealed that if sample size>100, the difference of resulting p-values from the R-native implementation is smaller than 1E-5
  */
-#define NROW(x) INTEGER(GET_DIM((x)))[0]
-#define NCOL(x) INTEGER(GET_DIM((x)))[1]
-
 SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   int i,j, n1,n2, k, m;
   int *ip;
@@ -27,7 +39,7 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   double tmp;
   double U;
   double mu, sigma2;
-  double zlt, zut, plt, pgt;
+  double zval, pval, pval2;
 
   // for ties
   double tiecoef;
@@ -76,18 +88,21 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 	sigma2=n1*n2*(slen+1.0)/12*tiecoef; //sigma2 = n1*n2*(n+1)/12*tiecoef
 
 	if(type==1) {
-	  zut=(U-0.5-mu)/sqrt(sigma2);
-	  pnorm_both(zut, &tmp, &plt, 1, 0);
-	  resp[j+i*length(indlist)]=plt;
+	  zval=(U-0.5-mu)/sqrt(sigma2);
+	  pnorm_both(zval, &tmp, &pval, 1, 0);
+	  resp[j+i*length(indlist)]=pval;
 	} else if (type==2) {
-	  zlt=(U+0.5-mu)/sqrt(sigma2);
-	  pnorm_both(zlt, &pgt, &tmp, 0, 0);
-	  resp[j+i*length(indlist)]=pgt;
+	  zval=(U+0.5-mu)/sqrt(sigma2);
+	  pnorm_both(zval, &pval, &tmp, 0, 0);
+	  resp[j+i*length(indlist)]=pval;
+	} else if (type==3) {
+	  zval=(U-mu- (U>mu ? 0.5 : -0.5))/sqrt(sigma2);
+	  pnorm_both(zval, &pval, &pval2, 2, 0);
+	  resp[j+i*length(indlist)]=2.0*MIN(pval, pval2);
 	} else {
-	  Rprintf("Unrocognized val_type. Should not happen\n");
+	  error("Unrocognized val_type. Should not happen\n");
 	}
       }
-      //resp[j+i*length(indlist)]=do_wmw_test(ip, n1, sp, slen, type); 
     }
 
     destroyDRankList(list);
