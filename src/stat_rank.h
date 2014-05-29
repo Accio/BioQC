@@ -14,7 +14,7 @@
  */
 typedef struct {
   int index; /*!< Input index (starting from 0) */
-  double value; /*!< Value of the number */
+  double value; /*!< Pointer to the value (to use with R) */
   double rank; /*!< Fractional ranking (starting from 1) */
 } DRankStruct, *DRank;
 
@@ -49,24 +49,6 @@ void rankDRankList(DRankList list);
 void sortDRankList(DRankList list);
 /*! \brief destroy the DRankList */
 void destroyDRankList(DRankList list);
-
-typedef struct  {
-  size_t len;
-  int* value;
-} intArrayStruct, *iArray;
-
-iArray iArrayCreate(int n);
-iArray iArrayCreateDef(int n, int val);
-void iArrayDestroy(iArray array);
-
-typedef struct {
-  size_t len;
-  double* value;
-} doubleArrayStruct , *dArray;
-
-dArray dArrayCreate(int n);
-dArray dArrayCopy(const double *array, int len);
-void dArrayDestroy(dArray array);
 
 /* private */
 DRank createDRank(double, int);
