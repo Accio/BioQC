@@ -39,7 +39,7 @@ dist:	clean
 
 install: dist
 	@echo '====== Installing Package ======'
-	(cd ..; ${R} CMD INSTALL ${PKG}_${PKG_VERSION}.tar.gz) --no-docs
+	(cd ..; ${R} CMD INSTALL ${PKG}_${PKG_VERSION}.tar.gz) --debug --no-inst
 	@echo '====== Installing finished ======'
 	@echo ' '
 

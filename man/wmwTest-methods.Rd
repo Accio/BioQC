@@ -2,8 +2,10 @@
 \docType{methods}
 \alias{wmwTest}
 \alias{wmwTest-methods}
-\alias{wmwTest,ExpressionSet,list,character-method}
-\alias{wmwTest,ExpressionSet,gmtlist,character-method}
+\alias{wmwTest,eSet,numeric,character-method}
+\alias{wmwTest,eSet,logical,character-method}
+\alias{wmwTest,eSet,list,character-method}
+\alias{wmwTest,eSet,gmtlist,character-method}
 \alias{wmwTest,matrix,list,character-method}
 \alias{wmwTest,numeric,numeric,character-method}
 \alias{wmwTest,numeric,logical,character-method}
@@ -114,11 +116,11 @@ data(sample.ExpressionSet)
 testSet <- sample.ExpressionSet
 fData(testSet)$GeneSymbol <- paste("GENE_",1:nrow(testSet), sep="")
 mySig1 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.25, 0.75), replace=TRUE)
-wmwTest(testSet, mySig1, alternative="greater",statistic=FALSE)
+wmwTest(testSet, mySig1, alternative="greater")
 
 ## using integer
 exprs(testSet)[,1L] <- exprs(testSet)[,1L] + ifelse(mySig1, 50, 0)
-wmwTest(testSet, which(mySig1), alternative="greater",statistic=FALSE)
+wmwTest(testSet, which(mySig1), alternative="greater")
 
 ## using lists
 mySig2 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.6, 0.4), replace=TRUE)

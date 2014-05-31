@@ -72,6 +72,7 @@ void destroyDRankList(DRankList list) {
 
 /*! \brief print an DRankList object
 */
+#ifdef DEBUG
 void printDRankList(const DRankList list) {
   int i=0;
   printf("--DRankList (Len=%d, UniqLen=%d)--\n",
@@ -83,6 +84,7 @@ void printDRankList(const DRankList list) {
 	   list->list[i]->index,
 	   list->list[i]->rank);
 }
+#endif
 
 /*! \brief test whether the DRankList has been ranked 
  *

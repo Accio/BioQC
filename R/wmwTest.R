@@ -22,9 +22,9 @@ wmwTestC <- function(x, sub, alternative=c("two.sided", "less", "greater"), stat
   return(.Call("wmw_test", which(sub)-1L, matrix(x, ncol=1L), val=val))
 }
 
-wmwTestCind <- function(matrix, ind.list, alternative=c("greater", "less", "greater", "U")) {
+wmwTestCind <- function(matrix, ind.list, alternative=c("greater", "less", "two.sided", "U")) {
   indC <- lapply(ind.list, function(x) {
-    if(is.logiacl(x) && length(x)==nrow(matrix)) {
+    if(is.logical(x) && length(x)==nrow(matrix)) {
       x[is.na(x)] <- FALSE
       return(which(x)-1L)
     } else if(is.numeric(x)) {
@@ -36,7 +36,7 @@ wmwTestCind <- function(matrix, ind.list, alternative=c("greater", "less", "grea
   })
   if(!is.matrix(matrix) || !is.numeric(matrix))
     stop("matrix must be a numeric matrix")
-  type <- match.arg(type)
+  type <- match.arg(alternative)
   if(type=="greater") {
     val <- 0L
   } else if (type=="less") {
@@ -73,6 +73,12 @@ setMethod("wmwTest", signature=c("matrix", "list", "character"), function(exprs,
   colnames(res) <- colnames(exprs)
   rownames(res) <- names(index)
   return(res)
+})
+setMethod("wmwTest", signature=c("eSet", "numeric", "character"), function(exprs, index, alternative) {
+  wmwTestCind(exprs(exprs), index, alternative=alternative)
+})
+setMethod("wmwTest", signature=c("eSet", "logical", "character"), function(exprs, index, alternative) {
+  wmwTestCind(exprs(exprs), index, alternative=alternative)
 })
 setMethod("wmwTest", signature=c("eSet", "list", "character"), function(exprs, index, alternative) {
   wmwTestCind(exprs(exprs), index, alternative=alternative)

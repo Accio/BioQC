@@ -39,7 +39,9 @@ int compareDRankIndex(const void* a, const void* b);
  * \param len the length of the array
  */
 DRankList createDRankList(const double* array, int len);
+#ifdef DEBUG
 /*! \brief print an DRankList */
+#endif
 void printDRankList(const DRankList list);
 /*! \brief perform sorting and ranking at once */
 void sortRankDRankList(DRankList list);
