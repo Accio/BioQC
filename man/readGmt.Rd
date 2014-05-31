@@ -12,7 +12,10 @@ readGmt(filename)
   \item{filename}{GMT file name}
 }
 \value{
-Gene set list
+A gene set list, wrapped in a S3-class \code{gmtlist}. Each list item is
+a list with three items: gene set name (\code{name}), gene set
+description (\code{desc}), and gene list (a character vector,
+\code{genes}). 
 }
 \author{
 Jitao David Zhang <jitao_david.zhang@roche.com>

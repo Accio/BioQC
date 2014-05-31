@@ -1,6 +1,5 @@
 \name{tfidf}
 \alias{tfidf}
-\alias{gsTfIdf}
 \title{
 Calculate TF-IDF
 }
@@ -9,13 +8,12 @@ TF-IDF is a measure of informativeness of genes contributing to the gene set. Th
 }
 \usage{
 tfidf(x)
-gsTfIdf(x)
 }
 \arguments{
   \item{x}{Any data structure that can be coereced into a matrix. Rows are genes (words) and columns are gene sets (documents).}
 }
 \value{
-  \code{tfidf} returns a numeric vector. \code{gsTfIdf} returns a \code{\link{gslist-class}} object filled with weights.
+  \code{tfidf} returns a numeric vector. 
 }
 
 \author{
