@@ -18,12 +18,12 @@ wmwTest <- function(x, ind.list, alternative=c("greater", "less", "two.sided", "
   } else {
     stop("'matrix' must be a numeric matrix, or a numeric vector, or an eSet object")
   }
-  
+
   if(is.numeric(ind.list) || is.logical(ind.list)) {
     ind.list <- list(ind.list)
     isIndVec <- TRUE
   } else if (is(ind.list, "gmtlist")) {
-    if(!is(x, "eSet") & "GeneSymbol" %in% fData(x))
+    if(!(is(x, "eSet") & "GeneSymbol" %in% colnames(fData(x))))
       stop("When ind.list is a 'gmtlist', 'x' must be an eSet object with a column 'GeneSymbol' in fData.")
     genes <- lapply(ind.list, function(x) x$genes)
     names(genes) <- sapply(ind.list, function(x) x$name)
