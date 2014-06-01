@@ -1,3 +1,6 @@
+Version 0.99-0 (Jun 01, 2014)
+  + Reset the version to 0.99-0 for submission
+
 Version 1.1-5 (Jun 01, 2014)
   + Add C-level implementation of Wilcoxon-Mann-Whitney rank sum test
   + Documentation and vignettes updated to be ready for Bioconductor submission. 
