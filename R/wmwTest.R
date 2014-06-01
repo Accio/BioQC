@@ -23,17 +23,30 @@ wmwTestC <- function(x, sub, alternative=c("two.sided", "less", "greater"), stat
 }
 
 wmwTestCind <- function(matrix, ind.list, alternative=c("greater", "less", "two.sided", "U")) {
+  isMatVec <- FALSE
+  isIndVec <- FALSE
+  if(is(matrix, "eSet")) {
+    matrix <- exprs(matrix)
+  } else if (!is.matrix(matrix) & is.numeric(matrix)) {
+    matrix <- matrix(matrix, ncol=1L)
+    isMatVec <- TRUE
+  }
+  if(is.numeric(ind.list) || is.logical(ind.list)) {
+    ind.list <- list(ind.list)
+    isIndVec <- TRUE
+  }
+  
   indC <- lapply(ind.list, function(x) {
-    if(is.logical(x) && length(x)==nrow(matrix)) {
-      x[is.na(x)] <- FALSE
-      return(which(x)-1L)
-    } else if(is.numeric(x)) {
+    if(is.logical(x))
+      x <- which(x)
+    if(is.numeric(x)) {
       x <- as.integer(x[!is.na(x)])
       return(x-1L)
     } else {
-      stop("index must be either logical or integer vector")
+      stop("index must be either integer vector")
     }
   })
+  
   if(!is.matrix(matrix) || !is.numeric(matrix))
     stop("matrix must be a numeric matrix")
   type <- match.arg(alternative)
@@ -48,45 +61,24 @@ wmwTestCind <- function(matrix, ind.list, alternative=c("greater", "less", "two.
   } else {
     stop("Should not happen")
   }
-  Cres <- .Call("wmw_test", indC, matrix, val)
+  res <- .Call("wmw_test", indC, matrix, val)
+  rownames(res) <- names(ind.list)
+  colnames(res) <- colnames(matrix)
+  if(isMatVec) res <- res[,1L]
+  if(isIndVec) res <- res[1L,]
+
+  return(res)
 }
 
 ##setGeneric("wmwTest",function(object, sub, alternative, statistic) standardGeneric("wmwTest"))
 setGeneric("wmwTest",function(exprs, index, alternative) standardGeneric("wmwTest"))
 setMethod("wmwTest", signature=c("matrix", "numeric", "character") , function(exprs, index, alternative) {
-  wmwTestCind(exprs, list(index), alternative=alternative)
-})
-setMethod("wmwTest", signature=c("matrix", "logical", "character"), function(exprs, index, alternative) {
-  wmwTestCind(exprs, list(index), alternative=alternative)
-})
-setMethod("wmwTest", signature=c("numeric", "numeric", "character") , function(exprs, index, alternative) {
-  wmwTestCind(matrix(exprs, ncol=1), list(index), alternative=alternative)
-})
-setMethod("wmwTest", signature=c("numeric", "logical", "character") , function(exprs, index, alternative) {
-  wmwTestCind(matrix(exprs, ncol=1), list(index), alternative=alternative)
-})
-setMethod("wmwTest", signature=c("ANY", "ANY", "missing"), function(exprs, index, alternative) {
-  wmwTestCind(exprs, index, alternative="greater")
-})
-setMethod("wmwTest", signature=c("matrix", "list", "character"), function(exprs, index, alternative) {
-  res <- wmwTestCind(exprs, index, alternative=alternative)
-  colnames(res) <- colnames(exprs)
-  rownames(res) <- names(index)
-  return(res)
-})
-setMethod("wmwTest", signature=c("eSet", "numeric", "character"), function(exprs, index, alternative) {
-  wmwTestCind(exprs(exprs), index, alternative=alternative)
-})
-setMethod("wmwTest", signature=c("eSet", "logical", "character"), function(exprs, index, alternative) {
-  wmwTestCind(exprs(exprs), index, alternative=alternative)
-})
-setMethod("wmwTest", signature=c("eSet", "list", "character"), function(exprs, index, alternative) {
-  wmwTestCind(exprs(exprs), index, alternative=alternative)
+  wmwTestCind(exprs, index, alternative=alternative)
 })
 setMethod("wmwTest", signature=c("eSet", "gmtlist", "character"), function(exprs, index, alternative) {
-  if(!"GeneSymbol" %in% colnames(fData(object)))
+  if(!"GeneSymbol" %in% colnames(fData(exprs)))
     stop("ExpressionSet must has 'GeneSymbol' as fData column which contains gene symbols used in the GMT files\n")
-  gb <- as.character(fData(object)[,"GeneSymbol"])
+  gb <- as.character(fData(exprs)[,"GeneSymbol"])
   ind <- lapply(index, function(x) {
     rind <- match(x$genes, gb)
     rind <- rind[!is.na(rind)]
