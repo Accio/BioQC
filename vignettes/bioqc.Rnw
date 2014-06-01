@@ -21,7 +21,7 @@
 
 \begin{document}
 \setkeys{Gin}{width=0.8\textwidth}
-\title{Case study of BioQC: detecting tissue heterogeneity in a kidney expression dataset}
+\title{Case studies of BioQC}
 \author{Jitao David Zhang}
 
 \maketitle
@@ -62,7 +62,7 @@ dummyRes <- wmwTest(myEset, gmt, alternative="greater")
 summary(p.adjust(dummyRes, "BH"))
 @ 
 
-\subsection{Using more basic data structure}
+\subsection{Using basic data structures}
 The dummy example above shows how to run BioQC algorithm with an \textit{ExpressionSet} and a list read from GMT files (a file format capturing gene sets). Users can also use more basic data structures (e.g. matrices and list of integer indexes) to run the algorithm as shown by the following example. Other data structures will be coerced into these basic data structures; we refer to interested user to the documentation of \textit{wmwTest} function.
 
 <<basicDS>>=
@@ -105,7 +105,7 @@ system.time(Rres <- apply(exprs, 2, function(x)
 
 @ 
 
-With 22000 genes, five samples, and five gene sets, the BioQC implementation is about 15x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the BioQC signature list), the BioQC implementation can be about 1000x faster than the R implementation.
+With 22000 genes, five samples, and five gene sets, the BioQC implementation is about 20x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the BioQC signature list), the BioQC implementation can be about 1000x faster than the R implementation.
 
 \section{Session Info}
 The script runs within the following session:

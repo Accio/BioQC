@@ -22,7 +22,7 @@
 \usepackage{Sweave}
 \begin{document}
 \setkeys{Gin}{width=0.8\textwidth}
-\title{Case study of BioQC: detecting tissue heterogeneity in a kidney expression dataset}
+\title{Case studies of BioQC}
 \author{Jitao David Zhang}
 
 \maketitle
@@ -53,7 +53,8 @@ Next we synthesize an ExpressionSet object, using randomly generated data.
 > gss <- unique(unlist(sapply(gmt, function(x) x$genes)))
 > myEset <- new("ExpressionSet",
 +               exprs=matrix(rnorm(Nrow*Nsample), nrow=Nrow),
-+               featureData=new("AnnotatedDataFrame", data.frame(GeneSymbol=sample(gss, Nrow))))
++               featureData=new("AnnotatedDataFrame", 
++                 data.frame(GeneSymbol=sample(gss, Nrow))))
 \end{Sinput}
 \end{Schunk}
 
@@ -69,13 +70,17 @@ Finally we run the BioQC algorithm and print the summary of the results. As expe
 \end{Soutput}
 \end{Schunk}
 
-\subsection{Using more basic data structure}
+\subsection{Using basic data structures}
 The dummy example above shows how to run BioQC algorithm with an \textit{ExpressionSet} and a list read from GMT files (a file format capturing gene sets). Users can also use more basic data structures (e.g. matrices and list of integer indexes) to run the algorithm as shown by the following example. Other data structures will be coerced into these basic data structures; we refer to interested user to the documentation of \textit{wmwTest} function.
 
 \begin{Schunk}
 \begin{Sinput}
-> myMatrix <- matrix(rnorm(Nrow*Nsample), ncol=Nsample, dimnames=list(NULL, LETTERS[1:Nsample]))
-> myList <- list(signature1=sample(1:Nrow, 100), signature2=sample(1:Nrow, 50), signature3=sample(1:Nrow, 200))
+> myMatrix <- matrix(rnorm(Nrow*Nsample), 
++                    ncol=Nsample, 
++                    dimnames=list(NULL, LETTERS[1:Nsample]))
+> myList <- list(signature1=sample(1:Nrow, 100), 
++                signature2=sample(1:Nrow, 50), 
++                signature3=sample(1:Nrow, 200))
 > wmwTest(myMatrix, myList)
 \end{Sinput}
 \begin{Soutput}
@@ -108,7 +113,7 @@ The following code, though in a small scale, demonstrates the difference between
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
-  0.138   0.000   0.138 
+  0.135   0.000   0.135 
 \end{Soutput}
 \begin{Sinput}
 > wmwTestR <- function(matrix, index, alternative, stat) {
@@ -122,14 +127,14 @@ The following code, though in a small scale, demonstrates the difference between
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
-  3.399   0.039   3.437 
+  3.171   0.028   3.199 
 \end{Soutput}
 \begin{Sinput}
 > 
 \end{Sinput}
 \end{Schunk}
 
-With 22000 genes, five samples, and five gene sets, the BioQC implementation is about 15x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the BioQC signature list), the BioQC implementation can be about 1000x faster than the R implementation.
+With 22000 genes, five samples, and five gene sets, the BioQC implementation is about 20x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the BioQC signature list), the BioQC implementation can be about 1000x faster than the R implementation.
 
 \section{Session Info}
 The script runs within the following session:
