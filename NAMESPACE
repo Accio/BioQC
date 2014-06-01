@@ -2,17 +2,6 @@ import("Rcpp")
 importClassFrom("Biobase", "eSet")
 importFrom("Biobase", "fData")
 importFrom("Biobase", "exprs")
-##exportClasses(gsitem, gslist)
-##exportMethods("gsName", "gsDesc", "gsGenes", "gsUniqGenes",
-##              "gsWeights","gsHasWeights", "gsClearWeights",
-##              "gsIndices")
-##exportMethods("gsName<-", "gsDesc<-", "gsGenes<-",
-##              "gsWeights<-", "gsIndices<-")
-##exportMethods("gsitem")
-
-##export(as.data.frame.gslist, as.matrix.gslist)
-
-
 
 export(gini)
 export(absLog10p)

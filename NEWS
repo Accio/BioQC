@@ -1,3 +1,7 @@
+Version 1.1-5 (Jun 01, 2014)
+  + Add C-level implementation of Wilcoxon-Mann-Whitney rank sum test
+  + Documentation and vignettes updated to be ready for Bioconductor submission. 
+
 Version 1.1-0 (Dec 27, 2013)
   + Dependencies on BIOS has been resolved by copying the C functions into the package, in order to prepare BioQC for public release. It can now be installed on systems where BIOS is not available.
   + Clean-ups and updates of documentations.

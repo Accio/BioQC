@@ -13,15 +13,13 @@
 ################################################################################
 ## conditional: choose R version depending on the BICOSN value
 ifneq ($(BICOSN), bas)
-	RBIN:= "/SOFT/bi/apps/R/devel/trunk/bin/R"
-	ifeq ($(wildcard RBIN),)
-		RBIN:="R"
-	endif
-	R:=$(RBIN)
+	R:= /SOFT/bi/bin/R-devel
 	CHECKADD:= ${CHECKADD} ## for envcheck
+	DISTADD:=--no-build-vignettes
 else
 	R:= R
 	CHECKADD:= ${CHECKADD}
+	DISTADD:=--no-vignettes
 endif 
 
 PKG          := $(shell awk 'BEGIN{FS=":"}{if ($$1=="Package") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION)
@@ -33,7 +31,7 @@ PKG_SRC_DIR := $(PKG_ROOT_DIR)/src
 
 dist:	clean
 	@echo '====== Building Distribution ======'
-	@(cd ..; ${R} CMD build --no-vignettes $(PKG) )
+	@(cd ..; ${R} CMD build ${DISTADD} $(PKG) )
 	@echo '====== Building finished ======'
 	@echo ' '
 
