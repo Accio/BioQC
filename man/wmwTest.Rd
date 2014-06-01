@@ -67,7 +67,8 @@ Zar, JH (1999). _Biostatistical Analysis 4th Edition_. Prentice-Hall Internation
 }
 
 \seealso{
-  \code{\link{wilcox.test}}, and \code{\link[limma]{rankSumTestWithCorrelation}}.
+  \code{wilcox.test} in the \code{stats} package, and \code{rankSumTestWithCorrelation} in
+  the \code{limma} package.
 }
 \examples{
 ## R-native data structures
