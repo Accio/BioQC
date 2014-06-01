@@ -9,7 +9,7 @@
 \usepackage{geometry}
 \usepackage{longtable}
 \usepackage[pdftex]{graphicx}
-\SweaveOpts{keep.source=TRUE,eps=FALSE,pdf=TRUE,prefix=TRUE,eval=TRUE} 
+ 
 
 % R part
 \newcommand{\R}[1]{{\textsf{#1}}}
@@ -19,6 +19,7 @@
 \newcommand{\Rclass}[1]{{\textit{#1}}}
 \newcommand{\Metas}[1]{{\texttt{#1}}}
 
+\usepackage{Sweave}
 \begin{document}
 \setkeys{Gin}{width=0.8\textwidth}
 \title{Case study of BioQC: detecting tissue heterogeneity in a kidney expression dataset}
@@ -34,46 +35,56 @@
 
 We demonstrate the basic use of the package by a dummy example. First we load BioQC library and the tissue signatures into the R session. 
 
-<<setSeed, echo=FALSE>>=
-set.seed(1887)
-@ 
 
-<<libLoad>>=
-library(Biobase)
-library(BioQC)
-gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
-gmt <- readGmt(gmtFile)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> library(Biobase)
+> library(BioQC)
+> gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
+> gmt <- readGmt(gmtFile)
+\end{Sinput}
+\end{Schunk}
 
 Next we synthesize an ExpressionSet object, using randomly generated data.
-<<gmtReadin>>=
-Nrow <- 2000L
-Nsample <- 5L
-gss <- unique(unlist(sapply(gmt, function(x) x$genes)))
-myEset <- new("ExpressionSet",
-              exprs=matrix(rnorm(Nrow*Nsample), nrow=Nrow),
-              featureData=new("AnnotatedDataFrame", 
-                data.frame(GeneSymbol=sample(gss, Nrow))))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> Nrow <- 2000L
+> Nsample <- 5L
+> gss <- unique(unlist(sapply(gmt, function(x) x$genes)))
+> myEset <- new("ExpressionSet",
++               exprs=matrix(rnorm(Nrow*Nsample), nrow=Nrow),
++               featureData=new("AnnotatedDataFrame", data.frame(GeneSymbol=sample(gss, Nrow))))
+\end{Sinput}
+\end{Schunk}
 
 Finally we run the BioQC algorithm and print the summary of the results. As expected, no single tissue scored significantly after multiple correction.
-<<runBioQC>>=
-dummyRes <- wmwTest(myEset, gmt, alternative="greater")
-summary(p.adjust(dummyRes, "BH"))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> dummyRes <- wmwTest(myEset, gmt, alternative="greater")
+> summary(p.adjust(dummyRes, "BH"))
+\end{Sinput}
+\begin{Soutput}
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.8235  0.9145  1.0000  0.9630  1.0000  1.0000 
+\end{Soutput}
+\end{Schunk}
 
 \subsection{Using more basic data structure}
 The dummy example above shows how to run BioQC algorithm with an \textit{ExpressionSet} and a list read from GMT files (a file format capturing gene sets). Users can also use more basic data structures (e.g. matrices and list of integer indexes) to run the algorithm as shown by the following example. Other data structures will be coerced into these basic data structures; we refer to interested user to the documentation of \textit{wmwTest} function.
 
-<<basicDS>>=
-myMatrix <- matrix(rnorm(Nrow*Nsample), 
-                   ncol=Nsample, 
-                   dimnames=list(NULL, LETTERS[1:Nsample]))
-myList <- list(signature1=sample(1:Nrow, 100), 
-               signature2=sample(1:Nrow, 50), 
-               signature3=sample(1:Nrow, 200))
-wmwTest(myMatrix, myList)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> myMatrix <- matrix(rnorm(Nrow*Nsample), ncol=Nsample, dimnames=list(NULL, LETTERS[1:Nsample]))
+> myList <- list(signature1=sample(1:Nrow, 100), signature2=sample(1:Nrow, 50), signature3=sample(1:Nrow, 200))
+> wmwTest(myMatrix, myList)
+\end{Sinput}
+\begin{Soutput}
+                    A          B         C         D         E
+signature1 0.96204402 0.04965141 0.7712248 0.8305735 0.9467891
+signature2 0.83157528 0.74666765 0.1798944 0.6342453 0.2656264
+signature3 0.07641411 0.18151649 0.9258939 0.5160349 0.2402755
+\end{Soutput}
+\end{Schunk}
 
 \section{Case study with a real data set}
 As another example, we have applied BioQC to a real gene expression profiling dataset. BioQC helped to generate hypotheses about potential contamination of rat kidney examples by pancreas tissues, which was confirmed by further qRT-PCR experiments. 
@@ -85,32 +96,61 @@ In the core of \textit{wmwTest}, an efficient C-implementation makes it feasible
 
 The following code, though in a small scale, demonstrates the difference between the performances of two implementations. 
 
-<<benchmark>>=
-bm.Nrow <- 22000
-bw.Nsample <- 5
-bm.Ngs <- 5
-bm.Ngssize <- sapply(1:bm.Ngs, function(x) sample(1:bm.Nrow/2, replace=TRUE))
-ind <- lapply(1:bm.Ngs, function(i) sample(1:bm.Nrow, bm.Ngssize[i]))
-exprs <- matrix(round(rnorm(bm.Nrow*bw.Nsample),4), nrow=bm.Nrow)
-
-system.time(Cres <- wmwTest(exprs, ind, alternative="less"))
-wmwTestR <- function(matrix, index, alternative, stat) {
-  sub <- rep(FALSE, length(matrix))
-  sub[index]=TRUE
-  return(wilcox.test(matrix[sub], matrix[!sub], alternative=alternative)$p.value)
-}
-system.time(Rres <- apply(exprs, 2, function(x)
-                          sapply(ind, function(y) 
-                                 wmwTestR(x, y, alternative="less", stat=FALSE))))
-
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> bm.Nrow <- 22000
+> bw.Nsample <- 5
+> bm.Ngs <- 5
+> bm.Ngssize <- sapply(1:bm.Ngs, function(x) sample(1:bm.Nrow/2, replace=TRUE))
+> ind <- lapply(1:bm.Ngs, function(i) sample(1:bm.Nrow, bm.Ngssize[i]))
+> exprs <- matrix(round(rnorm(bm.Nrow*bw.Nsample),4), nrow=bm.Nrow)
+> system.time(Cres <- wmwTest(exprs, ind, alternative="less"))
+\end{Sinput}
+\begin{Soutput}
+   user  system elapsed 
+  0.138   0.000   0.138 
+\end{Soutput}
+\begin{Sinput}
+> wmwTestR <- function(matrix, index, alternative, stat) {
++   sub <- rep(FALSE, length(matrix))
++   sub[index]=TRUE
++   return(wilcox.test(matrix[sub], matrix[!sub], alternative=alternative)$p.value)
++ }
+> system.time(Rres <- apply(exprs, 2, function(x)
++                           sapply(ind, function(y) 
++                                  wmwTestR(x, y, alternative="less", stat=FALSE))))
+\end{Sinput}
+\begin{Soutput}
+   user  system elapsed 
+  3.399   0.039   3.437 
+\end{Soutput}
+\begin{Sinput}
+> 
+\end{Sinput}
+\end{Schunk}
 
 With 22000 genes, five samples, and five gene sets, the BioQC implementation is about 15x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the BioQC signature list), the BioQC implementation can be about 1000x faster than the R implementation.
 
 \section{Session Info}
 The script runs within the following session:
-<<sessionInfo, echo=FALSE, results=verbatim>>=
-sessionInfo()
-@ 
+\begin{Schunk}
+\begin{Soutput}
+R Under development (unstable) (2014-05-31 r65803)
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+locale:
+[1] C
+
+attached base packages:
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+[1] BioQC_1.1-5        Rcpp_0.11.1        Biobase_2.22.0     BiocGenerics_0.8.0
+
+loaded via a namespace (and not attached):
+[1] tools_3.2.0
+\end{Soutput}
+\end{Schunk}
 
 \end{document}
