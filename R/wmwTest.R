@@ -5,7 +5,7 @@ wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), stat
   return(ifelse(statistic, wt$statistic, wt$p.value))
 }
 
-wmwTestC <- function(x, ind.list, alternative=c("greater", "less", "two.sided", "U"), simplify=TRUE) {
+wmwTest <- function(x, ind.list, alternative=c("greater", "less", "two.sided", "U"), simplify=TRUE) {
   isMatVec <- FALSE
   isIndVec <- FALSE
   if(is(x, "eSet")) {
@@ -22,7 +22,14 @@ wmwTestC <- function(x, ind.list, alternative=c("greater", "less", "two.sided", 
   if(is.numeric(ind.list) || is.logical(ind.list)) {
     ind.list <- list(ind.list)
     isIndVec <- TRUE
+  } else if (is(ind.list, "gmtlist")) {
+    if(!is(x, "eSet") & "GeneSymbol" %in% fData(x))
+      stop("When ind.list is a 'gmtlist', 'x' must be an eSet object with a column 'GeneSymbol' in fData.")
+    genes <- lapply(ind.list, function(x) x$genes)
+    names(genes) <- sapply(ind.list, function(x) x$name)
+    ind.list <- sapply(genes, function(g) match(g, fData(x)$GeneSymbol))
   }
+  
   indC <- lapply(ind.list, function(x) {
     if(is.logical(x))
       x <- which(x)
@@ -63,19 +70,19 @@ wmwTestC <- function(x, ind.list, alternative=c("greater", "less", "two.sided", 
 }
 
 ##setGeneric("wmwTest",function(object, sub, alternative, statistic) standardGeneric("wmwTest"))
-setGeneric("wmwTest",function(exprs, index, alternative) standardGeneric("wmwTest"))
-setMethod("wmwTest", signature=c("ANY", "ANY", "character") , function(exprs, index, alternative) {
-  wmwTestC(exprs, index, alternative=alternative)
-})
-setMethod("wmwTest", signature=c("eSet", "gmtlist", "character"), function(exprs, index, alternative) {
-  if(!"GeneSymbol" %in% colnames(fData(exprs)))
-    stop("ExpressionSet must has 'GeneSymbol' as fData column which contains gene symbols used in the GMT files\n")
-  gb <- as.character(fData(exprs)[,"GeneSymbol"])
-  ind <- lapply(index, function(x) {
-    rind <- match(x$genes, gb)
-    rind <- rind[!is.na(rind)]
-    return(rind-1L)
-  })
-  names(ind) <- sapply(index, function(x) x$name)
-  wmwTest(exprs(exprs), ind, alternative=alternative)
-})
+##setGeneric("wmwTest",function(exprs, index, alternative) standardGeneric("wmwTest"))
+##setMethod("wmwTest", signature=c("ANY", "ANY", "character") , function(exprs, index, alternative) {
+##  wmwTestC(exprs, index, alternative=alternative)
+##})
+##setMethod("wmwTest", signature=c("eSet", "gmtlist", "character"), function(exprs, index, alternative) {
+##  if(!"GeneSymbol" %in% colnames(fData(exprs)))
+##    stop("ExpressionSet must has 'GeneSymbol' as fData column which contains gene symbols used in the GMT files\n")
+##  gb <- as.character(fData(exprs)[,"GeneSymbol"])
+##  ind <- lapply(index, function(x) {
+##    rind <- match(x$genes, gb)
+##    rind <- rind[!is.na(rind)]
+##    return(rind-1L)
+##  })
+##  names(ind) <- sapply(index, function(x) x$name)
+##  wmwTest(exprs(exprs), ind, alternative=alternative)
+##})
