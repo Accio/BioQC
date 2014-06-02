@@ -6,6 +6,10 @@
 #ifndef _STAT_RANK_H_
 #define _STAT_RANK_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*! \struct "*Dval"
  *  \struct DvalStruct
  *  \brief A class used to sort/rank double values
@@ -57,4 +61,7 @@ DRank createDRank(const double*, int);
 void destroyDRank(DRank it);
 int isRanked(const DRankList list);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* _STAT_RANK_H_ */
