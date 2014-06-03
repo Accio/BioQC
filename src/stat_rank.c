@@ -34,9 +34,12 @@ void destroyDRank(DRank it) {
 /*! \brief compare item objects by value */
 int compareDRank (const void* a, const void* b) // dereference void pointer: *((T*)ptr)
 {
-  if(*(*(DRank*)a)->vPtr>*(*(DRank*)b)->vPtr) return 1;
-  if(*(*(DRank*)a)->vPtr==*(*(DRank*)b)->vPtr) return 0;
-  if(*(*(DRank*)a)->vPtr<*(*(DRank*)b)->vPtr) return -1; // long debug needed: note it must return an integer!
+  if(*(*(DRank*)a)->vPtr>*(*(DRank*)b)->vPtr) {
+    return 1;
+  } else if(*(*(DRank*)a)->vPtr==*(*(DRank*)b)->vPtr) {
+    return 0;
+  } else 
+    return -1; // long debug needed: note it must return an integer!
 }
 
 /*! \brief compare item objects by input index */
