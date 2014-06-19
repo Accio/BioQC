@@ -13,7 +13,8 @@
   1000 times faster.
 }
 \usage{
-wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided", "U"), simplify = TRUE)
+wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided",
+"U","abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify = TRUE)
 }
 \arguments{
   \item{x}{A numeric matrix. All other data types (e.g. numeric vectors
@@ -25,7 +26,8 @@ wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided", "U"), simpl
   using GMT files.}
   \item{alternative}{The value type to be returned, allowed values
     include \code{greater} and \code{less} (one-sided tests),
-    \code{two.sided}, and \code{U} statistic.}
+    \code{two.sided}, and \code{U} statistic, and their log10
+    transformation variants. See details below.}
   \item{simplify}{Logical. If not, the returning value is in matrix
     format; if set to \code{TRUE}, the results are simplified into
     vectors when possible (default).}
@@ -40,6 +42,18 @@ wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided", "U"), simpl
   from \code{readGmt} function. In this case, the only requirement is
   that one column named \code{GeneSymbol} in the \code{featureData}
   contain gene symbols used in the GMT file. See the example below.
+
+  Besides the conventional alternatives such as \sQuote{greater},
+  \sQuote{less}, \sQuote{two.sided}, and \sQuote{U}, \code{wmwTest}
+  (from version 0.99-1) provides further alternatives:
+  \code{abs.log10.greater} and \code{log10.less} perform log10
+  transformation on respective \emph{p}-values and give the
+  transformed value a proper sign (positive for greater than, and
+  negative for less than); \code{abs.log10.two.sided} transforms
+  two-sided \emph{p}-values to non-negative values; and \code{Q} picks
+  the smaller \emph{p}-value of the two sides and gives a proper sign
+  to it, depending on whether it is rather greater than (positive) or
+  less than (negative). 
 }
 \value{
   A numeric matrix or vector containing the statistic.
@@ -92,6 +106,13 @@ wmwTest(rmat, rl, alternative="greater")
 
 wmwTest(rmat, which(rl), alternative="two.sided")
 wmwTest(rmat, which(rl), alternative="greater")
+
+## other alternatives
+wmwTest(rmat, which(rl), alternative="U")
+wmwTest(rmat, which(rl), alternative="abs.log10.greater")
+wmwTest(rmat, which(rl), alternative="log10.less")
+wmwTest(rmat, which(rl), alternative="abs.log10.two.sided")
+wmwTest(rmat, which(rl), alternative="Q")
 
 ## using ExpressionSet
 data(sample.ExpressionSet)

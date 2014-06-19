@@ -5,7 +5,9 @@ wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), stat
   return(ifelse(statistic, wt$statistic, wt$p.value))
 }
 
-wmwTest <- function(x, ind.list, alternative=c("greater", "less", "two.sided", "U"), simplify=TRUE) {
+wmwTest <- function(x, ind.list,
+                    alternative=c("greater", "less", "two.sided", "U",
+                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
   isMatVec <- FALSE
   isIndVec <- FALSE
   if(is(x, "eSet")) {
@@ -50,6 +52,14 @@ wmwTest <- function(x, ind.list, alternative=c("greater", "less", "two.sided", "
     val <- 2L
   } else if (type=="U") {
     val <- 3L
+  } else if (type=="abs.log10.greater") {
+    val <- 4L
+  } else if (type=="log10.less") {
+    val <- 5L
+  } else if (type=="abs.log10.two.sided") {
+    val <- 6L
+  } else if (type=="Q") {
+    val <- 7L
   } else {
     stop("Should not happen")
   }
