@@ -15,12 +15,18 @@ RcppExport SEXP read_gmt(SEXP filename) {
   if(in) {
     string str;
     vector<List> gmtlist;
-    while(getline(in, str)) {
+    int line=0;
+    while(std::getline(in, str)) {
+      line++;
       GmtItem git=GmtItem(str);
-      List gitl=List::create(Named("name")=git.name(),
-			     Named("desc")=git.desc(),
-			     Named("genes")=git.genes());
-      gmtlist.push_back(gitl);
+      if(git.isValid()) {
+	List gitl=List::create(Named("name")=git.name(),
+			       Named("desc")=git.desc(),
+			       Named("genes")=git.genes());
+	gmtlist.push_back(gitl);
+      } else {
+	REprintf("[Warning: invalid GMT file] Skipping line %d:'%s'\n", line, str.c_str());
+      }
     }
     return Rcpp::wrap(gmtlist);
   } else {

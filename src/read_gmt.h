@@ -26,6 +26,8 @@
    std::string name() const {return gs_name;}
    std::string desc() const {return gs_desc;}
    const std::vector<std::string>& genes() const {return gs_genes;} // returns a reference to the vector
+   const std::size_t size() const {return gs_genes.size();};
+   bool isValid() const {return gs_genes.size()>0;};
  };
 
  GmtItem::GmtItem(std::istream& in) {read(in);}
@@ -61,11 +63,13 @@
 void GmtItem::read(const std::string& s) {
   std::vector<std::string> vec;
   split(s, back_inserter(vec));
-  std::vector<std::string>::iterator it=vec.begin();
-  gs_name=*it++;
-  gs_desc=*it++;
-  gs_genes.clear();
-  copy(it, vec.end(), back_inserter(gs_genes));
+  if(vec.size()>=3) { // at least one gene
+    std::vector<std::string>::iterator it=vec.begin();
+    gs_name=*it++;
+    gs_desc=*it++;
+    gs_genes.clear();
+    copy(it, vec.end(), back_inserter(gs_genes));
+  }
 }
 
 std::istream& GmtItem::read(std::istream& in) {

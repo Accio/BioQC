@@ -1,3 +1,6 @@
+Version 0.99-1 (Jun 19, 2014)
+  + read_gmt checks whether a GMT line is valid; if not, it prints warning message to the error console and skips the line.
+
 Version 0.99-0 (Jun 01, 2014)
   + Reset the version to 0.99-0 for submission
 
