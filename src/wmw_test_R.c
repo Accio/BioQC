@@ -104,15 +104,21 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 	  zval=(U-mu- (U>mu ? 0.5 : -0.5))/sqrt(sigma2);
 	  pnorm_both(zval, &plt, &pgt, 2, 0);
 	  if(type==2 || type==6) {
-	    val=2.0*MIN(plt, pgt);
+	    val=mu==0 ? 1.0 : 2.0*MIN(plt, pgt); /* if the size is 0, return 1 (not significant) */
 	    if(type==6) {
 	      val=ABSLOG(val);
 	    }
 	  } else if (type==7) { /* Q-value */
-	    val=plt<=pgt ? ABSLOG(plt) : -ABSLOG(pgt);
+	    if(mu==0) {
+	      val=0;
+	    } else {
+	      val=plt<=pgt ? ABSLOG(plt) : -ABSLOG(pgt);
+	    }
+	  } else {
+	    error("type != 2,6, or 7, Should not happen\n");
 	  }
 	} else {
-	  error("Unrocognized val_type. Should not happen\n");
+	  error("Unrecognized val_type. Should not happen\n");
 	}
       }
       resp[j+i*length(indlist)]=val;
