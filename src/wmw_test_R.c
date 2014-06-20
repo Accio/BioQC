@@ -26,7 +26,7 @@
  * \parblock
  * Define f(x)=abs(log10(x))
  * 0=p(left), 1=p(right), 2=p(two.sided), 3=U,
- * 4=f(p(left)),5=p(right),6=f(p(two.sided)), 7=p(left)<p(right) ? f(p(left)) : -f(p(right))
+ * 4=f(p(left)),5=p(right),6=f(p(two.sided)), 7=p(right)<p(left) ? f(p(two.sided)) : -f(p(two.sided))
  * \endparblock
  *
  * This implementation uses normal approximation, which works reasonably well if sample size > 100
