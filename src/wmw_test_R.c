@@ -5,7 +5,7 @@
 
 #include "stat_rank.h"
 
-#define MIN(x,y) ((x) > (y) ? (y) : (x));
+#define MIN(x,y) ((x) > (y) ? (y) : (x))
 #define NROW(x) INTEGER(GET_DIM((x)))[0]
 #define NCOL(x) INTEGER(GET_DIM((x)))[1]
 #define ABSLOG(x) fabs(log10( (x) ))
@@ -44,7 +44,7 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   double irsum; // sum of rank of index
   double U;
   double mu, sigma2;
-  double zval, plt, pgt, val;
+  double zval, pgt, plt, val;
 
   // for ties
   double tiecoef;
@@ -93,30 +93,22 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 	sigma2=n1*n2*(slen+1.0)/12*tiecoef; //sigma2 = n1*n2*(n+1)/12*tiecoef
 
 	if(type==0 || type==4) { /* greater */
-	  zval=(U+0.5-mu)/sqrt(sigma2);
-	  pnorm_both(zval, &plt, &pgt, 0, 0);
-	  val=type==0 ? plt : ABSLOG(plt);
+	  zval=(U+0.5-mu)/sqrt(sigma2); // z lower tail
+	  pnorm_both(zval, &pgt, &plt, 0, 0);
+	  val=type==0 ? pgt : ABSLOG(pgt);
 	} else if (type==1 || type==5) { /* less */
-	  zval=(U-0.5-mu)/sqrt(sigma2);
-	  pnorm_both(zval, &plt, &pgt, 1, 0);
-	  val=type==1 ? pgt : log10(pgt);
+	  zval=(U-0.5-mu)/sqrt(sigma2); // z higher tail
+	  pnorm_both(zval, &pgt, &plt, 1, 0);
+	  val=type==1 ? plt : log10(plt);
 	} else if (type==2 || type==6 || type==7) { /* two sided*/
 	  zval=(U-mu- (U>mu ? 0.5 : -0.5))/sqrt(sigma2);
-	  pnorm_both(zval, &plt, &pgt, 2, 0);
-	  if(type==2 || type==6) {
-	    val=mu==0 ? 1.0 : 2.0*MIN(plt, pgt); /* if the size is 0, return 1 (not significant) */
-	    if(type==6) {
-	      val=ABSLOG(val);
-	    }
-	  } else if (type==7) { /* Q-value */
-	    if(mu==0) {
-	      val=0;
-	    } else {
-	      val=plt<=pgt ? ABSLOG(plt) : -ABSLOG(pgt);
-	    }
-	  } else {
-	    error("type != 2,6, or 7, Should not happen\n");
-	  }
+	  pnorm_both(zval, &pgt, &plt, 2, 0);
+	  val= mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
+	  if(type==6) {
+	    val=ABSLOG(val);
+	  } else if(type==7) {
+	    val= pgt<=plt ? ABSLOG(val) : -ABSLOG(val);
+	  } 
 	} else {
 	  error("Unrecognized val_type. Should not happen\n");
 	}

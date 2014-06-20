@@ -25,6 +25,6 @@ system.time(Cq <- wmwTest(exprs, ind, alternative="Q"))
 
 manualQ <- matrix(NA, nrow=nrow(Cgreater), ncol=ncol(Cgreater))
 isLess <- Cless < Cgreater
-manualQ[isLess] <- log10(Cless[isLess])
-manualQ[!isLess] <- abs(log10(Cgreater[!isLess]))
+manualQ[isLess] <- log10(Cts[isLess])
+manualQ[!isLess] <- abs(log10(Cts[!isLess]))
 assertEqual(Cq, manualQ)

@@ -50,10 +50,9 @@ wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided",
   transformation on respective \emph{p}-values and give the
   transformed value a proper sign (positive for greater than, and
   negative for less than); \code{abs.log10.two.sided} transforms
-  two-sided \emph{p}-values to non-negative values; and \code{Q} picks
-  the smaller \emph{p}-value of the two sides and gives a proper sign
-  to it, depending on whether it is rather greater than (positive) or
-  less than (negative). 
+  two-sided \emph{p}-values to non-negative values; and \code{Q} score
+  reports absolute log10-transformation of \emph{p}-value of the
+  two-side variant,  and gives a proper sign to it, depending on whether it is rather greater than (positive) or  less than (negative). 
 }
 \value{
   A numeric matrix or vector containing the statistic.
