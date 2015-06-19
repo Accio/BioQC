@@ -13,4 +13,4 @@ export(entropy,
        entropySpecificity,
        sampleSpecialization)
 
-useDynLib(BioQC)
+useDynLib(BioQC, read_gmt)
