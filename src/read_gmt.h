@@ -14,6 +14,7 @@
    std::vector<std::string> gs_genes;
 
   public:
+   GmtItem();
    GmtItem(std::istream&);
    GmtItem(const std::string& line);
    GmtItem(std::string const name,
@@ -30,6 +31,7 @@
    bool isValid() const {return gs_genes.size()>0;};
  };
 
+GmtItem::GmtItem() {;}
  GmtItem::GmtItem(std::istream& in) {read(in);}
  GmtItem::GmtItem(const std::string& line) {read(line);}
  GmtItem::GmtItem(std::string const name, std::string const desc,

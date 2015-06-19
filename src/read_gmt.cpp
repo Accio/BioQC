@@ -16,9 +16,10 @@ RcppExport SEXP read_gmt(SEXP filename) {
     string str;
     vector<List> gmtlist;
     int line=0;
+    GmtItem git;
     while(std::getline(in, str)) {
       line++;
-      GmtItem git=GmtItem(str);
+      git=GmtItem(str);
       if(git.isValid()) {
 	List gitl=List::create(Named("name")=git.name(),
 			       Named("desc")=git.desc(),

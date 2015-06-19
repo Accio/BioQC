@@ -192,9 +192,15 @@
 
 readGmt <- function(filename) {
   stopifnot(file.exists(filename))
-  filename <- path.expand(filename)
-  res <- .Call("read_gmt", filename)
+  lines <- readLines(filename)
+  splitLines <- strsplit(lines, "\t")
+  isValid <- sapply(splitLines, function(x) length(x)>=3)
+  validLines <- splitLines[isValid]
+  res <- lapply(validLines, function(x)  {
+                    list(name=x[1], desc=x[2], genes=x[3:length(x)])
+                })
+  names(res) <- sapply(res, function(x) x$name)
+  ## res <- .Call("read_gmt", filename, PACKAGE="BioQC")
   class(res) <- "gmtlist"
   return(res)
 }
-
