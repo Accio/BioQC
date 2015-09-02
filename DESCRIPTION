@@ -1,10 +1,11 @@
 Package: BioQC
 Type: Package
 Title: Detect tissue heterogeneity in expression profiles with gene sets
-Version: 0.99-1
+Version: 0.99-2
 Date: 2014-06-19
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>, with inputs from Laura Badi
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
 Description: BioQC performs quality control of high-throughput expression data based on tissue gene signatures
 Depends: Rcpp, Biobase
+Suggests: testthat
 License: LGPL (>=2)
