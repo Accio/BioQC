@@ -13,14 +13,13 @@
 ################################################################################
 ## conditional: choose R version depending on the BICOSN value
 
-R:= R
+R=R
 
-PKG          := $(shell awk 'BEGIN{FS=":"}{if ($$1=="Package") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION)
-PKG_VERSION  := $(shell awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION)
+PKG=`awk 'BEGIN{FS=":"}{if ($$1=="Package") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION`
+PKG_VERSION=`awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION)`
 
-
-PKG_ROOT_DIR := $(shell pwd)
-PKG_SRC_DIR := $(PKG_ROOT_DIR)/src
+PKG_ROOT_DIR= `pwd`
+PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
 
 dist:	clean
 	@echo '====== Building Distribution ======'
