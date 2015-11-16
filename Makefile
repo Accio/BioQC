@@ -14,11 +14,11 @@
 ## conditional: choose R version depending on the BICOSN value
 
 R=R
+PKG_ROOT_DIR=`pwd`
 
-PKG=`awk 'BEGIN{FS=":"}{if ($$1=="Package") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION`
-PKG_VERSION=`awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' DESCRIPTION)`
+PKG=BioQC
+PKG_VERSION=`/bin/awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' ${PKG}/DESCRIPTION`
 
-PKG_ROOT_DIR= `pwd`
 PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
 
 dist:	clean
