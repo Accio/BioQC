@@ -37,6 +37,8 @@ wmwTest <- function(x, ind.list,
       x <- which(x)
     if(is.numeric(x)) {
       x <- as.integer(x[!is.na(x)])
+      if(any(x<1L))
+          stop("Indices in ind.list must be equal to or greater than one!")
       return(x-1L)
     } else {
       stop("index must be either integer vector")
