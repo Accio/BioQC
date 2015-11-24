@@ -1,5 +1,8 @@
 #!/bin/tcsh /SOFT/bi/apps/R/bdeRscript
 
+## BioQC script used internally in Roche for quality control of gene expression data
+## zhangj83, 24.11.2015
+
 suppressMessages(library(ribiosUtils))
 suppressMessages(library(ribiosArg))
 
