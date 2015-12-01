@@ -1,0 +1,16 @@
+import("Rcpp")
+importClassFrom("Biobase", "eSet")
+importFrom("Biobase", "fData")
+importFrom("Biobase", "exprs")
+
+export(gini)
+export(absLog10p)
+export(filterPmat)
+export(readGmt)
+export(wmwTest)
+export(entropy,
+       entropyDiversity,
+       entropySpecificity,
+       sampleSpecialization)
+
+useDynLib(BioQC, read_gmt)

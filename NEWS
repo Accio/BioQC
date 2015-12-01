@@ -1,0 +1,70 @@
+Version 0.99-1 (Jun 19, 2014)
+  + read_gmt checks whether a GMT line is valid; if not, it prints warning message to the error console and skips the line.
+  + Add following alternatives to wmwTest in order to make the downstream analysis easier: abs.log10.greater, log10.less, abs.log10.two.sided, and Q.
+  + Two.sided tests return correct value if the gene set is of length 0
+
+Version 0.99-0 (Jun 01, 2014)
+  + Reset the version to 0.99-0 for submission
+
+Version 1.1-5 (Jun 01, 2014)
+  + Add C-level implementation of Wilcoxon-Mann-Whitney rank sum test
+  + Documentation and vignettes updated to be ready for Bioconductor submission. 
+
+Version 1.1-0 (Dec 27, 2013)
+  + Dependencies on BIOS has been resolved by copying the C functions into the package, in order to prepare BioQC for public release. It can now be installed on systems where BIOS is not available.
+  + Clean-ups and updates of documentations.
+  
+Version 1.0-14 (Nov 14, 2012)
+  + Add a series of functions related to Shannon entropy: entropy, entropyDiversity, entropySpecificity, sampleSpecialization
+
+Version 1.0-13 (Nov 08, 2012)
+  + Add gini, a function to calculate Gini index. It implements the gini_stat function in the BIOS library
+
+Version 1.0-12 (Oct 21, 2012)
+  + If the p-value is lower than than the threshold of R (about 10E-320) and thus produces a score of -Inf, the value of 320 is used to avoid -Inf as output.
+
+Version 1.0-11 (Sep 20, 2012)
+  + bioqc.Rscript: add command-line option '-appendGmtDesc' to append DESC column in the GMT file to outputs.
+
+Version 1.0-10 (Sep 3, 2012)
+  + bioqc.Rscript: add details in the help information of 'chiptype' option
+  + bioqc.Rscript: accepts 'GeneID' and 'GeneSymbol' as chiptype in a case-insensitive manner
+  + Update the gmt file to include a few rat tissues (upstream change by Laura Badi, Sep. 3, 2012)
+
+Version 1.0-9 (Jul 12, 2012)
+  + bioqc.Rscript: the threshold input is first transformed by 10^(-threshold) to make inputting threshold easier
+
+Version 1.0-8 (Jun 07, 2012)
+  + filterPmat fixes the warning message when threshold is NULL: it is tested before is.na
+
+Version 1.0-7 (Jul 06, 2012)
+  + bioqc.Rscript rounds output to two digits
+
+Version 1.0-6 (Jun 28, 2012)
+  + Add absLog10p function to take the absolute base-10 logarithm of p-values
+  + Add filterPmat 
+
+Version 1.0-5 (Jun 27, 2012)
+  + bioqc.Rscript accepts -gmt correctly (before it is -gmtfile)
+
+Version 1.0-4 (Jun 27, 2012)
+  + exp.tissuemark.affy.roche.symbols.gmt were updated by L. Badi, removing suspected contaminated samples
+  + bioqc.Rscript maps genes to human orthologues from ChipFetcher-exported files
+
+Version 1.0-3 (Jun 21, 2012)
+  + bioqc.Rscript: the dependence on ribiosAnnotation has been simplified: only when chiptype is GeneSymbol, the script does not need ribiosAnnotation
+  + bioqc.Rscript: annotate GeneID and Probesets have been simplified by using syntax from ribiosAnnotation >= 2.0-0
+  + bioqc.Rscript: Program exists when no valid GeneSymbol could be found.
+
+Version 1.0-2 (Jun 19, 2012)
+  + bioqc.Rscript: Fix supported.ct2 bug seen on the UDIS machine
+  + bioqc.Rscript: ribiosIO minimum version 1.0-12 added
+
+Version 1.0-1 (Jun 13, 2012)
+  + wmw.test has been made more robust: in case no TRUE exists in sub, the function does not fail and return 0 (statistic) or 1 (p-value)
+  + bioqc.Rscript has been added and published under /SOFT/bi/apps/ribios/scripts
+
+Version 1.0-0 (Jun 12, 2012)
+  + Establish the BioQC package
+  + Add methods wmwTest for Wilcoxon-Mann-Whitney test for several data structures used by BIO-QC procedures
+  + wmwTest was (almost) fully documented
