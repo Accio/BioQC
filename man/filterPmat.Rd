@@ -1,0 +1,39 @@
+\name{filterPmat}
+\alias{filterPmat}
+\title{
+  Filter rows of p-value matrix under the significance threshold
+}
+\description{
+  Given a p-value matrix and a threshold value, \code{filterPmat}
+  removes rows where there is no p-values lower than the given
+  threshold.
+}
+\usage{
+filterPmat(x, threshold)
+}
+\arguments{
+  \item{x}{A matrix of p-values. It must be raw p-values and should not be transformed (e.g. logarithmic).}
+  \item{threshold}{A numeric value, the minimal p-value used to filter
+    rows. If missing, given the values of \code{NA}, \code{NULL} or
+    number \code{0}, no filtering will be done and the input matrix will
+    be returned.}
+}
+\value{
+  Matrix of p-values. If no line is left, a empty matrix of the same
+  dimension as input will be returned.
+}
+\author{
+  Jitao David Zhang <jitao_david.zhang@roche.com>
+}
+\examples{
+set.seed(1235)
+testMatrix <- matrix(runif(100,0,1), nrow=10)
+
+## filtering
+(testMatrix.filter <- filterPmat(testMatrix, threshold=0.05))
+## more strict filtering
+(testMatrix.strictfilter <- filterPmat(testMatrix, threshold=0.01))
+## no filtering
+(testMatrix.nofilter <- filterPmat(testMatrix))
+}
+
