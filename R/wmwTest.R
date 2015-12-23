@@ -21,6 +21,9 @@ wmwTest <- function(x, ind.list,
     stop("'matrix' must be a numeric matrix, or a numeric vector, or an eSet object")
   }
 
+  if(storage.mode(matrix)!="double")
+      storage.mode(matrix) <- "double"
+  
   if(is.numeric(ind.list) || is.logical(ind.list)) {
     ind.list <- list(ind.list)
     isIndVec <- TRUE
