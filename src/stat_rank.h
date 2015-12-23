@@ -59,6 +59,9 @@ extern "C" {
   /*! \brief destroy the DRankList */
   void destroyDRankList(DRankList list);
 
+  void clearDRank(DRank it);
+  void clearDRankList(DRankList list);
+
   int len(DRankList List);
   int ulen(DRankList List);
   double tieCoef(DRankList List);

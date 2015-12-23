@@ -31,6 +31,14 @@ void destroyDRank(DRank it) {
   free(it);
 }
 
+/*! \brief clear an DRank object */
+void clearDRank(DRank it) {
+  it->vPtr=NULL;
+  it->rank=-1.0;
+  it->index=-1;
+  free(it);
+}
+
 /*! \brief compare item objects by value */
 int compareDRank (const void* a, const void* b) // dereference void pointer: *((T*)ptr)
 {
@@ -71,6 +79,14 @@ void destroyDRankList(DRankList list) {
     destroyDRank(list->list[i]);
   free(list->list);
   free(list);
+}
+
+void clearDRankList(DRankList list) {
+  int i;
+  for(i=0;i<list->len;i++)
+    clearDRank(list->list[i]);
+  list->ulen=-1;
+  list->tieCoef=1.0;
 }
 
 /*! \brief print an DRankList object
