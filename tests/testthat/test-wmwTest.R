@@ -5,8 +5,8 @@ NROW <- 200
 NCOL <- 40
 GSCOUNT <- 50
 TOL <- 1E-8
-GSSIZE <- sapply(1:GSCOUNT, function(x) sample(1:NROW/2, replace=TRUE))
-ind <- lapply(1:GSCOUNT, function(i) sample(1:NROW, GSSIZE[i]))
+GSSIZE <- sample(1:as.integer(NROW/2), GSCOUNT, replace=TRUE)
+ind <- lapply(GSSIZE, function(x) sample(1:NROW, x))
 exprs <- matrix(round(rnorm(NROW*NCOL),4), nrow=NROW)
 
 gc()
