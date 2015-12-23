@@ -35,8 +35,8 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   int i,j, n1,n2, k, m;
   int *ip;
   const int type=INTEGER(val_type)[0];
-  const int n=NROW(matrix);
-  double *sp=REAL(matrix);
+  const int n=NROW(matrix); // total number of samples AND nrow of matrix
+  double *matColPtr; // pointer to the current column of the matrix
   SEXP res;
 
   DRankList list;
@@ -44,23 +44,23 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   double U;
   double mu, sigma2;
   double zval, pgt, plt, val;
-
-  // for ties
-  double tiecoef;
+  double tieCoef;
+  double *resPtr;
 
   res=PROTECT(allocMatrix(REALSXP,
 			  length(indlist), 
 			  NCOL(matrix)));
-  double *resp=REAL(res);
+  resPtr=REAL(res);
+  matColPtr=REAL(matrix);
   
   for(i=0; i<NCOL(matrix);++i) {
-    list=createDRankList(sp, n);    
+    list=createDRankList(matColPtr, n);    
     rankDRankList(list);
 
     if(list->ulen!=n) {
       int* tbl=(int*)malloc(list->ulen * sizeof(int));
       int ncount=0;
-      tiecoef=0;
+      tieCoef=0;
       sortDRankList(list);
       for(k=0;k<n;k=m+1) {
 	m=k;
@@ -68,12 +68,12 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 	tbl[ncount++]=m-k+1;
       }
       for(k=0;k<list->ulen;++k)
-	tiecoef+=(0.0+tbl[k])/n*(tbl[k]+1)/(n+1)*(tbl[k]-1)/(n-1);
-      tiecoef=1-tiecoef;
+	tieCoef+=(0.0+tbl[k])/n*(tbl[k]+1)/(n+1)*(tbl[k]-1)/(n-1);
+      tieCoef=1-tieCoef;
       free(tbl);
       rankDRankList(list);
     } else {
-      tiecoef=1.0;
+      tieCoef=1.0;
     }
 
     for(j=0;j<length(indlist);++j) {
@@ -88,8 +88,8 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
       if(type==3) {
 	val=U;
       } else {
-	mu=(double)n1*n2*0.5; // mu=n1*n2*0.5
-	sigma2=n1*n2*(n+1.0)/12*tiecoef; //sigma2 = n1*n2*(n+1)/12*tiecoef
+	mu=(double)n1*n2*0.5; // NOT mu=n1*n2*0.5
+	sigma2=n1*n2*(n+1.0)/12*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
 
 	if(type==0 || type==4) { /* greater */
 	  zval=(U+0.5-mu)/sqrt(sigma2); // z lower tail
@@ -112,11 +112,11 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 	  error("Unrecognized val_type. Should not happen\n");
 	}
       }
-      resp[j+i*length(indlist)]=val;
+      resPtr[j+i*length(indlist)]=val;
     }
 
     destroyDRankList(list);
-    sp+=NROW(matrix);
+    matColPtr+=NROW(matrix);
   }
   
   UNPROTECT(1);
