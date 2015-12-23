@@ -18,6 +18,61 @@
  * if(upper) return *ccum := P[X >  x] = 1 - P[X <= x]
 */
 
+void wmw_test_list(const double *valPtr, int n,
+		   SEXP indlist,
+		   double *resPtr, int type) {
+  DRankList list;
+  int i,j;
+  int *ip;
+  int n1, n2;
+  double indRankSum; // sum of index rank
+  double mu, sigma2;
+  double U, zval, pgt, plt, res;
+
+  list=createDRankList(valPtr, n);
+  prepareDRankList(list);
+
+  for(i=0;i<length(indlist);++i) {
+    ip=INTEGER(VECTOR_ELT(indlist,i));
+    n1=length(VECTOR_ELT(indlist,i));
+    n2=n-n1;
+    indRankSum=0.0;
+    for(j=0;j<n1;++j) 
+      indRankSum+=list->list[ip[j]]->rank;
+
+    U=n1*n2+n1*(n1+1.0)*0.5-indRankSum; 
+    if(type==3) {
+	res=U;
+    } else {
+      mu=(double)n1*n2*0.5; // NOT mu=n1*n2*0.5
+      sigma2=n1*n2*(n+1.0)/12*tieCoef(list); //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
+      
+      if(type==0 || type==4) { /* greater */
+	zval=(U+0.5-mu)/sqrt(sigma2); // z lower tail
+	pnorm_both(zval, &pgt, &plt, 0, 0);
+	res=type==0 ? pgt : ABSLOG(pgt);
+      } else if (type==1 || type==5) { /* less */
+	zval=(U-0.5-mu)/sqrt(sigma2); // z higher tail
+	pnorm_both(zval, &pgt, &plt, 1, 0);
+	res=type==1 ? plt : log10(plt);
+      } else if (type==2 || type==6 || type==7) { /* two sided*/
+	zval=(U-mu- (U>mu ? 0.5 : -0.5))/sqrt(sigma2);
+	pnorm_both(zval, &pgt, &plt, 2, 0);
+	res= mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
+	if(type==6) {
+	  res=ABSLOG(res);
+	} else if(type==7) {
+	  res= pgt<=plt ? ABSLOG(res) : -ABSLOG(res);
+	} 
+      } else {
+	error("Unrecognized type. Should not happen\n");
+      }
+    }
+    resPtr[i]=res;
+  }
+  destroyDRankList(list);
+}
+
 /*! \brief Wilcoxon-Mann-Whitney Test
  *  
  * \param indlist: A list of integers giving the index of gene sets
@@ -32,19 +87,10 @@
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
 SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
-  int i,j, n1,n2, k, m;
-  int *ip;
   const int type=INTEGER(val_type)[0];
   const int n=NROW(matrix); // total number of samples AND nrow of matrix
   double *matColPtr; // pointer to the current column of the matrix
   SEXP res;
-
-  DRankList list;
-  double irsum; // sum of rank of index
-  double U;
-  double mu, sigma2;
-  double zval, pgt, plt, val;
-  double tieCoef;
   double *resPtr;
 
   res=PROTECT(allocMatrix(REALSXP,
@@ -54,69 +100,11 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   matColPtr=REAL(matrix);
   
   for(i=0; i<NCOL(matrix);++i) {
-    list=createDRankList(matColPtr, n);    
-    rankDRankList(list);
-
-    if(list->ulen!=n) {
-      int* tbl=(int*)malloc(list->ulen * sizeof(int));
-      int ncount=0;
-      tieCoef=0;
-      sortDRankList(list);
-      for(k=0;k<n;k=m+1) {
-	m=k;
-	while(m<n-1 && (*(list->list[m+1]->vPtr)==*(list->list[m]->vPtr))) ++m;
-	tbl[ncount++]=m-k+1;
-      }
-      for(k=0;k<list->ulen;++k)
-	tieCoef+=(0.0+tbl[k])/n*(tbl[k]+1)/(n+1)*(tbl[k]-1)/(n-1);
-      tieCoef=1-tieCoef;
-      free(tbl);
-      rankDRankList(list);
-    } else {
-      tieCoef=1.0;
-    }
-
-    for(j=0;j<length(indlist);++j) {
-      ip=INTEGER(VECTOR_ELT(indlist,j));
-      n1=length(VECTOR_ELT(indlist,j));
-      n2=n-n1;
-      irsum=0.0;
-      for(k=0;k<n1;++k) 
-	irsum+=list->list[ip[k]]->rank;
-
-      U=n1*n2+n1*(n1+1.0)*0.5-irsum; 
-      if(type==3) {
-	val=U;
-      } else {
-	mu=(double)n1*n2*0.5; // NOT mu=n1*n2*0.5
-	sigma2=n1*n2*(n+1.0)/12*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
-
-	if(type==0 || type==4) { /* greater */
-	  zval=(U+0.5-mu)/sqrt(sigma2); // z lower tail
-	  pnorm_both(zval, &pgt, &plt, 0, 0);
-	  val=type==0 ? pgt : ABSLOG(pgt);
-	} else if (type==1 || type==5) { /* less */
-	  zval=(U-0.5-mu)/sqrt(sigma2); // z higher tail
-	  pnorm_both(zval, &pgt, &plt, 1, 0);
-	  val=type==1 ? plt : log10(plt);
-	} else if (type==2 || type==6 || type==7) { /* two sided*/
-	  zval=(U-mu- (U>mu ? 0.5 : -0.5))/sqrt(sigma2);
-	  pnorm_both(zval, &pgt, &plt, 2, 0);
-	  val= mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
-	  if(type==6) {
-	    val=ABSLOG(val);
-	  } else if(type==7) {
-	    val= pgt<=plt ? ABSLOG(val) : -ABSLOG(val);
-	  } 
-	} else {
-	  error("Unrecognized val_type. Should not happen\n");
-	}
-      }
-      resPtr[j+i*length(indlist)]=val;
-    }
-
-    destroyDRankList(list);
-    matColPtr+=NROW(matrix);
+    wmw_test_list(matColPtr, n,
+		  indlist,
+		  resPtr, type);
+    matColPtr+=n;
+    resPtr+=length(indlist);
   }
   
   UNPROTECT(1);
