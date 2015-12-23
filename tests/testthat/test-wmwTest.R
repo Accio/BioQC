@@ -1,11 +1,11 @@
 ## test wmwTest
 
-NROW <- 100
+set.seed(1887)
+NROW <- 200
 NCOL <- 40
-GSCOUNT <- 20
+GSCOUNT <- 50
 TOL <- 1E-8
 GSSIZE <- sapply(1:GSCOUNT, function(x) sample(1:NROW/2, replace=TRUE))
-set.seed(1887)
 ind <- lapply(1:GSCOUNT, function(i) sample(1:NROW, GSSIZE[i]))
 exprs <- matrix(round(rnorm(NROW*NCOL),4), nrow=NROW)
 
