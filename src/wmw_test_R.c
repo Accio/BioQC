@@ -36,7 +36,7 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   int i,j, n1,n2, k, m;
   int *ip;
   const int type=INTEGER(val_type)[0];
-  const int slen=NROW(matrix);
+  const int n=NROW(matrix);
   double *sp=REAL(matrix);
   SEXP res;
 
@@ -55,32 +55,32 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   double *resp=REAL(res);
   
   for(i=0; i<NCOL(matrix);++i) {
-    list=createDRankList(sp, slen);    
+    list=createDRankList(sp, n);    
     rankDRankList(list);
 
-    if(list->ulen!=slen) {
+    if(list->ulen!=n) {
       int* tbl=(int*)malloc(list->ulen * sizeof(int));
       int ncount=0;
       tiecoef=0;
       sortDRankList(list);
-      for(k=0;k<slen;k=m+1) {
+      for(k=0;k<n;k=m+1) {
 	m=k;
-	while(m<slen-1 && (*(list->list[m+1]->vPtr)==*(list->list[m]->vPtr))) ++m;
+	while(m<n-1 && (*(list->list[m+1]->vPtr)==*(list->list[m]->vPtr))) ++m;
 	tbl[ncount++]=m-k+1;
       }
       for(k=0;k<list->ulen;++k)
-	tiecoef+=(0.0+tbl[k])/slen*(tbl[k]+1)/(slen+1)*(tbl[k]-1)/(slen-1);
+	tiecoef+=(0.0+tbl[k])/n*(tbl[k]+1)/(n+1)*(tbl[k]-1)/(n-1);
       tiecoef=1-tiecoef;
       free(tbl);
       rankDRankList(list);
     } else {
-      tiecoef=1;
+      tiecoef=1.0;
     }
 
     for(j=0;j<length(indlist);++j) {
       ip=INTEGER(VECTOR_ELT(indlist,j));
       n1=length(VECTOR_ELT(indlist,j));
-      n2=slen-n1;
+      n2=n-n1;
       irsum=0.0;
       for(k=0;k<n1;++k) 
 	irsum+=list->list[ip[k]]->rank;
@@ -90,7 +90,7 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
 	val=U;
       } else {
 	mu=(double)n1*n2*0.5; // mu=n1*n2*0.5
-	sigma2=n1*n2*(slen+1.0)/12*tiecoef; //sigma2 = n1*n2*(n+1)/12*tiecoef
+	sigma2=n1*n2*(n+1.0)/12*tiecoef; //sigma2 = n1*n2*(n+1)/12*tiecoef
 
 	if(type==0 || type==4) { /* greater */
 	  zval=(U+0.5-mu)/sqrt(sigma2); // z lower tail
