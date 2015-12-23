@@ -3,6 +3,7 @@
 #include <Rmath.h>
 #include <math.h>
 
+#include "omp.h"
 #include "stat_rank.h"
 
 #define MIN(x,y) ((x) > (y) ? (y) : (x))
@@ -32,6 +33,7 @@ void wmw_test_list(const double *valPtr, int n,
   list=createDRankList(valPtr, n);
   prepareDRankList(list);
 
+#pragma omp parallel for
   for(i=0;i<length(indlist);++i) {
     ip=INTEGER(VECTOR_ELT(indlist,i));
     n1=length(VECTOR_ELT(indlist,i));
@@ -101,6 +103,7 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   resPtr=REAL(res);
   matColPtr=REAL(matrix);
   
+#pragma omp parallel for
   for(i=0; i<NCOL(matrix);++i) {
     wmw_test_list(matColPtr, n,
 		  indlist,
