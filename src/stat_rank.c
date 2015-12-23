@@ -113,9 +113,7 @@ void sortRankDRankList(DRankList list) {
   for(i=0;i<len; ++i)
     backup[i]=*(ll[i]->vPtr);
 
-  // qsort does not work properly!
   qsort(ll, len, sizeof(DRank), compareDRank);
-
 
   for(i=0; i<len;i=j+1) {
     j=i;
