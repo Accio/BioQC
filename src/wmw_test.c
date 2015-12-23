@@ -88,14 +88,16 @@ void wmw_test_list(const double *valPtr, int n,
  */
 SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   const int type=INTEGER(val_type)[0];
+  const int m=length(indlist);
   const int n=NROW(matrix); // total number of samples AND nrow of matrix
+
+  int i;
   double *matColPtr; // pointer to the current column of the matrix
   SEXP res;
   double *resPtr;
 
-  res=PROTECT(allocMatrix(REALSXP,
-			  length(indlist), 
-			  NCOL(matrix)));
+  res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
+
   resPtr=REAL(res);
   matColPtr=REAL(matrix);
   
@@ -103,8 +105,8 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
     wmw_test_list(matColPtr, n,
 		  indlist,
 		  resPtr, type);
+    resPtr+=m;
     matColPtr+=n;
-    resPtr+=length(indlist);
   }
   
   UNPROTECT(1);
