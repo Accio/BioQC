@@ -25,12 +25,11 @@
  * \param val_type: 
  * \parblock
  * Define f(x)=abs(log10(x))
- * 0=p(left), 1=p(right), 2=p(two.sided), 3=U,
- * 4=f(p(left)),5=p(right),6=f(p(two.sided)), 7=p(right)<p(left) ? f(p(two.sided)) : -f(p(two.sided))
+ * 0=p(greater), 1=p(less), 2=p(two.sided), 3=U,
+ * 4=f(p(greater)),5=p(less),6=f(p(two.sided)), 7=p(greater)<p(less) ? f(p(two.sided)) : -f(p(two.sided))
  * \endparblock
  *
- * This implementation uses normal approximation, which works reasonably well if sample size > 100
- * Empirical test revealed that if sample size>100, the difference of resulting p-values from the R-native implementation is smaller than 1E-5
+ * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
 SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
   int i,j, n1,n2, k, m;
