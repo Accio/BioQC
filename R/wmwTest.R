@@ -1,7 +1,7 @@
 wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), statistic=FALSE) {
   if(!any(sub)) return(ifelse(statistic, 0, 1))
   wt <- wilcox.test(x[sub],
-                    x[!sub], alternative=alternative)
+                    x[!sub], alternative=alternative, exact=FALSE)
   return(ifelse(statistic, wt$statistic, wt$p.value))
 }
 
