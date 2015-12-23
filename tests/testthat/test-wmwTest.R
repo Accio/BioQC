@@ -30,6 +30,4 @@ system.time(Rtwosided <- apply(exprs, 2, function(x)
 
 expect_equal(Cless, Rless, tolerance=TOL)
 expect_equal(Cgreater, Rgreater,tolerance=TOL)
-## note that sometimes this fails when the p value of C is near 1 while the value of R is around 0.996
-isNear1 <- abs(Ctwosided-1)<0.01
-expect_equal(object=Ctwosided[!isNear1], expected=Rtwosided[!isNear1], tolerance=TOL, scale=1L)
+expect_equal(object=Ctwosided, expected=Rtwosided, tolerance=TOL, scale=1L)
