@@ -1,4 +1,5 @@
 ## test wmwTest
+library(BioQC)
 
 set.seed(1887)
 NROW <- 200
