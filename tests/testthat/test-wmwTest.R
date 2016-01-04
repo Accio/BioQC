@@ -13,7 +13,9 @@ exprs <- matrix(round(rnorm(NROW*NCOL),4), nrow=NROW)
 
 gc()
 system.time(Cless <- wmwTest(exprs, ind, alternative="less"))
-system.time(Cless <- wmwTest(exprs, ind, alternative="less", useNonFactor=TRUE))
+system.time(ClessNonFac <- wmwTest(exprs, ind, alternative="less", useNonFactor=TRUE))
+system.time(Cless <- wmwTest(exprs, ind, alternative="less", useNonFactor=FALSE))
+system.time(ClessNonFac <- wmwTest(exprs, ind, alternative="less", useNonFactor=TRUE))
 system.time(Cgreater <- wmwTest(exprs, ind, alternative="greater"))
 system.time(Ctwosided <- wmwTest(exprs, ind, alternative="two.sided"))
 wmwTestR <- function(matrix, index, alternative, stat) {
