@@ -7,7 +7,8 @@ wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), stat
 
 wmwTest <- function(x, ind.list,
                     alternative=c("greater", "less", "two.sided", "U",
-                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
+                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE, useNonFactor=FALSE) {
+
   isMatVec <- FALSE
   isIndVec <- FALSE
   if(is(x, "eSet")) {
@@ -68,7 +69,11 @@ wmwTest <- function(x, ind.list,
   } else {
     stop("Should not happen")
   }
-  res <- .Call("wmw_test", indC, matrix, val)
+  if(useNonFactor) {
+    res <- .Call("wmw_test", indC, matrix, val)
+  } else {
+    res <- .Call("wmw_test_nonfactor", indC, matrix, val)
+  } 
   rownames(res) <- names(ind.list)
   colnames(res) <- colnames(matrix)
   if(simplify) {

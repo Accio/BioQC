@@ -1,9 +1,11 @@
 ## test wmwTest
 
+library(BioQC)
+
 set.seed(1887)
-NROW <- 200
-NCOL <- 40
-GSCOUNT <- 50
+NROW <- 20000
+NCOL <- 200
+GSCOUNT <- 1000
 TOL <- 1E-8
 GSSIZE <- sample(1:as.integer(NROW/2), GSCOUNT, replace=TRUE)
 ind <- lapply(GSSIZE, function(x) sample(1:NROW, x))
@@ -11,6 +13,7 @@ exprs <- matrix(round(rnorm(NROW*NCOL),4), nrow=NROW)
 
 gc()
 system.time(Cless <- wmwTest(exprs, ind, alternative="less"))
+system.time(Cless <- wmwTest(exprs, ind, alternative="less", useNonFactor=TRUE))
 system.time(Cgreater <- wmwTest(exprs, ind, alternative="greater"))
 system.time(Ctwosided <- wmwTest(exprs, ind, alternative="two.sided"))
 wmwTestR <- function(matrix, index, alternative, stat) {
