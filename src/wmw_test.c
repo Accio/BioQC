@@ -19,26 +19,18 @@
  * if(upper) return *ccum := P[X >  x] = 1 - P[X <= x]
  */
 
-double wmw_test_core (const DRankList valList,
-                    const int *inds, int nInds,
-                    int nTotal, int type) {
-    int nBg;
-    int i;
+double wmw_test_stat(double rankSum, int nInds, int nTotal, double tieCoef, int type) {
+    
     double U, mu, sigma2, zval, pgt, plt;
-    double indRankSum; // sum of index rank
     double res;
+    int nBg=nTotal-nInds;
     
-    nBg = nTotal-nInds;
-    indRankSum = 0.0;
-    for(i = 0;i<nInds;++i)
-        indRankSum += valList->list[inds[i]]->rank;
-    
-    U = nInds*nBg+nInds*(nInds+1.0)*0.5-indRankSum;
+    U = nInds*nBg+nInds*(nInds+1.0)*0.5-rankSum;
     if(type == 3) {
         res = U;
     } else {
         mu = (double)nInds*nBg*0.5; // NOT mu=n1*n2*0.5
-        sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef(valList); //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
+        sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
         
         if(type == 0 || type == 4) { /* greater */
             zval = (U+0.5-mu)/sqrt(sigma2); // z lower tail
@@ -61,6 +53,22 @@ double wmw_test_core (const DRankList valList,
             error("Unrecognized type. Should not happen\n");
         }
     }
+    return(res);
+}
+
+double wmw_test_core(const DRankList valList,
+                 const int *inds, int nInds,
+                int nTotal, int type) {
+    int i;
+    double indRankSum; // sum of index rank
+    double res;
+    
+    indRankSum = 0.0;
+    for(i = 0;i<nInds;++i)
+        indRankSum += valList->list[inds[i]]->rank;
+    
+    res = wmw_test_stat(indRankSum, nInds, nTotal,
+                        tieCoef(valList), type);
     return(res);
 }
 
