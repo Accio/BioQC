@@ -19,7 +19,7 @@
  * if(upper) return *ccum := P[X >  x] = 1 - P[X <= x]
  */
 
-void wmw_test_core (const DRankList valList,
+double wmw_test_core (const DRankList valList,
                     const int *inds, int nInds,
                     int nTotal, int type) {
     int nBg;
@@ -52,9 +52,9 @@ void wmw_test_core (const DRankList valList,
             zval = (U-mu-(U>mu ? 0.5 : -0.5))/sqrt(sigma2);
             pnorm_both(zval, &pgt, &plt, 2, 0);
             res = mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
-            if(type == 6) {
+            if(type == 6) {
                 res = ABSLOG(res);
-            } else if(type == 7) {
+            } else if(type == 7) {
                 res = pgt<=plt ? ABSLOG(res) : -ABSLOG(res);
             }
         } else {
@@ -69,9 +69,9 @@ void wmw_test_list(const double *valPtr, int n,
                    double *resPtr, int type) {
     DRankList list;
     int i;
-    int n1;
-    int *ip;
-
+    int n1;
+    int* ip;
+
     list=createDRankList(valPtr, n);
     prepareDRankList(list);
     
