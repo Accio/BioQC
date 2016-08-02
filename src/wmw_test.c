@@ -3,7 +3,9 @@
 #include <Rmath.h>
 #include <math.h>
 
-#include "omp.h"
+#ifndef __APPLE__
+  #include "omp.h"
+#endif
 #include "stat_rank.h"
 
 #define MIN(x,y) ((x) > (y) ? (y) : (x))
