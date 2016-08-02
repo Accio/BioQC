@@ -1,4 +1,5 @@
 ## test wmwTest
+library(BioQC)
 
 library(BioQC)
 
