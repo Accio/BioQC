@@ -6,6 +6,7 @@
 #ifndef __APPLE__
   #include "omp.h"
 #endif
+
 #include "stat_rank.h"
 
 #define MIN(x,y) ((x) > (y) ? (y) : (x))
@@ -31,42 +32,42 @@ typedef enum testtype {greater=0,
  */
 
 double wmw_test_stat(double rankSum, int nInds, int nTotal, double tieCoef, TestType type) {
+  
+  double uStat, mu, sigma2, zval, pgt, plt;
+  double res;
+  int nBg = nTotal-nInds;
+  
+  uStat = nInds*nBg+nInds*(nInds+1.0)*0.5-rankSum;
+  
+  if(type == U) {
+    res = uStat;
+  } else {
+    mu = (double)nInds*nBg*0.5; // NOT mu=n1*n2*0.5
+    sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
     
-    double uStat, mu, sigma2, zval, pgt, plt;
-    double res;
-    int nBg = nTotal-nInds;
-    
-    uStat = nInds*nBg+nInds*(nInds+1.0)*0.5-rankSum;
-
-    if(type == U) {
-      res = uStat;
-    } else {
-      mu = (double)nInds*nBg*0.5; // NOT mu=n1*n2*0.5
-      sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
-      
-      if(type == greater || type == abslog10greater) { /* greater */
-	zval = (uStat+0.5-mu)/sqrt(sigma2); // z lower tail
-	pnorm_both(zval, &pgt, &plt, 0, 0);
-	res = type==greater ? pgt : ABSLOG(pgt);
-      } else if (type == less || type == log10less) { /* less */
-	zval = (uStat-0.5-mu)/sqrt(sigma2); // z higher tail
-	pnorm_both(zval, &pgt, &plt, 1, 0);
-	res = type==less ? plt : log10(plt);
-      } else if (type == twoSided || type == abslog10twoSided || type == Q) { /* two sided*/
-	zval = (uStat-mu-(uStat>mu ? 0.5 : -0.5))/sqrt(sigma2);
-	pnorm_both(zval, &pgt, &plt, 2, 0);
-	res = mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
-	if(type == abslog10twoSided) {
-	  res = ABSLOG(res);
-	} else if (type == Q) {
-	  res = pgt<=plt ? ABSLOG(res) : -ABSLOG(res);
-	}
-      } else {
-	error("Unrecognized type %d. Should not happen\n",
-	      type);
+    if(type == greater || type == abslog10greater) { /* greater */
+      zval = (uStat+0.5-mu)/sqrt(sigma2); // z lower tail
+      pnorm_both(zval, &pgt, &plt, 0, 0);
+      res = type==greater ? pgt : ABSLOG(pgt);
+    } else if (type == less || type == log10less) { /* less */
+      zval = (uStat-0.5-mu)/sqrt(sigma2); // z higher tail
+      pnorm_both(zval, &pgt, &plt, 1, 0);
+      res = type==less ? plt : log10(plt);
+    } else if (type == twoSided || type == abslog10twoSided || type == Q) { /* two sided*/
+      zval = (uStat-mu-(uStat>mu ? 0.5 : -0.5))/sqrt(sigma2);
+      pnorm_both(zval, &pgt, &plt, 2, 0);
+      res = mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
+      if(type == abslog10twoSided) {
+	res = ABSLOG(res);
+      } else if (type == Q) {
+	res = pgt<=plt ? ABSLOG(res) : -ABSLOG(res);
       }
+    } else {
+      error("Unrecognized type %d. Should not happen\n",
+	    type);
     }
-    return(res);
+  }
+  return(res);
 }
 /*
 double wmw_test_core(const DRankList valList,
@@ -120,7 +121,6 @@ void wmw_test_list(const double *valPtr, int n,
 }
 
 
-
 /*! \brief Wilcoxon-Mann-Whitney Test
  *
  * \param indlist: A list of integers giving the index of gene sets
@@ -135,31 +135,31 @@ void wmw_test_list(const double *valPtr, int n,
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
 SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
-    const int type=INTEGER(rtype)[0];
-    const int m=length(indlist);
-    const int n=NROW(matrix);
-    
-    int i;
-    double *matColPtr; // pointer to the current column of the matrix
-    SEXP res;
-    double *resPtr;
-    
-    res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
-    
-    resPtr=REAL(res);
-    matColPtr=REAL(matrix);
-    
+  const int type=INTEGER(rtype)[0];
+  const int m=length(indlist);
+  const int n=NROW(matrix);
+  
+  int i;
+  double *matColPtr; // pointer to the current column of the matrix
+  SEXP res;
+  double *resPtr;
+  
+  res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
+  
+  resPtr=REAL(res);
+  matColPtr=REAL(matrix);
+  
 #pragma omp parallel for
-    for(i=0; i<NCOL(matrix);++i) {
-        wmw_test_list(matColPtr, n,
-                      indlist,
-                      resPtr, type);
-        resPtr+=m;
-        matColPtr+=n;
-    }
-    
-    UNPROTECT(1);
-    return(res);
+  for(i=0; i<NCOL(matrix);++i) {
+    wmw_test_list(matColPtr, n,
+		  indlist,
+		  resPtr, type);
+    resPtr+=m;
+    matColPtr+=n;
+  }
+  
+  UNPROTECT(1);
+  return(res);
 }
 
 // ----------------------------------------
@@ -168,41 +168,44 @@ SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
 void signed_wmw_test_list(const double *valPtr, int n,
 			  SEXP signedIndList,
 			  double *resPtr, TestType type) {
-    DRankList list;
-    SEXP signedPair;
-    int i, j;
-    int nPos, nNeg;
-    int *ipPos,*ipNeg;
-
-    double tie;
-    double indRankSum;
-    
-    list=createDRankList(valPtr, n);
-    prepareDRankList(list);
-
-    tie = tieCoef(list);
-    
+  DRankList list;
+  int i, j;
+  int nPos, nNeg;
+  int *ipPos,*ipNeg;
+  SEXP pairInd, posInd, negInd;
+  
+  double tie;
+  double indRankSum;
+  
+  list=createDRankList(valPtr, n);
+  prepareDRankList(list);
+  
+  tie = tieCoef(list);
+  
 #pragma omp parallel for
-    for(i=0;i<length(signedIndList);++i) {
-      signedPair = VECTOR_ELT(signedIndList, i);
-      ipPos = INTEGER(VECTOR_ELT(signedPair, 0));
-      nPos = length(VECTOR_ELT(signedPair, 0));
-      ipNeg = INTEGER(VECTOR_ELT(signedPair, 1));
-      nNeg = length(VECTOR_ELT(signedPair, 1));
-
-      indRankSum = 0.0;
-      for(j=0; j<nPos; ++j)
-	indRankSum += list->list[ipPos[j]]->rank;
-      for(j=0; j<nNeg; ++j)
-	indRankSum += n - list->list[ipNeg[j]]->rank + 1;
-      
-      resPtr[i]=wmw_test_stat(indRankSum,
-			      nPos+nNeg,
-			      n,
-			      tie,
-			      type);
-    }
-    destroyDRankList(list);
+  for(i=0;i<length(signedIndList);++i) {
+    pairInd = VECTOR_ELT(signedIndList, i);
+    posInd = VECTOR_ELT(pairInd, 0);
+    negInd = VECTOR_ELT(pairInd, 1);
+    
+    ipPos = INTEGER(posInd);
+    nPos = length(posInd);
+    ipNeg = INTEGER(negInd);
+    nNeg = length(negInd);
+    
+    indRankSum = 0.0;
+    for(j=0; j<nPos; ++j)
+      indRankSum += list->list[ipPos[j]]->rank;
+    for(j=0; j<nNeg; ++j)
+      indRankSum += n - list->list[ipNeg[j]]->rank + 1;
+    
+    resPtr[i]=wmw_test_stat(indRankSum,
+			    nPos+nNeg,
+			    n,
+			    tie,
+			    type);
+  }
+  destroyDRankList(list);
 }
 
 /*! \brief Signed Wilcoxon-Mann-Whitney Test
@@ -218,13 +221,12 @@ void signed_wmw_test_list(const double *valPtr, int n,
  *
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
-
 SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
-    const int type=INTEGER(rtype)[0];
-    const int m=length(signedIndList);
-    const int n=NROW(matrix);
-    
-    int i;
+  const int type=INTEGER(rtype)[0];
+  const int m=length(signedIndList);
+  const int n=NROW(matrix);
+  
+  int i;
     double *matColPtr; // pointer to the current column of the matrix
     SEXP res;
     double *resPtr;
