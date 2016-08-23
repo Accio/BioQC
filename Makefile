@@ -33,8 +33,8 @@ install: dist
 	@echo '====== Installing finished ======'
 	@echo ' '
 
-install-test: clean
-	${R} CMD INSTALL ../${PKG}; R -e "library(testthat); test_dir('./tests')"
+install-test: 
+	${R} CMD INSTALL ../${PKG} && R -e "library(testthat); test_dir('./tests')"
 
 check:	dist
 	@echo '====== Checking Package ======'
