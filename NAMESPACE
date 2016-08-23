@@ -1,7 +1,8 @@
 import("Rcpp")
 importClassFrom("Biobase", "eSet")
-importFrom("Biobase", "fData")
-importFrom("Biobase", "exprs")
+importFrom("Biobase", "fData", "exprs")
+importFrom("methods", "is")
+importFrom("stats", "pt", "wilcox.test")
 
 export(gini)
 export(absLog10p)
