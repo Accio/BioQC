@@ -33,6 +33,9 @@ install: dist
 	@echo '====== Installing finished ======'
 	@echo ' '
 
+install-test: clean
+	${R} CMD INSTALL ../${PKG}; R -e "library(testthat); test_dir('./tests')"
+
 check:	dist
 	@echo '====== Checking Package ======'
 	@(cd ..; ${R} CMD check ${CHECKADD} ${PKG}_${PKG_VERSION}.tar.gz)
