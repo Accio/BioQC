@@ -13,9 +13,9 @@ outList.pos <- gmtlist2signedGenesets(testInputList, nomatch="pos")
 outList.neg <- gmtlist2signedGenesets(testInputList, nomatch="neg")
 
 exp.ignore <- list("GeneSetA"=list(pos=LETTERS[1:3], neg=LETTERS[4:6]),
-                        "GeneSetB"=list(pos=NULL, neg=NULL),
-                        "GeneSetC"=list(pos=NULL, neg=LETTERS[1:3]),
-                        "GeneSetD"=list(pos=LETTERS[1:3], neg=NULL))
+                   "GeneSetB"=list(pos=NULL, neg=NULL),
+                   "GeneSetC"=list(pos=NULL, neg=LETTERS[1:3]),
+                   "GeneSetD"=list(pos=LETTERS[1:3], neg=NULL))
 
 exp.pos <- list("GeneSetA"=list(pos=LETTERS[1:3], neg=LETTERS[4:6]),
                 "GeneSetB"=list(pos=LETTERS[2:4], neg=NULL),
