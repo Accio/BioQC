@@ -5,86 +5,96 @@ wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), stat
   return(ifelse(statistic, wt$statistic, wt$p.value))
 }
 
+## type2int and formatMatrixInd are helper functions for wmwTest and wmwSignedTest
+TYPE_CODES <- c("greater"=0L, "less"=1L,
+                "two.sided"=2L, "U"=3L,
+                "abs.log10.greater"=4L,
+                "log10.less"=5L,
+                "abs.log10.two.sided"=6L,
+                "Q"=7L)
+
+type2int <- function(type) {
+    if(!type %in% names(TYPE_CODES))
+        stop("Should not happen! This is the wrong time")
+    return(TYPE_CODES[type])
+}
+
+formatMatrixInd <- function(x, ind.list) {
+    isMatVec <- FALSE
+    isIndVec <- FALSE
+    if(is(x, "eSet")) {
+        matrix <- exprs(x)
+    } else if (!is.matrix(x) & is.numeric(x)) {
+        matrix <- matrix(x, ncol=1L)
+        isMatVec <- TRUE
+    } else if (is.matrix(x)) {
+        matrix <- x
+    } else {
+        stop("'matrix' must be a numeric matrix, or a numeric vector, or an eSet object")
+    }
+
+    if(storage.mode(matrix)!="double")
+        storage.mode(matrix) <- "double"
+
+    if(is.numeric(ind.list) || is.logical(ind.list)) {
+        ind.list <- list(ind.list)
+        isIndVec <- TRUE
+    } else if (is(ind.list, "gmtlist")) {
+        if(!(is(x, "eSet") & "GeneSymbol" %in% colnames(fData(x))))
+            stop("When ind.list is a 'gmtlist', 'x' must be an eSet object with a column 'GeneSymbol' in fData.")
+        genes <- lapply(ind.list, function(x) x$genes)
+        names(genes) <- sapply(ind.list, function(x) x$name)
+        ind.list <- sapply(genes, function(g) match(g, fData(x)$GeneSymbol))
+    }
+
+    indC <- lapply(ind.list, function(x) {
+                       if(is.logical(x))
+                           x <- which(x)
+                       if(is.numeric(x)) {
+                           x <- as.integer(x[!is.na(x)])
+                           if(any(x<1L))
+                               stop("Indices in ind.list must be equal to or greater than one!")
+                           if(any(x>nrow(matrix)))
+                               stop("Indices out of range: they cannot exceed the row of the matrix!")
+                           return(x-1L)
+                       } else {
+                           stop("index must be either integer vector")
+                       }
+                   })
+
+    res <- list(matrix=matrix,
+                indC=indC,
+                isMatVec=isMatVec,
+                isIndVec=isIndVec,
+                rownames=names(ind.list),
+                colnames=colnames(matrix))
+    return(res)
+  
+}
 wmwTest <- function(x, ind.list,
                     alternative=c("greater", "less", "two.sided", "U",
                       "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
 
-  isMatVec <- FALSE
-  isIndVec <- FALSE
-  if(is(x, "eSet")) {
-    matrix <- exprs(x)
-  } else if (!is.matrix(x) & is.numeric(x)) {
-    matrix <- matrix(x, ncol=1L)
-    isMatVec <- TRUE
-  } else if (is.matrix(x)) {
-    matrix <- x
-  } else {
-    stop("'matrix' must be a numeric matrix, or a numeric vector, or an eSet object")
-  }
+    input <- formatMatrixInd(x, ind.list)
 
-  if(storage.mode(matrix)!="double")
-      storage.mode(matrix) <- "double"
-  
-  if(is.numeric(ind.list) || is.logical(ind.list)) {
-    ind.list <- list(ind.list)
-    isIndVec <- TRUE
-  } else if (is(ind.list, "gmtlist")) {
-    if(!(is(x, "eSet") & "GeneSymbol" %in% colnames(fData(x))))
-      stop("When ind.list is a 'gmtlist', 'x' must be an eSet object with a column 'GeneSymbol' in fData.")
-    genes <- lapply(ind.list, function(x) x$genes)
-    names(genes) <- sapply(ind.list, function(x) x$name)
-    ind.list <- sapply(genes, function(g) match(g, fData(x)$GeneSymbol))
-  }
-  
-  indC <- lapply(ind.list, function(x) {
-    if(is.logical(x))
-      x <- which(x)
-    if(is.numeric(x)) {
-      x <- as.integer(x[!is.na(x)])
-      if(any(x<1L))
-          stop("Indices in ind.list must be equal to or greater than one!")
-      if(any(x>nrow(matrix)))
-          stop("Indices out of range: they cannot exceed the row of the matrix!")
-      return(x-1L)
-    } else {
-      stop("index must be either integer vector")
+    matrix <- input$matrix
+    indC <- input$indC
+    typeInt <- type2int(match.arg(alternative))
+
+    res <- .Call("wmw_test", matrix, indC, typeInt)
+    
+    rownames(res) <- input$rownames
+    colnames(res) <- input$colnames
+    
+    if(simplify) {
+        if(input$isMatVec & input$isIndVec) {
+            res <- res[1L, 1L] 
+        } else if (input$isMatVec) {
+            res <- res[,1L]
+        } else if (input$isIndVec) {
+            res <- res[1L,]
+        }
     }
-  })
-  
-  type <- match.arg(alternative)
-  if(type=="greater") {
-    val <- 0L
-  } else if (type=="less") {
-    val <- 1L
-  } else if (type=="two.sided") {
-    val <- 2L
-  } else if (type=="U") {
-    val <- 3L
-  } else if (type=="abs.log10.greater") {
-    val <- 4L
-  } else if (type=="log10.less") {
-    val <- 5L
-  } else if (type=="abs.log10.two.sided") {
-    val <- 6L
-  } else if (type=="Q") {
-    val <- 7L
-  } else {
-    stop("Should not happen")
-  }
-
-  res <- .Call("wmw_test", matrix, indC, val)
-
-  rownames(res) <- names(ind.list)
-  colnames(res) <- colnames(matrix)
-  if(simplify) {
-    if(isMatVec & isIndVec) {
-      res <- res[1L, 1L] 
-    } else if (isMatVec) {
-      res <- res[,1L]
-    } else if (isIndVec) {
-      res <- res[1L,]
-    }
-  }
   
   return(res)
 }
