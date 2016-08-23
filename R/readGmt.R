@@ -204,3 +204,56 @@ readGmt <- function(filename) {
   class(res) <- "gmtlist"
   return(res)
 }
+
+#' Convert gmtlist into a list of signed genesets
+#'
+#' @param gmtlist A gmtlist object, probably read-in by \code{readGmt}
+#' @param posPattern Regular expression pattern of positive gene sets. It is trimmed from the original name to get the stem name of the gene set. See examples below.
+#' @param negPattern Regular expression pattern of negative gene sets. It is trimmed from the original name to get the stem name of the gene set. See examples below.
+#'
+#' @return A list of signed genesets
+#'
+#' Gene set names are detected whether they are positive or negative. If neither positive nor negative 
+#' @example
+#' testInputList <- list(list(name="GeneSetA_UP",genes=LETTERS[1:3]),
+#'                list(name="GeneSetA_DN", genes=LETTERS[4:6]),
+#'                list(name="GeneSetB", genes=LETTERS[2:4]),
+#'                list(name="GeneSetC_DN", genes=LETTERS[1:3]),
+#'                list(name="GeneSetD_UP", genes=LETTERS[1:3]))
+#' testOutputList.ignore <- gmtlist2signedGenesets(testInputList, nomatch="ignore")
+#' testOutputList.pos <- gmtlist2signedGenesets(testInputList, nomatch="pos")
+#' testOutputList.neg <- gmtlist2signedGenesets(testInputList, nomatch="neg")
+gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$",
+                                   nomatch=c("ignore", "pos", "neg")) {
+    nomatch <- match.arg(nomatch)
+    genes <- lapply(gmtlist, function(x) x$genes)
+    names <- sapply(gmtlist, function(x) x$name)
+    isPos <- grepl(posPattern, names)
+    isNeg <- grepl(negPattern, names)
+    stemNames <- gsub(negPattern, "", gsub(posPattern, "", names))
+    stemFactor <- factor(stemNames, levels=unique(stemNames))
+    res <- tapply(seq(along=gmtlist), stemFactor, function(i) {
+                      pos <- NULL
+                      neg <- NULL
+                      if(!any(isPos[i]) && !any(isNeg[i])) {
+                          otherGenes <- unique(unlist(genes[i]))
+                          if (nomatch=="pos") {
+                              pos <- otherGenes
+                          } else if (nomatch=="neg") {
+                              neg <- otherGenes
+                          } else if (nomatch!="ignore") {
+                              stop("should not be here")
+                          }
+                      } else {
+                          if(any(isPos[i])) {
+                              pos <- unique(unlist(genes[i][isPos[i]]))
+                          }
+                          if(any(isNeg[i])) {
+                              neg <- unique(unlist(genes[i][isNeg[i]]))
+                          }
+                      }
+                      return(list(pos=pos, neg=neg))
+                  })
+    class(res) <- "signed_genesets"
+    return(res)
+}
