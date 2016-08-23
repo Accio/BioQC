@@ -254,6 +254,7 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
                       }
                       return(list(pos=pos, neg=neg))
                   })
+    names(res) <- levels(stemFactor)
     class(res) <- "signed_genesets"
     return(res)
 }
