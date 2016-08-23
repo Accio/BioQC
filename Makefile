@@ -49,7 +49,7 @@ envcheck: dist
 
 clean:
 	@echo '====== Cleaning Package ======'
-	@(rm -f $(PKG_SRC_DIR)/*.o $(PKG_SRC_DIR)/*.so $(PKG_SRC_DIR)/*.dll)
+	@(rm -f $(PKG_SRC_DIR)/*.o $(PKG_SRC_DIR)/*.so $(PKG_SRC_DIR)/*.dll $(PKG_SRC_DIR)/*.rds)
 	@(find . -type f -name "*~" -exec rm '{}' \;)
 	@(find . -type f -name ".Rhistory" -exec rm '{}' \;)
 	@echo ' '
