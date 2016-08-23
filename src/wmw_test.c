@@ -120,10 +120,10 @@ void wmw_test_list(const double *valPtr, int n,
  *
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
-SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
+SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP val_type) {
     const int type=INTEGER(val_type)[0];
     const int m=length(indlist);
-    const int n=NROW(matrix); // total number of samples AND nrow of matrix
+    const int n=NROW(matrix);
     
     int i;
     double *matColPtr; // pointer to the current column of the matrix
@@ -147,3 +147,17 @@ SEXP wmw_test(SEXP indlist, SEXP matrix, SEXP val_type) {
     UNPROTECT(1);
     return(res);
 }
+
+/*! \brief Signed Wilcoxon-Mann-Whitney Test
+ *
+ * \param matrix: an expression matrix with features in rows and samples in columns
+ * \param signedIndList: A list of signed gene-set-pairs, each of which is a list of two character vectors, containing positive and negative signatures, respectively
+ * \param val_type:
+ * \parblock
+ * Define f(x)=abs(log10(x))
+ * 0=p(greater), 1=p(less), 2=p(twoSided), 3=U,
+ * 4=f(p(greater)),5=p(less),6=f(p(twoSided)), 7=p(greater)<p(less) ? f(p(twoSided)) : -f(p(twoSided))
+ * \endparblock
+ *
+ * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
+ */

@@ -43,6 +43,8 @@ wmwTest <- function(x, ind.list,
       x <- as.integer(x[!is.na(x)])
       if(any(x<1L))
           stop("Indices in ind.list must be equal to or greater than one!")
+      if(any(x>nrow(matrix)))
+          stop("Indices out of range: they cannot exceed the row of the matrix!")
       return(x-1L)
     } else {
       stop("index must be either integer vector")
@@ -70,7 +72,7 @@ wmwTest <- function(x, ind.list,
     stop("Should not happen")
   }
 
-  res <- .Call("wmw_test", indC, matrix, val)
+  res <- .Call("wmw_test", matrix, indC, val)
 
   rownames(res) <- names(ind.list)
   colnames(res) <- colnames(matrix)
