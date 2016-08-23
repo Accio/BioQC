@@ -68,7 +68,7 @@ double wmw_test_stat(double rankSum, int nInds, int nTotal, double tieCoef, Test
     }
     return(res);
 }
-
+/*
 double wmw_test_core(const DRankList valList,
 		     const int *inds, int nInds,
 		     int nTotal, TestType type) {
@@ -84,34 +84,48 @@ double wmw_test_core(const DRankList valList,
                         tieCoef(valList), type);
     return(res);
 }
-
+*/
 void wmw_test_list(const double *valPtr, int n,
                    SEXP indlist,
                    double *resPtr, TestType type) {
     DRankList list;
-    int i;
-    int n1;
+    int i, j;
+    int nInd;
     int* ip;
 
-    list=createDRankList(valPtr, n);
+    double tie;
+    double indRankSum;
+
+    list = createDRankList(valPtr, n);
     prepareDRankList(list);
+    
+    tie = tieCoef(list);
     
 #pragma omp parallel for
     for(i=0;i<length(indlist);++i) {
         ip=INTEGER(VECTOR_ELT(indlist,i));
-        n1=length(VECTOR_ELT(indlist,i));
-        resPtr[i]=wmw_test_core(list,
-                                ip, n1,
-                                n, type);
+        nInd=length(VECTOR_ELT(indlist,i));
+
+	indRankSum = 0.0;
+	for(j=0; j<nInd; ++j)
+	  indRankSum += list->list[ip[j]]->rank;
+
+	resPtr[i] = wmw_test_stat(indRankSum,
+				  nInd,
+				  n,
+				  tie,
+				  type);
     }
     destroyDRankList(list);
 }
+
+
 
 /*! \brief Wilcoxon-Mann-Whitney Test
  *
  * \param indlist: A list of integers giving the index of gene sets
  * \param matrix: an expression matrix with features in rows and samples in columns
- * \param val_type:
+ * \param rtype:
  * \parblock
  * Define f(x)=abs(log10(x))
  * 0=p(greater), 1=p(less), 2=p(twoSided), 3=U,
@@ -120,8 +134,8 @@ void wmw_test_list(const double *valPtr, int n,
  *
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
-SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP val_type) {
-    const int type=INTEGER(val_type)[0];
+SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
+    const int type=INTEGER(rtype)[0];
     const int m=length(indlist);
     const int n=NROW(matrix);
     
@@ -148,11 +162,54 @@ SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP val_type) {
     return(res);
 }
 
+// ----------------------------------------
+// signed tests
+// ----------------------------------------
+void signed_wmw_test_list(const double *valPtr, int n,
+			  SEXP signedIndList,
+			  double *resPtr, TestType type) {
+    DRankList list;
+    SEXP signedPair;
+    int i, j;
+    int nPos, nNeg;
+    int *ipPos,*ipNeg;
+
+    double tie;
+    double indRankSum;
+    
+    list=createDRankList(valPtr, n);
+    prepareDRankList(list);
+
+    tie = tieCoef(list);
+    
+#pragma omp parallel for
+    for(i=0;i<length(signedIndList);++i) {
+      signedPair = VECTOR_ELT(signedIndList, i);
+      ipPos = INTEGER(VECTOR_ELT(signedPair, 0));
+      nPos = length(VECTOR_ELT(signedPair, 0));
+      ipNeg = INTEGER(VECTOR_ELT(signedPair, 1));
+      nNeg = length(VECTOR_ELT(signedPair, 1));
+
+      indRankSum = 0.0;
+      for(j=0; j<nPos; ++j)
+	indRankSum += list->list[ipPos[j]]->rank;
+      for(j=0; j<nNeg; ++j)
+	indRankSum += n - list->list[ipNeg[j]]->rank + 1;
+      
+      resPtr[i]=wmw_test_stat(indRankSum,
+			      nPos+nNeg,
+			      n,
+			      tie,
+			      type);
+    }
+    destroyDRankList(list);
+}
+
 /*! \brief Signed Wilcoxon-Mann-Whitney Test
  *
  * \param matrix: an expression matrix with features in rows and samples in columns
  * \param signedIndList: A list of signed gene-set-pairs, each of which is a list of two character vectors, containing positive and negative signatures, respectively
- * \param val_type:
+ * \param rtype:
  * \parblock
  * Define f(x)=abs(log10(x))
  * 0=p(greater), 1=p(less), 2=p(twoSided), 3=U,
@@ -161,3 +218,31 @@ SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP val_type) {
  *
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
+
+SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
+    const int type=INTEGER(rtype)[0];
+    const int m=length(signedIndList);
+    const int n=NROW(matrix);
+    
+    int i;
+    double *matColPtr; // pointer to the current column of the matrix
+    SEXP res;
+    double *resPtr;
+    
+    res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
+    
+    resPtr=REAL(res);
+    matColPtr=REAL(matrix);
+    
+#pragma omp parallel for
+    for(i=0; i<NCOL(matrix);++i) {
+      signed_wmw_test_list(matColPtr, n,
+			   signedIndList,
+			   resPtr, type);
+      resPtr+=m;
+      matColPtr+=n;
+    }
+    
+    UNPROTECT(1);
+    return(res);
+}
