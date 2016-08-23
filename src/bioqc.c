@@ -5,7 +5,6 @@ static const R_CallMethodDef callMethods[] = {
   CALLMETHOD_DEF("gini", 1),
   CALLMETHOD_DEF("read_gmt", 1),
   CALLMETHOD_DEF("wmw_test", 3),
-  CALLMETHOD_DEF("wmw_test_nonfactor", 3),
   {NULL, NULL, 0}
 };
 
