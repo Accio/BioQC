@@ -21,7 +21,12 @@ PKG_VERSION=`/bin/awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);prin
 
 PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
 
-dist:	clean
+roxygenise:
+	@echo '====== roxygenize ======'	
+	@(cd ..; ${R} --vanilla -q -e "library(roxygen2);roxygenise(\"$(PKG)\")")
+	@echo ' '
+
+dist:	clean roxygenise
 	@echo '====== Building Distribution ======'
 	@(cd ..; ${R} CMD build ${DISTADD} $(PKG) )
 	@echo '====== Building finished ======'
