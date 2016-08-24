@@ -78,7 +78,8 @@ formatInd <- function(ind.list, x, nrow) {
         ind.list <- list(ind.list)
         isIndVec <- TRUE
     } else if (is(ind.list, "gmtlist")) {
-
+        ind.list <- gmtlist2ind(ind.list, x)
+        isInVec <- length(ind.list)==1
     }
 
     indC <- lapply(ind.list, function(x) getCind(x, nrow=nrow))
