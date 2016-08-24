@@ -7,7 +7,7 @@ importFrom("stats", "pt", "wilcox.test")
 export(gini)
 export(absLog10p)
 export(filterPmat)
-export(readGmt, gmtlist2signedGenesets)
+export(readGmt, gmtlist2signedGenesets, readSignedGmt)
 export(wmwTest)
 export(entropy,
        entropyDiversity,
