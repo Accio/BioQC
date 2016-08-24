@@ -44,7 +44,8 @@ getCind <- function(inds, nrow) {
     if(is.logical(inds))
         inds <- which(inds)
     if(!is.numeric(inds)) {
-        stop("index must be either logical or numeric!")
+        stop(paste("index must be either logical or numeric!\nGot ",
+                   paste(head(inds), ",...", sep=" ")))
     }
     inds <- as.integer(inds[!is.na(inds)])
     if(any(inds<1L))
@@ -57,12 +58,12 @@ getCind <- function(inds, nrow) {
 gmtlist2ind <- function(ind.list, x) {
     if(is(x, "eSet")) {
         if(!"GeneSymbol" %in% colnames(fData(x)))
-            stop("When ind.list is a 'gmtlist' and 'x' must is an eSet object, x's fData must contain the column 'GeneSymbol'")
+            stop("When ind.list is a 'GmtList' and 'x' must is an eSet object, x's fData must contain the column 'GeneSymbol'")
         inputGenes <- fData(x)$GeneSymbol
     } else if (is.matrix(x)) {
         inputGenes <- rownames(x)
     } else {
-        stop("When ind.list is a 'gmtlist', x must be either a matrix or an eSet object")
+        stop("When ind.list is a 'GmtList', x must be either a matrix or an eSet object")
     }
     genes <- lapply(ind.list, function(x) x$genes)
     names(genes) <- sapply(ind.list, function(x) x$name)
@@ -77,7 +78,7 @@ formatInd <- function(ind.list, x, nrow) {
     if(is.numeric(ind.list) || is.logical(ind.list)) {
         ind.list <- list(ind.list)
         isIndVec <- TRUE
-    } else if (is(ind.list, "gmtlist")) {
+    } else if (is(ind.list, "GmtList")) {
         ind.list <- gmtlist2ind(ind.list, x)
         isInVec <- length(ind.list)==1
     }
