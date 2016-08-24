@@ -215,7 +215,7 @@ readGmt <- function(filename) {
 #'
 #' Gene set names are detected whether they are positive or negative. If neither positive nor negative, nomatch will determine how will they be interpreted. In case of \code{pos} (or \code{neg}), such genesets will be treated as positive (or negative) gene sets.In case nomatch is set to \code{ignore}, the gene set will appear in the returned values with both positive and negative sets set to \code{NULL}.
 #' 
-#' @example
+#' @examples
 #' testInputList <- list(list(name="GeneSetA_UP",genes=LETTERS[1:3]),
 #'                list(name="GeneSetA_DN", genes=LETTERS[4:6]),
 #'                list(name="GeneSetB", genes=LETTERS[2:4]),
@@ -268,6 +268,11 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
 #' @param nomatch: options to deal with gene sets that match to neither posPattern nor negPattern patterns
 #'
 #' @seealso \code{\link{gmtlist2signedGenesets}} for parameters \code{posPattern}, \code{negPattern}, and \code{nomatch}
+#' @examples
+#' testSignedGenesets.ignore <- readSignedGmt(testFile, nomatch="ignore")
+#' testSignedGenesets.pos <- readSignedGmt(testFile, nomatch="pos")
+#' testSignedGenesets.neg <- readSignedGmt(testFile, nomatch="neg")
+#' 
 readSignedGmt <- function(filename, posPattern="_UP$", negPattern="_DN$",
                           nomatch=c("ignore", "pos", "neg")) {
     gmt <- readGmt(filename)
