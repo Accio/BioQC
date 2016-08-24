@@ -1,3 +1,117 @@
+isValidGmtList <- function(object) {
+    isList <- sapply(object, is.list)
+    if(!all(isList))
+        return(paste("Not all items in the list is a list. \n",
+                     "The following items are not:\n",
+                     paste(which(!isList), collapse=","),"\n", sep=""))
+    isGmt <- sapply(object, function(x) all(c("name", "desc", "genes") %in% names(x)))
+    if(!all(isGmt))
+        return(paste("Not all items in the list have three mandatory fields 'name', 'desc', and 'genes'",
+                     "Following items are not:\n",
+                     paste(which(!isGmt), collapse=","), "\n", sep=""))
+    return(TRUE)
+}
+
+setClass("GmtList", contains="list", validity=isValidGmtList)
+
+isValidSignedGenesets<- function(object) {
+    isList <- sapply(object, is.list)
+    if(!all(isList))
+        return(paste("Not all items in the list is a list. \n",
+                     "The following items are not:\n",
+                     paste(which(!isList), collapse=","),"\n", sep=""))
+    isSigned <- sapply(object, function(x) all(c("name", "pos", "neg") %in% names(x)))
+    if(!all(isSigned))
+        return(paste("Not all items in the list have three mandatory fields: 'name', 'pos' and 'neg'\n",
+                     "Following items are not:\n",
+                     paste(which(!isSigned), collapse=","), "\n", sep=""))
+    isPosChar <- sapply(object, function(x) is.null(x$pos) || is.character(x$pos))
+    isNegChar <- sapply(object, function(x) is.null(x$neg) || is.character(x$neg))
+    if(!all(isPosChar & isNegChar))
+        return(paste("Not all items in the list have character vectors in the fields 'pos' and 'neg'\n",
+                     "Following items are not:\n",
+                     paste(which(!(isPosChar & isNegChar)), collapse=","), "\n", sep=""))
+    return(TRUE)
+}
+
+setClass("SignedGenesets", contains="list", validity=isValidSignedGenesets)
+
+GmtList <- function(list) {
+    res <- new("GmtList", .Data=list)
+    return(res)
+}
+showGeneSet <- function(geneset, nGene=3, indent=2) {
+    genes <- geneset$genes
+    geneLen <- length(genes)
+    sprintf("%s%s (%sn=%d): %s%s",
+            paste(rep(" ", indent), collapse=""),
+            geneset$name,
+            ifelse(is.null(geneset$desc), "", paste(geneset$desc, ",", sep="")),
+            geneLen,
+            paste(geneset$genes[1:pmin(nGene, geneLen)],collapse=","),
+            ifelse(geneLen>nGene, ",...", ""))
+}
+setMethod("show", "GmtList", function(object) {
+              str <- sprintf("A gene-set list in gmt format with %d genesets", length(object))
+              indent <- 2
+              if(length(object)>6) {
+                  heads <- object[1:3]
+                  tails <- object[(length(object)-2):length(object)]
+                  shows <- c(sapply(heads, showGeneSet, indent=indent),
+                             paste(paste(rep(" ", indent), collapse=""), "...", sep=""),
+                             sapply(tails, showGeneSet, indent=indent))
+              } else {
+                  shows <- sapply(object, showGeneSet, indent=indent)
+              }
+              concStr <- paste(c(str, shows, ""), collapse="\n")
+              cat(concStr)
+          })
+
+SignedGenesets <- function(list) {
+    res <- new("SignedGenesets", .Data=list)
+    return(res)
+}
+
+showSignedGeneset <- function(geneset, nGene=3, indent=2) {
+    name <- geneset$name
+    pos <- geneset$pos
+    neg <- geneset$neg
+    posLen <- length(pos)
+    negLen <- length(neg)
+    idents <- paste(rep(" ", indent), collapse="")
+    doubleIdents <- paste(rep(" ", indent*2), collapse="")
+    if(posLen+negLen==0) {
+        res <- sprintf("%s%s (no genes)", idents, name)
+    } else {
+        res <- sprintf("%s%s[n=%d]\n%spositive[n=%d]:%s\n%snegative[n=%d]:%s",
+                        idents,
+                        name,
+                        posLen+negLen,
+                        doubleIdents,
+                        posLen, 
+                        paste(pos[1:pmin(posLen, nGene)],collapse=","),
+                        doubleIdents,
+                        negLen,
+                        paste(neg[1:pmin(negLen, nGene)],collapse=","))
+    }
+    return(res)
+}
+
+setMethod("show", "SignedGenesets", function(object) {
+              str <- sprintf("A list of %d signed gene-sets", length(object))
+              indent <- 2
+              if(length(object)>6) {
+                  heads <- object[1:3]
+                  tails <- object[(length(object)-2):length(object)]
+                  shows <- c(sapply(heads, showSignedGeneset, indent=indent),
+                             paste(paste(rep(" ", indent), collapse=""), "...", sep=""),
+                             sapply(tails, showSignedGeneset, indent=indent))
+              } else {
+                  shows <- sapply(object, showSignedGeneset, indent=indent)
+              }
+              concStr <- paste(c(str, shows, ""), collapse="\n")
+              cat(concStr)
+          })
 ##setClass("gsitem",
 ##         representation(name="character",
 ##                        desc="character",
@@ -219,8 +333,7 @@ as.gmtlist <- function(list, description=NULL) {
                            genes=list[[i]])
                   })
     names(res) <- names
-    return(res)
-    
+    return(GmtList(res))
 }
 
 readGmt <- function(filename) {
@@ -234,8 +347,7 @@ readGmt <- function(filename) {
                 })
   names(res) <- sapply(res, function(x) x$name)
   ## res <- .Call("read_gmt", filename, PACKAGE="BioQC")
-  class(res) <- "gmtlist"
-  return(res)
+  return(GmtList(res))
 }
 
 #' Convert gmtlist into a list of signed genesets
@@ -244,7 +356,7 @@ readGmt <- function(filename) {
 #' @param posPattern Regular expression pattern of positive gene sets. It is trimmed from the original name to get the stem name of the gene set. See examples below.
 #' @param negPattern Regular expression pattern of negative gene sets. It is trimmed from the original name to get the stem name of the gene set. See examples below.
 #' @param nomatch Options to deal with gene sets that match neither positive nor negative patterns. ignore: they will be ignored (but not discarded, see details below); pos: they will be counted as positive signs; neg: they will be counted as negative signs
-#' @return An S3-object of \code{signed_genesets}, which is a list of signed_geneset, each being a two-item list; the first item is 'pos', containing a character vector of positive genes; and the second item is 'neg', containing a character vector of negative genes.
+#' @return An S4-object of \code{SignedGenesets}, which is a list of signed_geneset, each being a two-item list; the first item is 'pos', containing a character vector of positive genes; and the second item is 'neg', containing a character vector of negative genes.
 #'
 #' Gene set names are detected whether they are positive or negative. If neither positive nor negative, nomatch will determine how will they be interpreted. In case of \code{pos} (or \code{neg}), such genesets will be treated as positive (or negative) gene sets.In case nomatch is set to \code{ignore}, the gene set will appear in the returned values with both positive and negative sets set to \code{NULL}.
 #' 
@@ -286,11 +398,10 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
                               neg <- unique(unlist(genes[i][isNeg[i]]))
                           }
                       }
-                      return(list(pos=pos, neg=neg))
+                      return(list(name=as.character(stemFactor)[i][1], pos=pos, neg=neg))
                   })
     names(res) <- levels(stemFactor)
-    class(res) <- "signed_genesets"
-    return(res)
+    return(SignedGenesets(res))
 }
 
 #' Read signed GMT files
