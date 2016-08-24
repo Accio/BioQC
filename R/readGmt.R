@@ -189,7 +189,20 @@
 ##    }
 ##})
 ##
+
+#' Convert a list of gene symbols into a gmtlist
+#'
+#' @param list: A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes
+#' @param description: description; will be expanded to the same length of the list
+#'
+#' @examples
+#' testVec <- list(GeneSet1=c("AKT1", "AKT2"),
+#'                GeneSet2=c("MAPK1", "MAPK3"),
+#'                GeneSet3=NULL)
+#' testVecGmtlist <- as.gmtlist(testVec)
 as.gmtlist <- function(list, description=NULL) {
+    if(is.null(names(list)))
+        stop('The input list must have non-null names')
     names <- names(list)
     if(!is.null(description)) {
         descs <- rep_len(description, length.out=length(list))
@@ -289,9 +302,10 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
 #'
 #' @seealso \code{\link{gmtlist2signedGenesets}} for parameters \code{posPattern}, \code{negPattern}, and \code{nomatch}
 #' @examples
-#' testSignedGenesets.ignore <- readSignedGmt(testFile, nomatch="ignore")
-#' testSignedGenesets.pos <- readSignedGmt(testFile, nomatch="pos")
-#' testSignedGenesets.neg <- readSignedGmt(testFile, nomatch="neg")
+#' testGmtFile <- system.file("extdata/test.gmt", package="BioQC")
+#' testSignedGenesets.ignore <- readSignedGmt(testGmtFile, nomatch="ignore")
+#' testSignedGenesets.pos <- readSignedGmt(testGmtFile, nomatch="pos")
+#' testSignedGenesets.neg <- readSignedGmt(testGmtFile, nomatch="neg")
 #' 
 readSignedGmt <- function(filename, posPattern="_UP$", negPattern="_DN$",
                           nomatch=c("ignore", "pos", "neg")) {
