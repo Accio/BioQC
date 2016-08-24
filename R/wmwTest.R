@@ -15,7 +15,7 @@ TYPE_CODES <- c("greater"=0L, "less"=1L,
 
 type2int <- function(type) {
     if(!type %in% names(TYPE_CODES))
-        stop("Should not happen! This is the wrong time")
+        stop("Should not happen! This is the wrong code")
     return(TYPE_CODES[type])
 }
 
@@ -156,8 +156,8 @@ formatSignedInd <- function(signedIndList, x, nrow) {
         stop("signedIndList must be a list of two items, first containing indices of positive gene sets, and the second containing negative gene sets")
 
     isIndVec <- legnth(signedIndList)==1L
-    indC <- lapply(signedIndList, function(x) list(pos=getCind(x[[1]], nrow=nrow),
-                                                   neg=getCind(x[[2]], nrow=nrow)))
+    indC <- lapply(signedIndList, function(x) list(pos=getCind(x$pos, nrow=nrow),
+                                                   neg=getCind(x$neg, nrow=nrow)))
     res <- list(indC=indC,
                 isIndVec=isIndVec)
     return(res)
