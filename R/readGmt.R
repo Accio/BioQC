@@ -210,10 +210,11 @@ readGmt <- function(filename) {
 #' @param gmtlist A gmtlist object, probably read-in by \code{readGmt}
 #' @param posPattern Regular expression pattern of positive gene sets. It is trimmed from the original name to get the stem name of the gene set. See examples below.
 #' @param negPattern Regular expression pattern of negative gene sets. It is trimmed from the original name to get the stem name of the gene set. See examples below.
+#' @param nomatch Options to deal with gene sets that match neither positive nor negative patterns. ignore: they will be ignored (but not discarded, see details below); pos: they will be counted as positive signs; neg: they will be counted as negative signs
+#' @return An S3-object of \code{signed_genesets}, which is a list of signed_geneset, each being a two-item list; the first item is 'pos', containing a character vector of positive genes; and the second item is 'neg', containing a character vector of negative genes.
 #'
-#' @return A list of signed genesets
-#'
-#' Gene set names are detected whether they are positive or negative. If neither positive nor negative 
+#' Gene set names are detected whether they are positive or negative. If neither positive nor negative, nomatch will determine how will they be interpreted. In case of \code{pos} (or \code{neg}), such genesets will be treated as positive (or negative) gene sets.In case nomatch is set to \code{ignore}, the gene set will appear in the returned values with both positive and negative sets set to \code{NULL}.
+#' 
 #' @example
 #' testInputList <- list(list(name="GeneSetA_UP",genes=LETTERS[1:3]),
 #'                list(name="GeneSetA_DN", genes=LETTERS[4:6]),
@@ -257,4 +258,20 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
     names(res) <- levels(stemFactor)
     class(res) <- "signed_genesets"
     return(res)
+}
+
+#' Read signed GMT files
+#'
+#' @param filename A gmt file
+#' @param posPattern: Pattern of positive gene sets
+#' @param negPattern: Pattern of negative gene sets
+#' @param nomatch: options to deal with gene sets that match to neither posPattern nor negPattern patterns
+#'
+#' @seealso \code{\link{gmtlist2signedGenesets}} for parameters \code{posPattern}, \code{negPattern}, and \code{nomatch}
+readSignedGmt <- function(filename, posPattern="_UP$", negPattern="_DN$",
+                          nomatch=c("ignore", "pos", "neg")) {
+    gmt <- readGmt(filename)
+    res <- gmtlist2signedGenesets(gmt, posPattern=posPattern, negPattern=negPattern, nomatch=nomatch)
+    return(res)
+    
 }
