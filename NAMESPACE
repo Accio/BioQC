@@ -4,6 +4,8 @@ importFrom("Biobase", "fData", "exprs")
 importFrom("methods", "is")
 importFrom("stats", "pt", "wilcox.test")
 
+exportClass(GmtList, SignedGenesets)
+
 export(gini)
 export(absLog10p)
 export(filterPmat)
