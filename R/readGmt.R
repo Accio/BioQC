@@ -189,6 +189,26 @@
 ##    }
 ##})
 ##
+as.gmtlist <- function(list, description=NULL) {
+    names <- names(list)
+    if(!is.null(description)) {
+        descs <- rep_len(description, length.out=length(list))
+    }
+    res <- lapply(seq(along=list),
+                  function(i) {
+                      if(!is.null(description)) {
+                          desc <- descs[i]
+                      } else {
+                          desc <- NULL
+                      }
+                      list(name=names[i],
+                           desc=desc,
+                           genes=list[[i]])
+                  })
+    names(res) <- names
+    return(res)
+    
+}
 
 readGmt <- function(filename) {
   stopifnot(file.exists(filename))
