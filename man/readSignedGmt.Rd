@@ -20,9 +20,10 @@ readSignedGmt(filename, posPattern = "_UP$", negPattern = "_DN$",
 Read signed GMT files
 }
 \examples{
-testSignedGenesets.ignore <- readSignedGmt(testFile, nomatch="ignore")
-testSignedGenesets.pos <- readSignedGmt(testFile, nomatch="pos")
-testSignedGenesets.neg <- readSignedGmt(testFile, nomatch="neg")
+testGmtFile <- system.file("extdata/test.gmt", package="BioQC")
+testSignedGenesets.ignore <- readSignedGmt(testGmtFile, nomatch="ignore")
+testSignedGenesets.pos <- readSignedGmt(testGmtFile, nomatch="pos")
+testSignedGenesets.neg <- readSignedGmt(testGmtFile, nomatch="neg")
 }
 \seealso{
 \code{\link{gmtlist2signedGenesets}} for parameters \code{posPattern}, \code{negPattern}, and \code{nomatch}
