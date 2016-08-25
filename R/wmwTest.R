@@ -98,9 +98,6 @@ type2int <- function(type) {
     return(TYPE_CODES[type])
 }
 
-
-
-
 gmtList2IndexList.default <- function(geneSymbols, gmtList) {
     genes <- lapply(gmtList, function(x) x$genes)
     names(genes) <- sapply(gmtList, function(x) x$name)
@@ -186,7 +183,23 @@ setMethod("wmwTest", c("eSet", "GmtList"),
                    valType, simplify) {
               indexList <- gmtList2IndexList(object, indexList, col=col)
               wmwTest.default(exprs(object), indexList, valType=valType, simplify=simplify)
-          })                   
+          })
+setMethod("wmwTest", c("eSet", "numeric"),
+          function(object, indexList, col="GeneSymbol",
+                   valType, simplify) {
+              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("eSet", "logical"),
+          function(object, indexList, col="GeneSymbol",
+                   valType, simplify) {
+              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("eSet", "list"),
+          function(object, indexList, col="GeneSymbol",
+                   valType, simplify) {
+              indexList <- IndexList(indexList)
+              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          })
 setMethod("wmwTest", c("ANY", "numeric"),
           function(object, indexList, valType, simplify) {
               indexList <- IndexList(indexList)
@@ -202,7 +215,7 @@ setMethod("wmwTest", c("ANY", "list"),
               indexList <- IndexList(indexList)
               wmwTest(object, indexList, valType=valType, simplify=simplify)
           })
-
+##
 ##wmwTest <- function(x, ind.list,
 ##                    alternative=c("greater", "less", "two.sided", "U",
 ##                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
