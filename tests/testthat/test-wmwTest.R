@@ -1,6 +1,23 @@
 ## test wmwTest
 library(BioQC)
 
+context("Non-exact wilcoxon test in R")
+testNums <- 1:10
+testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
+testP <- wmwTestInR(testNums, testSub)
+testU <- wmwTestInR(testNums, testSub, statistic=TRUE)
+testIndP <- wmwTestInR(testNums, which(testSub))
+testIndU <- wmwTestInR(testNums, which(testSub), statistic=TRUE)
+expWMW <- wilcox.test(testNums[seq(1,9,2)],
+                      testNums[seq(2,10,2)], exact=FALSE)
+
+test_that("Non-exact wilcoxon test in R is wrapped correctly by wmwTestInR", {
+             expect_equal(testP, expWMW$p.value)
+             expect_equal(testIndP, expWMW$p.value)
+             expect_equivalent(testU, expWMW$statistic)
+             expect_equivalent(testIndU, expWMW$statistic)
+         })
+
 context("Wilcoxon test in R and C")
 
 set.seed(1887)
@@ -19,7 +36,7 @@ system.time(Ctwosided <- wmwTest(exprs, ind, alternative="two.sided"))
 wmwTestR <- function(matrix, index, alternative, stat) {
   sub <- rep(FALSE, length(matrix))
   sub[index]=TRUE
-  BioQC:::wmw.test(matrix, sub, alternative, stat)
+  wmwTestInR(matrix, sub, alternative, stat)
 }
 system.time(Rless <- apply(exprs, 2, function(x)
                           sapply(ind, function(y) 

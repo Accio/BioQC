@@ -1,8 +1,26 @@
-wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), statistic=FALSE) {
-  if(!any(sub)) return(ifelse(statistic, 0, 1))
-  wt <- wilcox.test(x[sub],
-                    x[!sub], alternative=alternative, exact=FALSE)
-  return(ifelse(statistic, wt$statistic, wt$p.value))
+#' Wilcoxon-Mann-Whitney test in R
+#'
+#' @param x A numerical vector
+#' @param sub A logical vector or integer vector to subset \code{x}. Numbers in \code{sub} are compared with numbers out of \code{sub}
+#' @param alternative two.sided, less, or greater
+#' @param statistic Logical, if \code{TRUE}, the U-statistic of the Wilcoxon-Mann-Whitney test is returned; otherwise the p-value is returned
+#' 
+#' @examples
+#' testNums <- 1:10
+#' testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
+#' wmwTestInR(testNums, testSub)
+wmwTestInR <- function(x, sub, alternative=c("two.sided", "less", "greater"), statistic=FALSE) {
+    if(is.numeric(sub)) {
+        tmp <- rep(FALSE, length(x))
+        tmp[sub] <- TRUE
+        sub <- tmp
+    }
+    if(!is.logical(sub))
+        stop("sub must be either numeric indices or logical")
+    if(!any(sub)) return(ifelse(statistic, 0, 1))
+    wt <- wilcox.test(x[sub],
+                      x[!sub], alternative=alternative, exact=FALSE)
+    return(ifelse(statistic, wt$statistic, wt$p.value))
 }
 
 ## type2int and formatMatrixInd are helper functions for wmwTest and wmwSignedTest
