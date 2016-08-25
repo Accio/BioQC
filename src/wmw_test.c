@@ -227,24 +227,24 @@ SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
   const int n=NROW(matrix);
   
   int i;
-    double *matColPtr; // pointer to the current column of the matrix
-    SEXP res;
-    double *resPtr;
-    
-    res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
-    
-    resPtr=REAL(res);
-    matColPtr=REAL(matrix);
-    
+  double *matColPtr; // pointer to the current column of the matrix
+  SEXP res;
+  double *resPtr;
+  
+  res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
+  
+  resPtr=REAL(res);
+  matColPtr=REAL(matrix);
+  
 #pragma omp parallel for
-    for(i=0; i<NCOL(matrix);++i) {
-      signed_wmw_test_list(matColPtr, n,
-			   signedIndList,
-			   resPtr, type);
-      resPtr+=m;
-      matColPtr+=n;
-    }
-    
-    UNPROTECT(1);
-    return(res);
+  for(i=0; i<NCOL(matrix);++i) {
+    signed_wmw_test_list(matColPtr, n,
+			 signedIndList,
+			 resPtr, type);
+    resPtr+=m;
+    matColPtr+=n;
+  }
+  
+  UNPROTECT(1);
+  return(res);
 }
