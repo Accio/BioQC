@@ -7,7 +7,7 @@
 IndexListFromList(list, keepNA = FALSE, keepDup = FALSE, offset = 1L)
 }
 \arguments{
-\item{list}{A list of unique integer indices or NULL. NA is discarded.}
+\item{list}{A list of unique integer indices or NULL, or logical vectors of same lengths. NA is discarded.}
 
 \item{keepNA}{Logical, whether NA indices should be kept or not. Default: FALSE (removed)}
 
