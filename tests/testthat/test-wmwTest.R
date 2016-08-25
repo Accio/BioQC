@@ -5,9 +5,9 @@ context("Non-exact wilcoxon test in R")
 testNums <- 1:10
 testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
 testP <- wmwTestInR(testNums, testSub)
-testU <- wmwTestInR(testNums, testSub, statistic=TRUE)
+testU <- wmwTestInR(testNums, testSub, valType="U")
 testIndP <- wmwTestInR(testNums, which(testSub))
-testIndU <- wmwTestInR(testNums, which(testSub), statistic=TRUE)
+testIndU <- wmwTestInR(testNums, which(testSub), valType="U")
 expWMW <- wilcox.test(testNums[seq(1,9,2)],
                       testNums[seq(2,10,2)], exact=FALSE)
 
@@ -30,23 +30,23 @@ ind <- lapply(GSSIZE, function(x) sample(1:NROW, x))
 exprs <- matrix(round(rnorm(NROW*NCOL),4), nrow=NROW)
 
 gc()
-system.time(Cless <- wmwTest(exprs, ind, alternative="less"))
-system.time(Cgreater <- wmwTest(exprs, ind, alternative="greater"))
-system.time(Ctwosided <- wmwTest(exprs, ind, alternative="two.sided"))
-wmwTestR <- function(matrix, index, alternative, stat) {
+system.time(Cless <- wmwTest(exprs, ind, valType="p.less"))
+system.time(Cgreater <- wmwTest(exprs, ind, valType="p.greater"))
+system.time(Ctwosided <- wmwTest(exprs, ind, valType="p.two.sided"))
+wmwTestR <- function(matrix, index, valType) {
   sub <- rep(FALSE, length(matrix))
   sub[index]=TRUE
-  wmwTestInR(matrix, sub, alternative, stat)
+  wmwTestInR(matrix, sub, valType)
 }
 system.time(Rless <- apply(exprs, 2, function(x)
                           sapply(ind, function(y) 
-                                 wmwTestR(x, y, alternative="less", stat=FALSE))))
+                                 wmwTestR(x, y, valType="p.less"))))
 system.time(Rgreater <- apply(exprs, 2, function(x)
                               sapply(ind, function(y)
-                                     wmwTestR(x, y, alternative="greater", stat=FALSE))))
+                                     wmwTestR(x, y, valType="p.greater"))))
 system.time(Rtwosided <- apply(exprs, 2, function(x)
                               sapply(ind, function(y)
-                                     wmwTestR(x, y, alternative="two.sided", stat=FALSE))))
+                                     wmwTestR(x, y, valType="p.two.sided"))))
 
 test_that("less is identical", {
               expect_equal(Cless, Rless, tolerance=TOL)
