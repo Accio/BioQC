@@ -13,7 +13,7 @@
   1000 times faster.
 }
 \usage{
-wmwTest(x, ind.list, valType = c("p.greater", "p.less", "two.sided",
+wmwTest(x, ind.list, valType = c("p.greater", "p.less", "p.two.sided",
 "U","abs.log10p.greater","log10p.less","abs.log10p.two.sided","Q"), simplify = TRUE)
 }
 \arguments{
@@ -88,22 +88,22 @@ Zar, JH (1999). _Biostatistical Analysis 4th Edition_. Prentice-Hall Internation
 set.seed(1887)
 rd <- rnorm(1000)
 rl <- sample(c(TRUE, FALSE), 1000, replace=TRUE)
-wmwTest(rd, rl, valType="two.sided")
-wmwTest(rd, which(rl), valType="two.sided")
+wmwTest(rd, rl, valType="p.two.sided")
+wmwTest(rd, which(rl), valType="p.two.sided")
 rd1 <- rd + ifelse(rl, 0.5, 0)
 wmwTest(rd1, rl, valType="p.greater")
 wmwTest(rd1, rl, valType="U")
 rd2 <- rd - ifelse(rl, 0.2, 0)
 wmwTest(rd2, rl, valType="p.greater")
-wmwTest(rd2, rl, valType="two.sided")
+wmwTest(rd2, rl, valType="p.two.sided")
 wmwTest(rd2, rl, valType="p.less")
 
 ## matrix forms
 rmat <- matrix(c(rd, rd1, rd2), ncol=3, byrow=FALSE)
-wmwTest(rmat, rl, valType="two.sided")
+wmwTest(rmat, rl, valType="p.two.sided")
 wmwTest(rmat, rl, valType="p.greater")
 
-wmwTest(rmat, which(rl), valType="two.sided")
+wmwTest(rmat, which(rl), valType="p.two.sided")
 wmwTest(rmat, which(rl), valType="p.greater")
 
 ## other valTypes
