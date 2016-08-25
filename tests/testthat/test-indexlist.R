@@ -29,3 +29,11 @@ test_that("test IndexList", {
               offset(testIndexList) <- 2L
               expect_equivalent(sapply(expList, function(x) x+1L), testIndexList@.Data)
           })
+
+testLogical <- c(FALSE, TRUE, FALSE, TRUE)
+testLogIndexList <- IndexList(testLogical)
+testIntIndexList <- IndexList(which(testLogical))
+test_that("test IndexList from logical vector", {
+    expect_equivalent(testLogIndexList@.Data, list(c(2,4)))
+    expect_equivalent(testIntIndexList@.Data, list(c(2,4)))
+})
