@@ -4,17 +4,16 @@
 \alias{wmwTestInR}
 \title{Wilcoxon-Mann-Whitney test in R}
 \usage{
-wmwTestInR(x, sub, valType = c("two.sided", "less", "greater"),
-  statistic = FALSE)
+wmwTestInR(x, sub, valType = c("p.two.sided", "p.less", "p.greater", "U"))
 }
 \arguments{
 \item{x}{A numerical vector}
 
 \item{sub}{A logical vector or integer vector to subset \code{x}. Numbers in \code{sub} are compared with numbers out of \code{sub}}
 
-\item{statistic}{Logical, if \code{TRUE}, the U-statistic of the Wilcoxon-Mann-Whitney test is returned; otherwise the p-value is returned}
-
 \item{alternative}{two.sided, less, or greater}
+
+\item{statistic}{Logical, if \code{TRUE}, the U-statistic of the Wilcoxon-Mann-Whitney test is returned; otherwise the p-value is returned}
 }
 \description{
 Wilcoxon-Mann-Whitney test in R
@@ -23,5 +22,8 @@ Wilcoxon-Mann-Whitney test in R
 testNums <- 1:10
 testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
 wmwTestInR(testNums, testSub)
+wmwTestInR(testNums, testSub, valType="p.two.sided")
+wmwTestInR(testNums, testSub, valType="p.less")
+wmwTestInR(testNums, testSub, valType="U")
 }
 
