@@ -13,7 +13,7 @@ setGeneric("wmwTest", function(object, indexList, ...) standardGeneric("wmwTest"
 ##--------------------##
 #' Convert a list to an IndexList object
 #' 
-#' @param list A list of unique integer indices or NULL. NA is discarded. 
+#' @param list A list of unique integer indices or NULL, or logical vectors of same lengths. NA is discarded. 
 #' @param keepNA Logical, whether NA indices should be kept or not. Default: FALSE (removed)
 #' @param keepDup Logical, whether duplicated indices should be kept or not. Default: FALSE (removed)
 #' @param offset Integer, the starting index. Default: 1 (as in the convention of R)
@@ -29,6 +29,8 @@ IndexListFromList <- function(list, keepNA=FALSE, keepDup=FALSE, offset=1L) {
     list <- lapply(list, function(x) {
                        if(is.null(x))
                            return(x)
+                       if(is.logical(x))
+                           x <- which(x)
                        x <- as.integer(x)
                        if(!keepNA)
                            x <- x[!is.na(x)]
