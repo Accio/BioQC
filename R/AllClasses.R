@@ -60,8 +60,10 @@ isValidIndexList <- function(object) {
 setClass("GmtList", contains="list", validity=isValidGmtList)
 setClass("SignedGenesets", contains="list", validity=isValidSignedGenesets)
 setClass("IndexList",
-         representation=list("offset"="integer"),
-         prototype=prototype(offset=1L),
+         representation=list("offset"="integer",
+             "keepNA"="logical",
+             "keepDup"="logical"),
+         prototype=prototype(offset=1L, keepNA=FALSE, keepDup=FALSE),
          contains="list", validity=isValidIndexList)
 
 ## Constructors
@@ -96,27 +98,3 @@ SignedGenesets <- function(list) {
     res <- new("SignedGenesets", .Data=list)
     return(res)
 }
-
-#' Convert a list to an IndexList object
-#' 
-#' @param list A list of indices in integer (or numeric) or NULL. 
-#' 
-#' @examples
-#' testList <- list(GS_A=c(1,2,3,4),
-#'                  GS_B=c(2,3,4,5),
-#'                  GS_C=NULL,
-#'                  GS_D=c(1,3,5,NA),
-#'                  GS_E=c(2,4))
-#' testIndexList <- IndexList(testList)
-IndexListFromList <- function(list, offset=1L) {
-    list <- lapply(list, function(x) {
-                       if(is.null(x))
-                           return(x)
-                       x <- as.integer(x)
-                       return(x)
-                   })
-    res <- new("IndexList", offset=as.integer(offset))
-    res@.Data <- list
-    return(res)
-}
-

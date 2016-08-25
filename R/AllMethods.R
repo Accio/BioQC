@@ -3,13 +3,45 @@
 ##----------------------------------------##
 setGeneric("offset", function(object) standardGeneric("offset"))
 setGeneric("offset<-", function(object, value) standardGeneric("offset<-"))
-setGeneric("IndexList", function(object, ..., offset) standardGeneric("IndexList"))
-setGeneric("wmwTest", function(x, indexList, valType, simplify) standardGeneric("wmwTest"))
+setGeneric("IndexList", function(object, ...) standardGeneric("IndexList"))
+setGeneric("gmtList2IndexList", function(object, list, ...) standardGeneric("gmtList2IndexList"))
+setGeneric("wmwTest", function(object, indexList, ...) standardGeneric("wmwTest"))
 
 
 ##--------------------##
 ## IndexList
 ##--------------------##
+#' Convert a list to an IndexList object
+#' 
+#' @param list A list of unique integer indices or NULL. NA is discarded. 
+#' @param keepNA Logical, whether NA indices should be kept or not. Default: FALSE (removed)
+#' @param keepDup Logical, whether duplicated indices should be kept or not. Default: FALSE (removed)
+#' @param offset Integer, the starting index. Default: 1 (as in the convention of R)
+#' 
+#' @examples
+#' testList <- list(GS_A=c(1,2,3,4,3),
+#'                  GS_B=c(2,3,4,5),
+#'                  GS_C=NULL,
+#'                  GS_D=c(1,3,5,NA),
+#'                  GS_E=c(2,4))
+#' testIndexList <- IndexList(testList)
+IndexListFromList <- function(list, keepNA=FALSE, keepDup=FALSE, offset=1L) {
+    list <- lapply(list, function(x) {
+                       if(is.null(x))
+                           return(x)
+                       x <- as.integer(x)
+                       if(!keepNA)
+                           x <- x[!is.na(x)]
+                       if(!keepDup)
+                           x <- unique(x)
+                       return(x)
+                   })
+    res <- new("IndexList", keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
+    res@.Data <- list
+    return(res)
+}
+
+
 #' Convert several numeric vectors into an index list
 #'
 #' @param object A integer (numeric) vector
@@ -19,12 +51,29 @@ setGeneric("wmwTest", function(x, indexList, valType, simplify) standardGeneric(
 #' @examples
 #' IndexList(1:3, 4:5, 7:9)
 #' IndexList(1:3, 4:5, 7:9, offset=0)
-setMethod("IndexList", "numeric", function(object, ..., offset) {
+setMethod("IndexList", "numeric", function(object, ..., keepNA=FALSE, keepDup=FALSE, offset=1L) {
               olist <- list(...)
               list <- c(list(object), olist)
-              if(missing(offset))
-                  offset <- 1L
-              IndexListFromList(list, offset=offset)
+              IndexListFromList(list, keepNA=keepNA, keepDup=keepDup, offset=offset)
+          })
+
+#' Convert several logical vectors into an index list
+#'
+#' @param object A logical vector
+#' @param ... Other logical vector(s) of the same length as \code{object}
+#' @param offset offset; 1 if missing
+#'
+#' @examples
+#' IndexList(c(FALSE, TRUE, TRUE), c(FALSE, FALSE, TRUE), c(TRUE, FALSE, FALSE), offset=0)
+setMethod("IndexList", "logical", function(object, ..., keepNA=FALSE, keepDup=FALSE, offset=1L) {
+              olist <- list(...)
+              list <- c(list(object), olist)
+              if(!all(sapply(list, is.logical)))
+                  stop("all input must be logical vectors")
+              if(!length(unique(length(sapply(list, length))))==1)
+                  stop("all input must be of the same length")
+              list <- lapply(list, which)
+              IndexListFromList(list, keepNA=keepNA, keepDup=keepDup, offset=offset)
           })
 
 #' Convert a list of numeric (integer) vectors into an index list
@@ -35,10 +84,8 @@ setMethod("IndexList", "numeric", function(object, ..., offset) {
 #' @examples
 #' IndexList(list(A=1:3, B=4:5, C=7:9))
 #' IndexList(list(A=1:3, B=4:5, C=7:9), offset=0)
-setMethod("IndexList", "list", function(object, offset) {
-              if(missing(offset))
-                  offset <- 1L
-              IndexListFromList(object, offset=offset)
+setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
+              IndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
           })
 
 ##--------------------##
@@ -53,12 +100,13 @@ setMethod("IndexList", "list", function(object, offset) {
 #' offset(myIndexList)
 setMethod("offset", "IndexList", function(object) return(object@offset))
 setMethod("offset<-", c("IndexList", "numeric"), function(object, value) {
-                     diff <- object@offset - value
-                     object@offset <- value
-                     resList <- lapply(object@.Data, function(x) x-diff)
-                     object@.Data <- resList
-                     return(object)
-                 })
+              value <- as.integer(value)
+              diff <- object@offset - value
+              object@offset <- value
+              resList <- lapply(object@.Data, function(x) x-diff)
+              object@.Data <- resList
+              return(object)
+          })
 
 ##--------------------##
 ## show for GmtList
@@ -157,6 +205,7 @@ showIndices <- function(indices, name, nInd=3, indent=2) {
 }
 setMethod("show", "IndexList", function(object) {
               str <- sprintf("A list of %d indices with offset=%d", length(object), object@offset)
+              opts <- sprintf("Options: NA removed: %s; duplicates removed: %s", !object@keepNA, !object@keepDup)
               indent <- 2
               if(length(object)>6) {
                   heads <- object[1:3]
@@ -167,6 +216,6 @@ setMethod("show", "IndexList", function(object) {
               } else {
                   shows <- sapply(seq(along=object), function(i) showIndices(object[[i]], names(object)[i], indent=indent))
               }
-              concStr <- paste(c(str, shows, ""), collapse="\n")
+              concStr <- paste(c(str, opts, shows, ""), collapse="\n")
               cat(concStr)
           })
