@@ -1,3 +1,52 @@
+## FOR REFERENCE rankSumTestWithCorrelation function from the limma package (version 3.18.13)
+
+## authors: Gordon Smyth and Di Wu, following Zar, JD (1999) Biostatistical Analysis 4th Edition
+## used under GPL(>=2) license. The function has been slihtly modified to allow reporting results
+
+rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df = Inf) {
+    n <- length(statistics)
+    r <- rank(statistics)
+    r1 <- r[index]
+    n1 <- length(r1)
+    n2 <- n - n1
+    U <- n1 * n2 + n1 * (n1 + 1)/2 - sum(r1)
+    mu <- n1 * n2/2
+    if (correlation == 0 || n1 == 1) {
+        sigma2 <- n1 * n2 * (n + 1)/12
+    }
+    else {
+        sigma2 <- asin(1) * n1 * n2 + asin(0.5) * n1 * n2 * (n2 - 
+            1) + asin(correlation/2) * n1 * (n1 - 1) * n2 * (n2 - 
+            1) + asin((correlation + 1)/2) * n1 * (n1 - 1) * 
+            n2
+        sigma2 <- sigma2/2/pi
+    }
+    TIES <- (length(r) != length(unique(r)))
+    if (TIES) {
+        NTIES <- table(r)
+        prod <- sum(NTIES * (NTIES + 1) * (NTIES - 1))
+        denom <- (n * (n + 1) * (n - 1))
+        adjustment <- prod/denom
+        sigma2 <- sigma2 * (1 - adjustment)
+    }
+    zlowertail <- (U + 0.5 - mu)/sqrt(sigma2)
+    zuppertail <- (U - 0.5 - mu)/sqrt(sigma2)
+    less <-pt(zuppertail, df = df, lower.tail = FALSE)
+    greater <- pt(zlowertail, df = df)
+    res <- c(U=U,
+             mu=mu,
+             n1=n1,
+             n2=n2,
+             sigma2=sigma2,
+             r1sum=sum(r1),
+             zlt=zlowertail,
+             zut=zuppertail,
+             less = less,
+             greater = greater)
+    return(res)
+}
+
+
 #' Wilcoxon-Mann-Whitney test in R
 #'
 #' @param x A numerical vector
@@ -108,17 +157,42 @@ formatInd <- function(ind.list, x, nrow) {
     return(res)
 }
 
-simplifyWmw <- function(wmwRes, isMatVec, isIndVec) {
-    if(isMatVec & isIndVec) {
-        wmwRes <- wmwRes[1L, 1L] 
-    } else if (isMatVec) {
-        wmwRes <- wmwRes[,1L]
-    } else if (isIndVec) {
-        wmwRes <- wmwRes[1L,]
-    }
-    return(wmwRes)
+simplifyMatrix <- function(matrix) {
+    if(nrow(matrix)==1L & ncol(matrix)==1L)  {
+        matrix <- matrix[1L,1L]
+    } else if (nrow(matrix)==1L) {
+        matrix <- matrix[1L,]
+    } else if (ncol(matrix)==1L)  {
+        matrix <- matrix[,1L]
+    } 
+    return(matrix)
 }
 
+wmwTest.default <- function(matrix,
+                            indexListInC,
+                            valType=c("greater", "less", "two.sided", "U",
+                                "abs.log10.greater","log10.less","abs.log10.two.sided",
+                                "Q"),
+                            simplify=TRUE) {
+
+    if(storage.matrix(matrix)=="character")
+        stop("Input must be a numeric matrix or anything that can be converted into a numeric matrix")
+    
+    if(!storage.mode(matrix)!="double")
+        storage.matrix(matrix) <- "double"
+    
+    typeInt <- type2int(match.arg(valType))
+    res <- .Call("wmw_test", matrix, indexListInC, typeInt)
+    rownames(res) <- names(indexListInC)
+    colnames(res) <- colnames(matrix)
+
+    if(simplify) {
+        res <- simplifyMatrix(res)
+    }
+    return(res)
+}
+                            
+                            
 wmwTest <- function(x, ind.list,
                     alternative=c("greater", "less", "two.sided", "U",
                       "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
@@ -137,7 +211,7 @@ wmwTest <- function(x, ind.list,
     colnames(res) <- colnames(matrix)
     
     if(simplify) {
-        res <- simplifyWmw(res, matrixObj$isMatVec, indObj$isIndVec)
+        res <- simplifyMatrix(res)
     }
   
   return(res)
