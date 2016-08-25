@@ -4,19 +4,28 @@ importFrom("Biobase", "fData", "exprs")
 importFrom("methods", "is")
 importFrom("stats", "pt", "wilcox.test")
 
-exportClass(GmtList, SignedGenesets)
+exportClass(GmtList, SignedGenesets, IndexList)
+export(GmtList, SignedGenesets, IndexList, as.gmtlist)
 
-export(gini)
-export(absLog10p)
-export(filterPmat)
-export(as.gmtlist,
-       readGmt,
+export(offset, "offset<-")
+
+## GMT functions
+export(readGmt,
        gmtlist2signedGenesets,
        readSignedGmt)
-export(wmwTest)
+
+## helper functions
 export(entropy,
        entropyDiversity,
        entropySpecificity,
        sampleSpecialization)
+export(gini)
+export(absLog10p)
+export(filterPmat)
+
+export(wmwTestInR)
+export(wmwTest)
+
+
 
 useDynLib(BioQC, read_gmt)
