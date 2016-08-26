@@ -51,8 +51,7 @@ rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df =
 #'
 #' @param x A numerical vector
 #' @param sub A logical vector or integer vector to subset \code{x}. Numbers in \code{sub} are compared with numbers out of \code{sub}
-#' @param alternative two.sided, less, or greater
-#' @param statistic Logical, if \code{TRUE}, the U-statistic of the Wilcoxon-Mann-Whitney test is returned; otherwise the p-value is returned
+#' @param valType Type of retured-value. Supported values: p.two.sided, p.less, p.greater, and W statistic (note it is different from the U statistic)
 #' 
 #' @examples
 #' testNums <- 1:10
@@ -60,8 +59,8 @@ rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df =
 #' wmwTestInR(testNums, testSub)
 #' wmwTestInR(testNums, testSub, valType="p.two.sided")
 #' wmwTestInR(testNums, testSub, valType="p.less")
-#' wmwTestInR(testNums, testSub, valType="U")
-wmwTestInR <- function(x, sub, valType=c("p.two.sided", "p.less", "p.greater", "U")) {
+#' wmwTestInR(testNums, testSub, valType="W")
+wmwTestInR <- function(x, sub, valType=c("p.two.sided", "p.less", "p.greater", "W")) {
     if(is.numeric(sub)) {
         tmp <- rep(FALSE, length(x))
         tmp[sub] <- TRUE
@@ -70,10 +69,11 @@ wmwTestInR <- function(x, sub, valType=c("p.two.sided", "p.less", "p.greater", "
     valType <- match.arg(valType)
     if(!is.logical(sub))
         stop("sub must be either numeric indices or logical")
-    isStat <- valType=="U"
+    isStat <- valType=="W"
     if(!any(sub)) return(ifelse(isStat, 0, 1))
     if(!isStat) {
         alternative <- substr(valType, 3, nchar(valType))
+        stopifnot(alternative %in% c("greater", "less", "two.sided"))
     } else {
         alternative <- "two.sided"
     }
@@ -144,7 +144,7 @@ wmwTest.default <- function(matrix,
     if(storage.mode(matrix)=="character")
         stop("Input must be a numeric matrix or anything that can be converted into a numeric matrix")
     
-    if(!storage.mode(matrix)!="double")
+    if(storage.mode(matrix)!="double")
         storage.mode(matrix) <- "double"
 
     if(offset(indexList)!=0L)
