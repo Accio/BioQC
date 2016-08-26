@@ -187,7 +187,7 @@ eset<-new("ExpressionSet",
           phenoData=new("AnnotatedDataFrame", data.frame(Sample=LETTERS[1:8])),
           featureData=new("AnnotatedDataFrame",data.frame(GeneSymbol=gss)))
 esetWmwRes <- wmwTest(eset ,gmt_list, valType="p.greater")
-gmtInd <- BioQC:::gmtList2IndexList(eset, gmt_list, "GeneSymbol")
+gmtInd <- matchGenes(gmt_list, eset, "GeneSymbol")
 esetWmwResR <- wmwTest(exprs(eset), gmtInd, valType="p.greater")
                              
 test_that("eSet and GMT", {
