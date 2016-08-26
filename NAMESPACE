@@ -1,7 +1,8 @@
 import("Rcpp")
 importClassFrom("Biobase", "eSet")
 importFrom("Biobase", "fData", "featureNames", "exprs")
-importFrom("methods", "is")
+importFrom("utils", "head")
+importFrom("methods", "is", "new")
 importFrom("stats", "pt", "wilcox.test")
 
 exportClass(GmtList, SignedGenesets, IndexList)
@@ -27,7 +28,5 @@ export(valTypes)
 
 export(wmwTestInR)
 export(wmwTest)
-
-
 
 useDynLib(BioQC, read_gmt)
