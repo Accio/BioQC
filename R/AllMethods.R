@@ -4,6 +4,7 @@
 setGeneric("offset", function(object) standardGeneric("offset"))
 setGeneric("offset<-", function(object, value) standardGeneric("offset<-"))
 setGeneric("IndexList", function(object, ...) standardGeneric("IndexList"))
+setGeneric("SignedIndexList", function(object, ...) standardGeneric("SignedIndexList"))
 setGeneric("matchGenes", function(list, object, ...) standardGeneric("matchGenes"))
 setGeneric("wmwTest", function(object, indexList, ...) standardGeneric("wmwTest"))
 
@@ -25,24 +26,37 @@ setGeneric("wmwTest", function(object, indexList, ...) standardGeneric("wmwTest"
 #'                  GS_D=c(1,3,5,NA),
 #'                  GS_E=c(2,4))
 #' testIndexList <- IndexList(testList)
-IndexListFromList <- function(list, keepNA=FALSE, keepDup=FALSE, offset=1L) {
-    list <- lapply(list, function(x) {
-                       if(is.null(x))
-                           return(x)
-                       if(is.logical(x))
-                           x <- which(x)
-                       x <- as.integer(x)
-                       if(!keepNA)
-                           x <- x[!is.na(x)]
-                       if(!keepDup)
-                           x <- unique(x)
-                       return(x)
-                   })
+
+parseIndex <- function(x, keepNA=FALSE, keepDup=FALSE) {
+    if(is.null(x))
+        return(x)
+    if(is.logical(x))
+        x <- which(x)
+    x <- as.integer(x)
+    if(!keepNA)
+        x <- x[!is.na(x)]
+    if(!keepDup)
+        x <- unique(x)
+    return(x)
+}
+IndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
+    outlist <- lapply(inlist, parseIndex, keepNA=keepNA, keepDup=keepDup) 
     res <- new("IndexList", keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
-    res@.Data <- list
+    res@.Data <- outlist
     return(res)
 }
 
+SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
+    outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
+                                               neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
+    res <- new("SignedIndexList", keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
+    res@.Data <- outlist
+    return(res)
+}
+
+setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
+     SignedIndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
+})
 
 #' Convert several numeric vectors into an index list
 #'
@@ -100,8 +114,8 @@ setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, off
 #' @examples
 #' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 #' offset(myIndexList)
-setMethod("offset", "IndexList", function(object) return(object@offset))
-setMethod("offset<-", c("IndexList", "numeric"), function(object, value) {
+setMethod("offset", "BaseIndexList", function(object) return(object@offset))
+setMethod("offset<-", c("BaseIndexList", "numeric"), function(object, value) {
               value <- as.integer(value)
               diff <- object@offset - value
               object@offset <- value

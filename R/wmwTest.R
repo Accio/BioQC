@@ -253,27 +253,6 @@ setMethod("wmwTest", c("ANY", "list"),
 ## wmwTestSignedGenesets
 ##----------------------------------------##
 
-formatMatrix <- function(x) {
-    isMatVec <- FALSE
-
-    if(is(x, "eSet")) {
-        matrix <- exprs(x)
-    } else if (!is.matrix(x) & is.numeric(x)) {
-        matrix <- matrix(x, ncol=1L)
-        isMatVec <- TRUE
-    } else if (is.matrix(x)) {
-        matrix <- x
-    } else {
-        stop("'matrix' must be a numeric matrix, or a numeric vector, or an eSet object")
-    }
-
-    if(storage.mode(matrix)!="double")
-        storage.mode(matrix) <- "double"
-
-    return(list(matrix=matrix,
-                isMatVec=isMatVec))
-}
-
 gmtlist2signedInd <- function(gmtlist, x,  posPattern="_UP$", negPattern="_DN$",
                               nomatch=c("ignore", "pos", "neg")) {
     if(is(x, "eSet")) {
@@ -325,26 +304,46 @@ formatSignedInd <- function(signedIndList, x, nrow) {
     return(res)
 }
 
-wmwTestSignedGenesets <- function(x, signedIndList,
-                                  alternative=c("greater", "less", "two.sided", "U",
-                                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
-    matrixObj <- formatMatrix(x)
-    matrix <- matrixObj$matrix
+wmwTestSignedGenesets.default <- function(matrix,
+                                          signedIndexList,
+                                          valType=c("p.greater", "p.less", "p.two.sided", "U",
+                                              "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
+                                              "Q"),
+                                          simplify=TRUE) {
+    if(!is.matrix(matrix) || !is(signedIndexList, "SignedIndexList"))
+        stop("'matrix' and 'signedIndexList' must be matrix and an SignedIndexList object, respectively")
+    if(missing(simplify))  simplify <- TRUE
+    if(missing(valType)) {
+        valType <- "p.greater"
+    } else {
+        valType <- match.arg(valType)
+    }
+    typeInt <- type2int(valType)
+    
+    if(storage.mode(matrix)=="character")
+        stop("Input must be a numeric matrix or anything that can be converted into a numeric matrix")
+    
+    if(storage.mode(matrix)!="double")
+        storage.mode(matrix) <- "double"
 
-    indObj <- formatSignedInd(signedIndList, x, nrow(matrix))
-    typeInt <- type2int(match.arg(alternative))
-
-    res <- .Call("signed_wmw_test", matrix, posObj$indC, negObj$indC, typeInd)
-
-    rownames(res) <- names(ind.list)
+    if(offset(signedIndexList)!=0L)
+        offset(signedIndexList) <- 0L
+    
+    res <- .Call("signed_wmw_test", matrix,
+                 posIndices(signedIndexList),
+                 negIndices(signedIndexList),
+                 typeInt)
+    rownames(res) <- names(indexList)
     colnames(res) <- colnames(matrix)
 
     if(simplify) {
-        res <- simplifyWmw(res, matrixObj$isMatVec, posObj$isIndVec)
+        res <- simplifyMatrix(res)
     }
-    
     return(res)
 }
+setMethod("wmwTest", c("matrix", "SignedGenesets"), function(object, indexList, valType, simplify) {
+    wmwTestSignedGenesets.default(object, indexList, valType, simplify)
+})
 
 ##setGeneric("wmwTest",function(object, sub, alternative, statistic) standardGeneric("wmwTest"))
 ##setGeneric("wmwTest",function(exprs, index, alternative) standardGeneric("wmwTest"))

@@ -39,7 +39,7 @@ isValidSignedGenesets<- function(object) {
     return(TRUE)
 }
 
-isValidIndexList <- function(object) {
+isValidBaseIndexList <- function(object) {
     if(!(length(object@offset)==1L && is.integer(object@offset)))
         return(sprintf("offset must be a single integer. Its value now:%d; class:%s; length:%d",
                        object@offset,
@@ -49,10 +49,29 @@ isValidIndexList <- function(object) {
     isList <- is.list(object)
     if(!isList)
         return(paste("object must be a list of indices starting from 1"))
-    isInd <- sapply(object, function(x) is.null(x) || is.integer(x) & all(x)>=1)
+    return(TRUE)
+}
+
+isValidIndexList <- function(object) {
+    isInd <- sapply(object, function(x) is.null(x) || is.integer(x))
     if(!all(isInd))
         return(paste("object must be a list of indices starting from 1\n",
                      sprintf("Followings are not: %s", which(!isInd))))
+    return(TRUE)
+}
+
+isValidSignedIndexList <- function(object) {
+    isSigned <- sapply(object, function(x)
+                       all(c("pos", "neg") %in% names(x)))
+    if(!isSigned)
+        return(paste("In some items there are no pos/neg fields\n",
+                     sprintf("Following are not: %s", which(!isSigned))))
+    isPosInd <- sapply(object, function(x) is.null(x$pos) || is.integer(x$pos))
+    isNegInd <- sapply(object, function(x) is.null(x$neg) || is.integer(x$neg))
+    isInd <- isPosInd & isNegInd
+    if(!all(isInd))
+        return(paste("Indices are not valid in following cses\n",
+                     sprintf("%s", which(!isInd))))
     return(TRUE)
 }
 
@@ -64,19 +83,38 @@ setClass("GmtList", contains="list", validity=isValidGmtList)
 #' An S4 class to hold signed genesets, each item in the list is in in turn a list containing following items: name, pos, and neg.
 setClass("SignedGenesets", contains="list", validity=isValidSignedGenesets)
 
+#' An S4 class to hold a list of indices, with the possibility to specify the offset of the indices. IndexList and SignedIndexList extend this class
+#'
+#' @slot offset An integer specifying the value of first element. Default 1
+#' @slot keepNA Logical, whether NA was kept during construction
+#' @slot keepDup Logical, whether duplicated values were kept during construction
+
+setClass("BaseIndexList",
+         representation=list("offset"="integer",
+             "keepNA"="logical",
+             "keepDup"="logical"),
+         prototype=prototype(offset=1L, keepNA=FALSE, keepDup=FALSE),
+         contains="list", validity=isValidBaseIndexList)
+
+##setClass("IndexList",
+##         representation=list("offset"="integer",
+##             "keepNA"="logical",
+##             "keepDup"="logical"),
+##         prototype=prototype(offset=1L, keepNA=FALSE, keepDup=FALSE),
+##         contains="BaseIndexList", validity=isValidIndexList)
+
 #' An S4 class to hold a list of integers as indices, with the possibility to specify the offset of the indices
 #'
 #' @slot offset An integer specifying the value of first element. Default 1
 #' @slot keepNA Logical, whether NA was kept during construction
 #' @slot keepDup Logical, whether duplicated values were kept during construction
-setClass("IndexList",
-         representation=list("offset"="integer",
-             "keepNA"="logical",
-             "keepDup"="logical"),
-         prototype=prototype(offset=1L, keepNA=FALSE, keepDup=FALSE),
-         contains="list", validity=isValidIndexList)
 
+setClass("IndexList", contains="BaseIndexList", validity=isValidIndexList)
+setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedIndexList)
+
+##----------------------------------------##
 ## Constructors
+##----------------------------------------##
 
 #' Convert a list to a GmtList object
 #' @param list A list of genesets; each geneset is a list of at least three fields: 'name', 'desc', and 'genes'. 'name' and 'desc' contains one character string ('desc' can be NULL while 'name' cannot), and 'genes' can be either NULL or a character vector.
@@ -108,3 +146,4 @@ SignedGenesets <- function(list) {
     res <- new("SignedGenesets", .Data=list)
     return(res)
 }
+

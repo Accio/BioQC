@@ -37,3 +37,11 @@ test_that("test IndexList from logical vector", {
     expect_equivalent(testLogIndexList@.Data, list(c(2,4)))
     expect_equivalent(testIntIndexList@.Data, list(c(2,4)))
 })
+
+context("Test SignedIndexList")
+
+inputSil <- list("GS_A"=list(pos=1:3, neg=NULL),
+                 "GS_B"=list(pos=1:3, neg=4:7),
+                 "GS_C"=list(pos=NULL, neg=c(3L,5L,NA)),
+                 "GS_D"=list(pos=c(1L,3L,3L,4L), neg=c(3L,5L,NA)))
+## resSil <- SignedIndexList(inputSil)
