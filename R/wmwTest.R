@@ -132,7 +132,8 @@ wmwTest.default <- function(matrix,
                                 "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
                                 "Q"),
                             simplify=TRUE) {
-    
+    if(!is.matrix(matrix) || !is(indexList, "IndexList"))
+        stop("'matrix' and 'indexList' must be matrix and an IndexList object, respectively")
     if(missing(simplify))  simplify <- TRUE
     if(missing(valType)) {
         valType <- "p.greater"
