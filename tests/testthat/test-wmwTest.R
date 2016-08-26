@@ -4,22 +4,21 @@ library(BioQC)
 context("Non-exact wilcoxon test in R")
 testNums <- 1:10
 testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
-testP <- wmwTestInR(testNums, testSub)
-testU <- wmwTestInR(testNums, testSub, valType="U")
-testIndP <- wmwTestInR(testNums, which(testSub))
-testIndU <- wmwTestInR(testNums, which(testSub), valType="U")
+testP <- wmwTestInR(testNums, testSub, valType="p.two.sided")
+testW <- wmwTestInR(testNums, testSub, valType="W")
+testIndP <- wmwTestInR(testNums, which(testSub), valType="p.two.sided")
+testIndW <- wmwTestInR(testNums, which(testSub), valType="W")
 expWMW <- wilcox.test(testNums[seq(1,9,2)],
-                      testNums[seq(2,10,2)], exact=FALSE)
+                      testNums[seq(2,10,2)], alternative="two.sided", exact=FALSE)
 
 test_that("Non-exact wilcoxon test in R is wrapped correctly by wmwTestInR", {
              expect_equal(testP, expWMW$p.value)
              expect_equal(testIndP, expWMW$p.value)
-             expect_equivalent(testU, expWMW$statistic)
-             expect_equivalent(testIndU, expWMW$statistic)
+             expect_equivalent(testW, expWMW$statistic)
+             expect_equivalent(testIndW, expWMW$statistic)
          })
 
 context("Wilcoxon test in R and C")
-
 set.seed(1887)
 NROW <- 2000
 NCOL <- 5
@@ -60,61 +59,137 @@ test_that("two.sided is identical", {
           })
 
 
-## TO BE REFACTORED!
-context("one-to-one copy of the example")
+context("Test different combinations of input and valType in wmwTest")
 ## R-native data structures
-set.seed(1887)
+
 rd <- rnorm(1000)
 rl <- sample(c(TRUE, FALSE), 1000, replace=TRUE)
-wmwTest(rd, rl, valType="p.two.sided")
-wmwTest(rd, which(rl), valType="p.two.sided")
+wmwTwoSidedC <- wmwTest(rd, rl, valType="p.two.sided")
+wmwTwoSidedR <- wmwTestInR(rd, rl, valType="p.two.sided")
+
 rd1 <- rd + ifelse(rl, 0.5, 0)
-wmwTest(rd1, rl, valType="p.greater")
-wmwTest(rd1, rl, valType="U")
+wmwGreaterC <- wmwTest(rd1, rl, valType="p.greater")
+wmwGreaterR <- wmwTestInR(rd1, rl, valType="p.greater")
+
 rd2 <- rd - ifelse(rl, 0.2, 0)
-wmwTest(rd2, rl, valType="p.greater")
-wmwTest(rd2, rl, valType="p.two.sided")
-wmwTest(rd2, rl, valType="p.less")
+wmwGreaterC2 <- wmwTest(rd2, rl, valType="p.greater")
+wmwTwoSidedC2 <- wmwTest(rd2, rl, valType="p.two.sided")
+wmwLessC2 <- wmwTest(rd2, rl, valType="p.less")
+wmwGreaterR2 <- wmwTestInR(rd2, rl, valType="p.greater")
+wmwTwoSidedR2 <- wmwTestInR(rd2, rl, valType="p.two.sided")
+wmwLessR2 <- wmwTestInR(rd2, rl, valType="p.less")
+test_that("p-values by C and R implementations are identical", {
+    expect_equivalent(wmwTwoSidedC, wmwTwoSidedR)
+    expect_equivalent(wmwGreaterC, wmwGreaterR)
+    expect_equivalent(wmwGreaterC2, wmwGreaterR2)
+    expect_equivalent(wmwTwoSidedC2, wmwTwoSidedR2)
+    expect_equivalent(wmwLessC2, wmwLessR2)
+})
+
+wmwTwoSidedC.ind <- wmwTest(rd, which(rl), valType="p.two.sided")
+test_that("wmwTest accepts logical and numeric vector as IndexList", {
+    expect_equivalent(wmwTwoSidedC.ind, wmwTwoSidedC)
+})
 
 ## matrix forms
 rmat <- matrix(c(rd, rd1, rd2), ncol=3, byrow=FALSE)
-wmwTest(rmat, rl, valType="p.two.sided")
-wmwTest(rmat, rl, valType="p.greater")
+tsMat <- wmwTest(rmat, rl, valType="p.two.sided")
+tsMatR <- apply(rmat, 2, function(x)
+                wmwTestInR(x, rl, valType="p.two.sided"))
+tsMatLess <- wmwTest(rmat, rl, valType="p.less")
+tsMatLessR <- apply(rmat, 2, function(x)
+                       wmwTestInR(x, rl, valType="p.less"))
+tsMatGreater <- wmwTest(rmat, rl, valType="p.greater")
+tsMatGreaterR <- apply(rmat, 2, function(x)
+                       wmwTestInR(x, rl, valType="p.greater"))
+logicTsMat <- wmwTest(rmat, which(rl), valType="p.two.sided")
+logicTsMatGreater <- wmwTest(rmat, which(rl), valType="p.greater")
+    
+test_that("Matrix as input to wmwTest", {
+    expect_equivalent(tsMat, tsMatR)
+    expect_equivalent(tsMatGreater, tsMatGreaterR)
+    expect_equivalent(tsMatLess, tsMatLessR)
+    expect_equivalent(tsMat, logicTsMat)
+    expect_equivalent(tsMatGreater, logicTsMatGreater)
+})
 
-wmwTest(rmat, which(rl), valType="p.two.sided")
-wmwTest(rmat, which(rl), valType="p.greater")
+intMat <- matrix(as.integer(rnorm(3000, 5, 3)), nrow=1000)
+intMatTs <- wmwTest(intMat, rl, valType="p.two.sided")
+intMatGreater <- wmwTest(intMat, rl, valType="p.greater")
+intMatLess <- wmwTest(intMat, rl, valType="p.less")
+intMatTsR <- apply(intMat, 2, function(x) wmwTestInR(x, rl, valType="p.two.sided"))
+intMatGreaterR <- apply(intMat, 2, function(x) wmwTestInR(x, rl, valType="p.greater"))
+intMatLessR <- apply(intMat, 2, function(x) wmwTestInR(x, rl, valType="p.less"))
 
-## other valTypes
-wmwTest(rmat, which(rl), valType="U")
-wmwTest(rmat, which(rl), valType="abs.log10p.greater")
-wmwTest(rmat, which(rl), valType="log10p.less")
-wmwTest(rmat, which(rl), valType="abs.log10p.two.sided")
-wmwTest(rmat, which(rl), valType="Q")
+test_that("Integer matrix as input", {
+    expect_equivalent(intMatTs, intMatTsR)
+    expect_equivalent(intMatGreater, intMatGreaterR)
+    expect_equivalent(intMatLess, intMatLessR)
+})
+    
+## transformed val types
+tsMatGreaterScore <- wmwTest(rmat, which(rl), valType="abs.log10p.greater")
+expTsMatGreaterScore <- abs(log10(tsMatGreater))
+
+tsMatLessScore <- wmwTest(rmat, which(rl), valType="log10p.less")
+expTsMatLessScore <- log10(tsMatLess)
+
+tsMatScore <- wmwTest(rmat, which(rl), valType="abs.log10p.two.sided")
+expTsMatScore <- abs(log10(tsMat))
+
+matQ <- wmwTest(rmat, which(rl), valType="Q")
+expQ <-expTsMatScore
+isRevQ <- tsMatLess < tsMatGreater
+expQ[isRevQ] <- -expQ[isRevQ]
+test_that("Transformed valTypes", {
+   expect_equivalent(tsMatGreaterScore,expTsMatGreaterScore)
+   expect_equivalent(tsMatLessScore,expTsMatLessScore)
+   expect_equivalent(tsMatScore, expTsMatScore)
+   expect_equivalent(matQ, expQ)
+})
+
 
 ## using ExpressionSet
 data(sample.ExpressionSet)
 testSet <- sample.ExpressionSet
 fData(testSet)$GeneSymbol <- paste("GENE_",1:nrow(testSet), sep="")
 mySig1 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.25, 0.75), replace=TRUE)
-wmwTest(testSet, which(mySig1), valType="p.greater")
 
-## using integer
-exprs(testSet)[,1L] <- exprs(testSet)[,1L] + ifelse(mySig1, 50, 0)
-wmwTest(testSet, which(mySig1), valType="p.greater")
+eSetInt <- wmwTest(testSet, which(mySig1), valType="p.greater")
+eSetIntR <- apply(exprs(testSet), 2, function(x)
+                  wmwTestInR(x, which(mySig1), valType="p.greater"))
+
+
 
 ## using lists
 mySig2 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.6, 0.4), replace=TRUE)
-wmwTest(testSet, list(first=mySig1, second=mySig2))
+sigLogLists <- list(first=mySig1, second=mySig2)
+sigIntLists <- list(first=which(mySig1), second=which(mySig2))
+sigLog <- wmwTest(testSet, sigLogLists, valType="p.greater")
+sigInt <- wmwTest(testSet, sigIntLists, valType="p.greater")
+sigLogR <- apply(exprs(testSet), 2, function(x)
+                 sapply(sigLogLists, function(vec)
+                        wmwTestInR(x, vec, valType="p.greater")))
+
+test_that("eSet", {
+    expect_equivalent(eSetInt, eSetIntR)
+    expect_equivalent(sigLog, sigInt)
+    expect_equivalent(sigLog, sigLogR)
+})
 
 ## using GMT file
 gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
 gmt_list <- readGmt(gmt_file)
 
-gss <- sample(unlist(sapply(gmt_list, function(x) x$genes)), 1000)
+gss <- sample(unlist(sapply(gmt_list, function(x) x$genes)), 500)
 eset<-new("ExpressionSet",
-          exprs=matrix(rnorm(10000), nrow=1000L),
-          phenoData=new("AnnotatedDataFrame", data.frame(Sample=LETTERS[1:10])),
+          exprs=matrix(rnorm(4000), nrow=500L),
+          phenoData=new("AnnotatedDataFrame", data.frame(Sample=LETTERS[1:8])),
           featureData=new("AnnotatedDataFrame",data.frame(GeneSymbol=gss)))
 esetWmwRes <- wmwTest(eset ,gmt_list, valType="p.greater")
-summary(esetWmwRes)
-        
+gmtInd <- BioQC:::gmtList2IndexList(eset, gmt_list, "GeneSymbol")
+esetWmwResR <- wmwTest(exprs(eset), gmtInd, valType="p.greater")
+                             
+test_that("eSet and GMT", {
+    expect_equivalent(esetWmwRes, esetWmwResR)
+})
