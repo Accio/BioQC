@@ -51,7 +51,7 @@ rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df =
 #'
 #' @param x A numerical vector
 #' @param sub A logical vector or integer vector to subset \code{x}. Numbers in \code{sub} are compared with numbers out of \code{sub}
-#' @param valType Type of retured-value. Supported values: p.two.sided, p.less, p.greater, and W statistic (note it is different from the U statistic)
+#' @param valType Type of retured-value. Supported values: p.greater, p.less, p.two.sided, and W statistic (note it is different from the U statistic)
 #' 
 #' @examples
 #' testNums <- 1:10
@@ -60,7 +60,7 @@ rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df =
 #' wmwTestInR(testNums, testSub, valType="p.two.sided")
 #' wmwTestInR(testNums, testSub, valType="p.less")
 #' wmwTestInR(testNums, testSub, valType="W")
-wmwTestInR <- function(x, sub, valType=c("p.two.sided", "p.less", "p.greater", "W")) {
+wmwTestInR <- function(x, sub, valType=c("p.greater", "p.less", "p.two.sided",  "W")) {
     if(is.numeric(sub)) {
         tmp <- rep(FALSE, length(x))
         tmp[sub] <- TRUE
