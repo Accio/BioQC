@@ -98,7 +98,15 @@ type2int <- function(type) {
     return(TYPE_CODES[type])
 }
 
-gmtList2IndexList.default <- function(geneSymbols, gmtList) {
+#' Match genes in a GmtList to a vector of genesymbols
+#'
+#' @param gmtList A GmtList object
+#' @param geneSymbols Gene symbols to be matched; they can come from a column in an eSet object, for example
+matchGenes.default <- function(gmtList,geneSymbols) {
+    if(!is(gmtList, "GmtList"))
+        stop(paste("gmtlist be must of class GmtList; now it is", class(gmtList)))
+    if(!is.character(geneSymbols))
+        stop(paste("geneSymbols be must characters; now it is", class(geneSymbols)))
     genes <- lapply(gmtList, function(x) x$genes)
     names(genes) <- sapply(gmtList, function(x) x$name)
     indList <- sapply(genes, function(g) match(g, geneSymbols))
@@ -106,16 +114,16 @@ gmtList2IndexList.default <- function(geneSymbols, gmtList) {
     return(res)
 }
 
-setMethod("gmtList2IndexList", c("character", "GmtList"), function(object, list) {
-              gmtList2IndexList.default(object, list)
+setMethod("matchGenes", c("GmtList", "character"), function(list, object) {
+              matchGenes.default(list, object)
           })
-setMethod("gmtList2IndexList", c("matrix", "GmtList"), function(object, list) {
+setMethod("matchGenes", c("GmtList", "genes"), function(list, object) {
               if(is.null(rownames(object)))
                   stop("When used to map genes in GmtList directly to rows in matrix, the matrix's row names must be gene symbols")
               symbols <- rownames(object)
-              gmtList2IndexList.default(symbols, list)
+              matchGenes.default(list, as.character(symbols))
           })
-setMethod("gmtList2IndexList", c("eSet", "GmtList"), function(object, list, col="GeneSymbol") {
+setMethod("matchGenes", c("GmtList", "eSet"), function(list, object, col="GeneSymbol") {
               if(!is.null(col) && !col %in% colnames(fData(object)))
                   stop("When used to map genes in GmtList directly to rows in an eSet, col must be either NULL (mapped to feature names) or a column in the fData(eset)")
               if(is.null(col)) {
@@ -123,7 +131,7 @@ setMethod("gmtList2IndexList", c("eSet", "GmtList"), function(object, list, col=
               } else {
                   symbols <- fData(object)[,col]
               }
-              gmtList2IndexList.default(symbols, list)
+              matchGenes.default(list, as.character(symbols))
           })
 
 wmwTest.default <- function(matrix,
@@ -176,13 +184,13 @@ setMethod("wmwTest", c("numeric", "IndexList"),
 setMethod("wmwTest", c("matrix", "GmtList"),
           function(object, indexList,
                    valType, simplify) {
-              indexList <- gmtList2IndexList(object, indexList)
+              indexList <- matchGenes(indexList, object)
               wmwTest.default(object, indexList, valType=valType, simplify=simplify)
           })
 setMethod("wmwTest", c("eSet", "GmtList"),
           function(object, indexList, col="GeneSymbol",
                    valType, simplify) {
-              indexList <- gmtList2IndexList(object, indexList, col=col)
+              indexList <- matchGenes(indexList, object, col=col)
               wmwTest.default(exprs(object), indexList, valType=valType, simplify=simplify)
           })
 setMethod("wmwTest", c("eSet", "numeric"),

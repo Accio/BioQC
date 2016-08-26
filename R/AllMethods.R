@@ -4,7 +4,7 @@
 setGeneric("offset", function(object) standardGeneric("offset"))
 setGeneric("offset<-", function(object, value) standardGeneric("offset<-"))
 setGeneric("IndexList", function(object, ...) standardGeneric("IndexList"))
-setGeneric("gmtList2IndexList", function(object, list, ...) standardGeneric("gmtList2IndexList"))
+setGeneric("matchGenes", function(list, object, ...) standardGeneric("matchGenes"))
 setGeneric("wmwTest", function(object, indexList, ...) standardGeneric("wmwTest"))
 
 
