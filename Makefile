@@ -39,7 +39,7 @@ install: dist
 	@echo ' '
 
 install-test: 
-	${R} CMD INSTALL ../${PKG} && R -e "library(testthat); test_dir('./tests')"
+	${R} CMD INSTALL ../${PKG} && ${R} -e "library(testthat); test_dir('./tests')"
 
 check:	dist
 	@echo '====== Checking Package ======'
