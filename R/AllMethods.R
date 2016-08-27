@@ -46,17 +46,6 @@ IndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
     return(res)
 }
 
-SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
-    outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
-                                               neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
-    ## note that .Data must be the first data slot in the new command
-    res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
-    return(res)
-}
-
-setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
-     SignedIndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
-})
 
 #' Convert several numeric vectors into an index list
 #'
@@ -104,6 +93,21 @@ setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, off
               IndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
           })
 
+##----------------------------------------##
+## SignedIndexList
+##----------------------------------------##
+SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
+    outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
+                                               neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
+    ## note that .Data must be the first data slot in the new command
+    res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
+    return(res)
+}
+
+setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
+     SignedIndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
+})
+
 ##--------------------##
 ## offset
 ##--------------------##
@@ -115,15 +119,27 @@ setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, off
 #' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 #' offset(myIndexList)
 setMethod("offset", "BaseIndexList", function(object) return(object@offset))
-setMethod("offset<-", c("BaseIndexList", "numeric"), function(object, value) {
+modOffset <- function(x, diff) {
+    if(is.null(x)) return(NULL)
+    return(x-diff)
+}
+setMethod("offset<-", c("IndexList", "numeric"), function(object, value) {
               value <- as.integer(value)
               diff <- object@offset - value
               object@offset <- value
-              resList <- lapply(object@.Data, function(x) x-diff)
+              resList <- lapply(object@.Data, modOffset, diff=diff)
               object@.Data <- resList
               return(object)
           })
-
+setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
+    value <- as.integer(value)
+    diff <- object@offset - value
+    object@offset <- value
+    resList <- lapply(object@.Data, function(x) list(pos=modOffset(x$pos, diff),
+                                                     neg=modOffset(x$neg, diff)))
+    object@.Data <- resList
+    return(object)
+})
 ##--------------------##
 ## show for GmtList
 ##--------------------##
