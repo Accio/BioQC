@@ -44,4 +44,14 @@ inputSil <- list("GS_A"=list(pos=1:3, neg=NULL),
                  "GS_B"=list(pos=1:3, neg=4:7),
                  "GS_C"=list(pos=NULL, neg=c(3L,5L,NA)),
                  "GS_D"=list(pos=c(1L,3L,3L,4L), neg=c(3L,5L,NA)))
-## resSil <- SignedIndexList(inputSil)
+resSil <- SignedIndexList(inputSil)
+test_that("SignedIndexList from list", {
+    expect_equal(names(resSil), paste("GS", LETTERS[1:4], sep="_"))
+    expect_equal(resSil@keepNA, FALSE)
+    expect_equal(resSil@keepDup, FALSE)
+    expect_equal(resSil@offset, 1L)
+    expect_equivalent(resSil@.Data, list(list(pos=1:3, neg=NULL),
+                                         list(pos=1:3, neg=4:7),
+                                         list(pos=NULL, neg=c(3L, 5L)),
+                                         list(pos=c(1L, 3L, 4L), neg=c(3L, 5L))))
+})
