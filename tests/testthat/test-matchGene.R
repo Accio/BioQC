@@ -1,4 +1,4 @@
-context("Test matchGene")
+context("Test matchGene for GmtList")
 
 testGenes <- c("AKT1", "AKT2", "EGFR", "ERBB2", "TSC1", "TSC2", NA)
 testRawGmtList <- list(GS1=c("AKT1", "AKT2"),
@@ -40,4 +40,50 @@ test_that("matchGenes works for GmtList and eSet", {
     expect_equivalent(testEsetMatch.GeneSymbol@.Data, expMatchList)
     expect_equivalent(testEsetMatch.myID@.Data, expMatchList)
     expect_equivalent(testEsetMatch.fname@.Data, expMatchList)
+})
+
+context("Test matchGene for SignedGenesets")
+testRawSignedGenesets <- list(GS1=list(name="GS1",
+                                  pos=c("AKT1", "AKT2"),
+                                  neg=c("TSC1", "TSC2", "PR")),
+                              GS2=list(name="GS2",
+                                  pos=c("EGFR","ERBB3"),
+                                  neg=c("ERBB2", "ERBB4")),
+                              GS3=list(name="GS3",
+                                  pos=NULL,
+                                  neg=c("TSC1", "TSC2")),
+                              GS4=list(name="GS4",
+                                  pos=c("ERBB2", "ERBB4", "PR", NA),
+                                  neg=NULL),
+                              GS5=list(name="GS5", pos=NULL, neg=NULL))
+testSignedGenesets <- SignedGenesets(testRawSignedGenesets)
+testSignedMatch <- matchGenes(testSignedGenesets, testGenes)
+expSignedMatchList <- list(list(pos=1:2, neg=5:6),
+                           list(pos=3L, neg=4L),
+                           list(pos=NULL, neg=5:6),
+                           list(pos=4L, neg=NULL),
+                           list(pos=NULL, neg=NULL))
+
+test_that("matchGenes works for SignedGenesets and character", {
+    expect_equal(offset(testSignedMatch), 1L)
+    expect_equivalent(testSignedMatch@.Data, expSignedMatchList)
+})
+
+testMatrixSignedMatch <- matchGenes(testSignedGenesets, testMatrix)
+test_that("matchSignedGenes works for SignedGenesets and matrix", {
+    expect_equal(offset(testMatrixSignedMatch), 1L)
+    expect_equivalent(testMatrixSignedMatch@.Data, expSignedMatchList)
+})
+
+testEsetSignedMatch.GeneSymbol <- matchGenes(testSignedGenesets, testEset)
+testEsetSignedMatch.myID <- matchGenes(testSignedGenesets, testEset, col="myID")
+testEsetSignedMatch.fname <- matchGenes(testSignedGenesets, testEset, col=NULL)
+test_that("matchSignedGenes works for SignedGenesets and eSet", {
+    expect_equal(offset(testEsetSignedMatch.GeneSymbol), 1L)
+    expect_equal(offset(testEsetSignedMatch.myID), 1L)
+    expect_equal(offset(testEsetSignedMatch.fname), 1L)
+
+    expect_equal(testEsetSignedMatch.GeneSymbol@.Data, expSignedMatchList)
+    expect_equal(testEsetSignedMatch.myID@.Data, expSignedMatchList)
+    expect_equal(testEsetSignedMatch.fname@.Data, expSignedMatchList)
 })

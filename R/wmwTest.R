@@ -160,14 +160,14 @@ matchGenes.signedDefault <- function(signedGenesets, geneSymbols) {
         return(list(pos=posInd, neg=negInd))
     })
     names(resList) <- names(signedGenesets)
-    res <- SignedGenesets(resList)
+    res <- SignedIndexList(resList)
     return(res)
 }
 
 setMethod("matchGenes", c("SignedGenesets", "character"), function(list, object) {
               matchGenes.signedDefault(list, object)
           })
-setMethod("matchGenes", c("SignedGenesets", "genes"), function(list, object) {
+setMethod("matchGenes", c("SignedGenesets", "matrix"), function(list, object) {
               if(is.null(rownames(object)))
                   stop("When used to map genes in GmtList directly to rows in matrix, the matrix's row names must be gene symbols")
               symbols <- rownames(object)
@@ -184,7 +184,9 @@ setMethod("matchGenes", c("SignedGenesets", "eSet"), function(list, object, col=
               matchGenes.signedDefault(list, as.character(symbols))
           })
 
-
+##----------------------------------------##
+## wmwTest
+##----------------------------------------##
 wmwTest.default <- function(matrix,
                             indexList,
                             valType=c("p.greater", "p.less", "p.two.sided", "U",
