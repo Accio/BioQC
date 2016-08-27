@@ -40,17 +40,17 @@ parseIndex <- function(x, keepNA=FALSE, keepDup=FALSE) {
     return(x)
 }
 IndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
-    outlist <- lapply(inlist, parseIndex, keepNA=keepNA, keepDup=keepDup) 
-    res <- new("IndexList", keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
-    res@.Data <- outlist
+    outlist <- lapply(inlist, parseIndex, keepNA=keepNA, keepDup=keepDup)
+    ## note that .Data must be the first data slot in the new command
+    res <- new("IndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
     return(res)
 }
 
 SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
     outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
                                                neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
-    res <- new("SignedIndexList", keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
-    res@.Data <- outlist
+    ## note that .Data must be the first data slot in the new command
+    res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
     return(res)
 }
 
