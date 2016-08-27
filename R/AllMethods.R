@@ -185,16 +185,18 @@ showSignedGeneset <- function(geneset, nGene=3, indent=2) {
     if(posLen+negLen==0) {
         res <- sprintf("%s%s (no genes)", idents, name)
     } else {
-        res <- sprintf("%s%s[n=%d]\n%spositive[n=%d]:%s\n%snegative[n=%d]:%s",
-                        idents,
-                        name,
-                        posLen+negLen,
-                        doubleIdents,
-                        posLen, 
-                        paste(pos[1:pmin(posLen, nGene)],collapse=","),
-                        doubleIdents,
-                        negLen,
-                        paste(neg[1:pmin(negLen, nGene)],collapse=","))
+        res <- sprintf("%s%s[n=%d]\n%spositive[n=%d]:%s%s\n%snegative[n=%d]:%s%s",
+                       idents,
+                       name,
+                       posLen+negLen,
+                       doubleIdents,
+                       posLen,
+                       paste(pos[1:pmin(posLen, nGene)],collapse=","),
+                       ifelse(posLen>nGene, ",...", ""),
+                       doubleIdents,
+                       negLen,
+                       paste(neg[1:pmin(negLen, nGene)],collapse=","),
+                       ifelse(negLen>nGene, ",...", ""))
     }
     return(res)
 }
