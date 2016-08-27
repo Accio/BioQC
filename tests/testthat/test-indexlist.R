@@ -85,3 +85,5 @@ test_that("SignedIndexList: offset 2", {
                                          list(pos=NULL, neg=c(4L, 6L)),
                                          list(pos=c(2L, 4L, 5L), neg=c(4L, 6L))))
 })
+
+context("Test matchGene for SignedGenesets")
