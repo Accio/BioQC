@@ -63,15 +63,13 @@ isValidIndexList <- function(object) {
 isValidSignedIndexList <- function(object) {
     isSigned <- sapply(object, function(x)
                        all(c("pos", "neg") %in% names(x)))
-    if(!isSigned)
+    if(!all(isSigned))
         return(paste("In some items there are no pos/neg fields\n",
                      sprintf("Following are not: %s", which(!isSigned))))
     isPosInd <- sapply(object, function(x) is.null(x$pos) || is.integer(x$pos))
     isNegInd <- sapply(object, function(x) is.null(x$neg) || is.integer(x$neg))
-    isInd <- isPosInd & isNegInd
-    if(!all(isInd))
-        return(paste("Indices are not valid in following cses\n",
-                     sprintf("%s", which(!isInd))))
+    if(!all(isPosInd) & !all(isNegInd))
+        return("Indices are not valid in following cses\n")
     return(TRUE)
 }
 
