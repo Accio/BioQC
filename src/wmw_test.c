@@ -188,16 +188,25 @@ void signed_wmw_test_list(const double *valPtr, int n,
     posInd = VECTOR_ELT(pairInd, 0);
     negInd = VECTOR_ELT(pairInd, 1);
     
-    ipPos = INTEGER(posInd);
-    nPos = length(posInd);
-    ipNeg = INTEGER(negInd);
-    nNeg = length(negInd);
-    
     indRankSum = 0.0;
-    for(j=0; j<nPos; ++j)
-      indRankSum += list->list[ipPos[j]]->rank;
-    for(j=0; j<nNeg; ++j)
-      indRankSum += n - list->list[ipNeg[j]]->rank + 1;
+
+    if(posInd != NULL_USER_OBJECT) {
+      ipPos = INTEGER(posInd);
+      nPos = length(posInd);
+      for(j=0; j<nPos; ++j)
+	indRankSum += list->list[ipPos[j]]->rank;
+    } else {
+      nPos = 0;
+    }
+
+    if(negInd != NULL_USER_OBJECT) {
+      ipNeg = INTEGER(negInd);
+      nNeg = length(negInd);
+      for(j=0; j<nNeg; ++j)
+	indRankSum += n - list->list[ipNeg[j]]->rank + 1;
+    } else {
+      nNeg = 0;
+    }
     
     resPtr[i]=wmw_test_stat(indRankSum,
 			    nPos+nNeg,
