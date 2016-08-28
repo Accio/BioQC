@@ -305,58 +305,6 @@ setMethod("wmwTest", c("ANY", "list"),
 ##----------------------------------------##
 ## wmwTestSignedGenesets
 ##----------------------------------------##
-
-gmtlist2signedInd <- function(gmtlist, x,  posPattern="_UP$", negPattern="_DN$",
-                              nomatch=c("ignore", "pos", "neg")) {
-    if(is(x, "eSet")) {
-        if(!"GeneSymbol" %in% colnames(fData(x)))
-            stop("When ind.list is a 'gmtlist' and 'x' must is an eSet object, x's fData must contain the column 'GeneSymbol'")
-        inputGenes <- fData(x)$GeneSymbol
-    } else if (is.matrix(x)) {
-        inputGenes <- rownames(x)
-    } else {
-        stop("When ind.list is a 'gmtlist', x must be either a matrix or an eSet object")
-    }
-    signedGenesets <- gmtlist2signedGenesets(gmtlist,
-                                             posPattern=posPattern, negPattern=negPattern,
-                                             nomatch=nomatch)
-    indList <- sapply(signedGenesets, function(g) list(pos=match(g$pos, inputGenes),
-                                                       neg=match(g$neg, inputGenes)))
-    names(indList) <- names(signedGenesets)
-    return(indList)
-}
-
-
-getCind <- function(inds, nrow) {
-    if(is.logical(inds))
-        inds <- which(inds)
-    if(!is.numeric(inds)) {
-        stop(paste("index must be either logical or numeric!\nGot ",
-                   paste(head(inds), ",...", sep=" ")))
-    }
-    inds <- as.integer(inds[!is.na(inds)])
-    if(any(inds<1L))
-        stop("Indices in ind.list must be equal to or greater than one!")
-    if(any(inds>nrow))
-        stop("Indices out of range: they cannot exceed the row of the matrix!")
-    return(inds-1L)
-}
-
-formatSignedInd <- function(signedIndList, x, nrow) {
-
-    if(!is.list(signedIndList))
-        stop("signedIndList must be a list")
-    if(!all(sapply(signedIndList, function(x) length(x)==2)))
-        stop("signedIndList must be a list of two items, first containing indices of positive gene sets, and the second containing negative gene sets")
-
-    isIndVec <- length(signedIndList)==1L
-    indC <- lapply(signedIndList, function(x) list(pos=getCind(x$pos, nrow=nrow),
-                                                   neg=getCind(x$neg, nrow=nrow)))
-    res <- list(indC=indC,
-                isIndVec=isIndVec)
-    return(res)
-}
-
 wmwTestSignedGenesets.default <- function(matrix,
                                           signedIndexList,
                                           valType=c("p.greater", "p.less", "p.two.sided", "U",
@@ -383,10 +331,9 @@ wmwTestSignedGenesets.default <- function(matrix,
         offset(signedIndexList) <- 0L
     
     res <- .Call("signed_wmw_test", matrix,
-                 posIndices(signedIndexList),
-                 negIndices(signedIndexList),
+                 signedIndexList,
                  typeInt)
-    rownames(res) <- names(indexList)
+    rownames(res) <- names(signedIndexList)
     colnames(res) <- colnames(matrix)
 
     if(simplify) {
@@ -394,7 +341,7 @@ wmwTestSignedGenesets.default <- function(matrix,
     }
     return(res)
 }
-setMethod("wmwTest", c("matrix", "SignedGenesets"), function(object, indexList, valType, simplify) {
+setMethod("wmwTest", c("matrix", "SignedIndexList"), function(object, indexList, valType, simplify) {
     wmwTestSignedGenesets.default(object, indexList, valType, simplify)
 })
 
