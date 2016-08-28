@@ -193,3 +193,26 @@ esetWmwResR <- wmwTest(exprs(eset), gmtInd, valType="p.greater")
 test_that("eSet and GMT", {
     expect_equivalent(esetWmwRes, esetWmwResR)
 })
+
+context("Test wmwTest for SignedGenesets")
+testGenes <- c("AKT1", "AKT2", "EGFR", "ERBB2", "TSC1", "TSC2", "F4")
+testRows <- c(testGenes, paste("Gene", (length(testGenes)+1):100, sep=""))
+testRawSignedGenesets <- list(GS1=list(name="GS1",
+                                  pos=c("AKT1", "AKT2"),
+                                  neg=c("TSC1", "TSC2", "PR")),
+                              GS2=list(name="GS2",
+                                  pos=c("EGFR","ERBB3"),
+                                  neg=c("ERBB2", "ERBB4")),
+                              GS3=list(name="GS3",
+                                  pos=NULL,
+                                  neg=c("TSC1", "TSC2")),
+                              GS4=list(name="GS4",
+                                  pos=c("ERBB2", "ERBB4", "PR", NA),
+                                  neg=NULL),
+                              GS5=list(name="GS5", pos=NULL, neg=NULL))
+testSignedGenesets <- SignedGenesets(testRawSignedGenesets)
+testSignedMatch <- matchGenes(testSignedGenesets, testRows)
+testMatrix <- matrix(rnorm(1000),
+                     nrow=100,
+                     dimnames=list(testRows, NULL))
+wmwTest(testMatrix, testSignedMatch)
