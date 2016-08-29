@@ -23,6 +23,7 @@ Collate:
     entropy.R
     gini.R
     readGmt.R
+    matchGenes.R
     wmwTest.R
 Suggests:
     testthat
