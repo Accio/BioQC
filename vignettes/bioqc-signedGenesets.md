@@ -12,70 +12,17 @@ Introduction
 
 Besides being used as a QC-tool for gene expression data, _BioQC_ can be used for general-purpose gene-set enrichment analysis. Its core function, _wmwTest_, can handle not only "normal", unsigned gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated respectively. 
 
-This vignette describes an example of such applications.
-
-GMT read-in
-----------
-We first open a toy GMT file containing signed genesets with _readSignedGmt_. The function reads the file into a _SignedGenesets_ object.
+This vignette describes an example of such applications. First we load the BioQC library.
 
 
 ```r
 library(BioQC)
 ```
 
-```
-## Loading required package: Rcpp
-```
+GMT read-in
+----------
+We first open a toy GMT file containing signed genesets with _readSignedGmt_. The function reads the file into a _SignedGenesets_ object.
 
-```
-## Loading required package: Biobase
-```
-
-```
-## Loading required package: BiocGenerics
-```
-
-```
-## Loading required package: parallel
-```
-
-```
-## 
-## Attaching package: 'BiocGenerics'
-```
-
-```
-## The following objects are masked from 'package:parallel':
-## 
-##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-##     parLapplyLB, parRapply, parSapply, parSapplyLB
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     IQR, mad, xtabs
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     anyDuplicated, append, as.data.frame, cbind, colnames,
-##     do.call, duplicated, eval, evalq, Filter, Find, get, grep,
-##     grepl, intersect, is.unsorted, lapply, lengths, Map, mapply,
-##     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
-##     Position, rank, rbind, Reduce, rownames, sapply, setdiff,
-##     sort, table, tapply, union, unique, unsplit
-```
-
-```
-## Welcome to Bioconductor
-## 
-##     Vignettes contain introductory material; view with
-##     'browseVignettes()'. To cite Bioconductor, see
-##     'citation("Biobase")', and for packages 'citation("pkgname")'.
-```
 
 ```r
 gmtFile <- system.file("extdata/test.gmt", package="BioQC")
@@ -313,9 +260,9 @@ sessionInfo()
 ## 
 ## other attached packages:
 ## [1] BioQC_1.02.0        Biobase_2.32.0      BiocGenerics_0.18.0
-## [4] Rcpp_0.12.5         knitr_1.13         
+## [4] Rcpp_0.12.6         knitr_1.13         
 ## 
 ## loaded via a namespace (and not attached):
-## [1] compiler_3.3.0 magrittr_1.5   formatR_1.4    tools_3.3.0   
-## [5] stringi_1.1.1  stringr_1.0.0  evaluate_0.9
+## [1] compiler_3.3.0 magrittr_1.5   formatR_1.4    markdown_0.7.7
+## [5] tools_3.3.0    stringi_1.1.1  stringr_1.0.0  evaluate_0.9
 ```

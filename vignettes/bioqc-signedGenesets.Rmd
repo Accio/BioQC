@@ -15,14 +15,17 @@ Introduction
 
 Besides being used as a QC-tool for gene expression data, _BioQC_ can be used for general-purpose gene-set enrichment analysis. Its core function, _wmwTest_, can handle not only "normal", unsigned gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated respectively. 
 
-This vignette describes an example of such applications.
+This vignette describes an example of such applications. First we load the BioQC library.
+
+```{r lib, warning=FALSE, message=FALSE, results="hide"}
+library(BioQC)
+```
 
 GMT read-in
 ----------
 We first open a toy GMT file containing signed genesets with _readSignedGmt_. The function reads the file into a _SignedGenesets_ object.
 
-```{r lib}
-library(BioQC)
+```{r gmt}
 gmtFile <- system.file("extdata/test.gmt", package="BioQC")
 ## print the file context
 cat(readLines(gmtFile), sep="\n")
