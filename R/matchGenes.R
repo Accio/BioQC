@@ -63,8 +63,8 @@ matchGenes.signedDefault <- function(signedGenesets, geneSymbols) {
         negInd <- matchGeneExclNA(geneset$neg, geneSymbols)
         return(list(pos=posInd, neg=negInd))
     })
+    names(resList) <- sapply(signedGenesets, function(x) x$name)
     res <- SignedIndexList(resList)
-    names(res) <- names(signedGenesets)
     return(res)
 }
 
