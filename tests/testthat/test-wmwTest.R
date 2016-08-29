@@ -237,10 +237,21 @@ testSignedTwoSided <- wmwTest(testMatrix, testSignedMatch, valType="p.two.sided"
 testSignedQ <- wmwTest(testMatrix, testSignedMatch, valType="Q")
 testSignedU <- wmwTest(testMatrix, testSignedMatch, valType="U")
 ## U statistic is calculated by hand
-expSignedU <- matrix(rep(c(0, 99, 4, 196, 0), each=10L), ncol=10, byrow=TRUE)
-                       
+expSignedUBase <- c(0, 99, 4, 196, 0)
+expSignedU <- matrix(rep(expSignedUBase, each=10L), ncol=10, byrow=TRUE)
+
 test_that("wmwTest works for signed genesets", {
               expect_equivalent(testMatrixRankHead, expMatrixRankHead)
               expect_equivalent(testSignedMatch, expSignedMatch)
               expect_equivalent(testSignedU, expSignedU)
+          })
+
+testSignedUcol1 <- wmwTest(testMatrix[,1], testSignedMatch, valType="U")
+testSignedEset <- new("ExpressionSet",
+                      exprs=testMatrix)
+testSignedEsetU <- wmwTest(testSignedEset, testSignedMatch, valType="U")
+
+test_that("wmwTest works for signed genesets and polymorphism", {
+              expect_equivalent(testSignedUcol1, expSignedUBase)
+              expect_equivalent(testSignedEsetU, expSignedU)
           })
