@@ -7,7 +7,9 @@
 GmtList(list)
 }
 \arguments{
-\item{list}{A list of genesets; each geneset is a list of at least three fields: 'name', 'desc', and 'genes'. 'name' and 'desc' contains one character string ('desc' can be NULL while 'name' cannot), and 'genes' can be either NULL or a character vector.}
+\item{list}{A list of genesets; each geneset is a list of at least three fields: 'name', 'desc', and 'genes'. 'name' and 'desc' contains one character string ('desc' can be NULL while 'name' cannot), and 'genes' can be either NULL or a character vector.
+
+For convenience, the function also accepts a list of character vectors, each containing a geneset. In this case, the function works as a wrapper of \code{as.gmtlist}}
 }
 \description{
 Convert a list to a GmtList object
@@ -17,6 +19,10 @@ testList <- list(list(name="GS_A", desc=NULL, genes=LETTERS[1:3]),
                  list(name="GS_B", desc="gene set B", genes=LETTERS[1:5]),
                  list(name="GS_C", desc="gene set C", genes=NULL))
 testGmt <- GmtList(testList)
+
+# as wrapper of as.gmtlist
+testGeneList <- list(GS_A=LETTERS[1:3], GS_B=LETTERS[1:5], GS_C=NULL)
+testGeneGmt <- GmtList(testGeneList)
 }
 \seealso{
 If a list of gene symbols need to be converted into a GmtList, use 'as.gmtlist' instead
