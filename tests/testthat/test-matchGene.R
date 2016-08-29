@@ -6,6 +6,10 @@ testRawGmtList <- list(GS1=c("AKT1", "AKT2"),
                        GS3=NULL,
                        GS4=c("TSC1", "TSC2", "PR", NA))
 testGmtList <- as.gmtlist(testRawGmtList)
+testGmtListWithMethod <- GmtList(testRawGmtList)
+test_that("GmtList works as a wrapper of as.gmtlist", {
+              expect_equal(testGmtList, testGmtListWithMethod)
+          })
 
 testMatch <- matchGenes(testGmtList, testGenes)
 expMatchList <- list(1:2, 3:4, NULL, 5:6)
