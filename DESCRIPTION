@@ -26,7 +26,8 @@ Collate:
     matchGenes.R
     wmwTest.R
 Suggests:
-    testthat
+    testthat,
+    knitr
 biocViews: GeneExpression,QualityControl,StatisticalMethod
 License: GPL (>=3)
 RoxygenNote: 5.0.1
