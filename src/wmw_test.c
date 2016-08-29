@@ -203,7 +203,7 @@ void signed_wmw_test_list(const double *valPtr, int n,
       ipNeg = INTEGER(negInd);
       nNeg = length(negInd);
       for(j=0; j<nNeg; ++j)
-	indRankSum += n - list->list[ipNeg[j]]->rank + 1;
+	indRankSum += (n - list->list[ipNeg[j]]->rank + 1);
     } else {
       nNeg = 0;
     }
