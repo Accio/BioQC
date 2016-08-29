@@ -253,3 +253,28 @@ setMethod("show", "IndexList", function(object) {
               concStr <- paste(c(str, opts, shows, ""), collapse="\n")
               cat(concStr)
           })
+
+##--------------------##
+## show for SignedIndexList
+##--------------------##
+showSignedIndices <- function(indices, name, nInd=3, indent=2) {
+    if(is.null(name)) name <- "NONAME"
+    indices$name <- name
+    showSignedGeneset(indices, nGene=nInd, indent=indent)
+}
+setMethod("show", "SignedIndexList", function(object) {
+              str <- sprintf("A list of %d signed indices with offset=%d", length(object), object@offset)
+              opts <- sprintf("Options: NA removed: %s; duplicates removed: %s", !object@keepNA, !object@keepDup)
+              indent <- 2
+              if(length(object)>6) {
+                  heads <- object[1:3]
+                  tails <- object[(length(object)-2):length(object)]
+                  shows <- c(sapply(seq(along=heads), function(i) showSignedIndices(heads[[i]], names(heads)[i], indent=indent)),
+                             paste(paste(rep(" ", indent), collapse=""), "...", sep=""),
+                             sapply(seq(along=tails), function(i) showSignedIndices(tails[[i]], names(tails)[i], indent=indent)))
+              } else {
+                  shows <- sapply(seq(along=object), function(i) showSignedIndices(object[[i]], names(object)[i], indent=indent))
+              }
+              concStr <- paste(c(str, opts, shows, ""), collapse="\n")
+              cat(concStr)
+          })
