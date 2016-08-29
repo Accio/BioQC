@@ -13,7 +13,7 @@ opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="cente
 Introduction
 ------------
 
-Besides being used as a QC-tool for gene expression data, **BioQC** can be used for general-purpose gene-set enrichment analysis. Its core function, _wmwTest_, can handle not only "normal" gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated, respectively. 
+Besides being used as a QC-tool for gene expression data, _BioQC_ can be used for general-purpose gene-set enrichment analysis. Its core function, _wmwTest_, can handle not only "normal", unsigned gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated respectively. 
 
 This vignette describes an example of such applications.
 

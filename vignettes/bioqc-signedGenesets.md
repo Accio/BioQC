@@ -10,7 +10,7 @@ Using BioQC with signed genesets
 Introduction
 ------------
 
-Besides being used as a QC-tool for gene expression data, **BioQC** can be used for general-purpose gene-set enrichment analysis. Its core function, _wmwTest_, can handle not only "normal" gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated, respectively. 
+Besides being used as a QC-tool for gene expression data, _BioQC_ can be used for general-purpose gene-set enrichment analysis. Its core function, _wmwTest_, can handle not only "normal", unsigned gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated respectively. 
 
 This vignette describes an example of such applications.
 
@@ -21,6 +21,63 @@ We first open a toy GMT file containing signed genesets with _readSignedGmt_. Th
 
 ```r
 library(BioQC)
+```
+
+```
+## Loading required package: Rcpp
+```
+
+```
+## Loading required package: Biobase
+```
+
+```
+## Loading required package: BiocGenerics
+```
+
+```
+## Loading required package: parallel
+```
+
+```
+## 
+## Attaching package: 'BiocGenerics'
+```
+
+```
+## The following objects are masked from 'package:parallel':
+## 
+##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+##     clusterExport, clusterMap, parApply, parCapply, parLapply,
+##     parLapplyLB, parRapply, parSapply, parSapplyLB
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     IQR, mad, xtabs
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     anyDuplicated, append, as.data.frame, cbind, colnames,
+##     do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+##     grepl, intersect, is.unsorted, lapply, lengths, Map, mapply,
+##     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+##     Position, rank, rbind, Reduce, rownames, sapply, setdiff,
+##     sort, table, tapply, union, unique, unsplit
+```
+
+```
+## Welcome to Bioconductor
+## 
+##     Vignettes contain introductory material; view with
+##     'browseVignettes()'. To cite Bioconductor, see
+##     'citation("Biobase")', and for packages 'citation("pkgname")'.
+```
+
+```r
 gmtFile <- system.file("extdata/test.gmt", package="BioQC")
 ## print the file context
 cat(readLines(gmtFile), sep="\n")
@@ -133,17 +190,17 @@ print(testIndex)
 ```
 ## A list of 5 signed indices with offset=1
 ## Options: NA removed: TRUE; duplicates removed: TRUE
-##   NONAME[n=2]
+##   GS_A[n=2]
 ##     positive[n=2]:1,2
 ##     negative[n=0]:
-##   NONAME (no genes)
-##   NONAME[n=3]
+##   GS_B (no genes)
+##   GS_C[n=3]
 ##     positive[n=2]:3,4
 ##     negative[n=1]:5
-##   NONAME[n=4]
+##   GS_D[n=4]
 ##     positive[n=2]:8,9
 ##     negative[n=2]:10,11
-##   NONAME[n=2]
+##   GS_E[n=2]
 ##     positive[n=0]:
 ##     negative[n=2]:6,7
 ```
@@ -161,11 +218,11 @@ print(wmwResult.greater)
 
 ```
 ##                1           2           3
-## [1,] 0.008185751 0.008185751 0.008185751
-## [2,] 1.000000000 1.000000000 1.000000000
-## [3,] 0.997942914 0.997942914 0.997942914
-## [4,] 0.924153922 0.114118870 0.211756278
-## [5,] 0.008185751 0.008185751 0.008185751
+## GS_A 0.008185751 0.008185751 0.008185751
+## GS_B 1.000000000 1.000000000 1.000000000
+## GS_C 0.997942914 0.997942914 0.997942914
+## GS_D 0.924153922 0.114118870 0.211756278
+## GS_E 0.008185751 0.008185751 0.008185751
 ```
 
 As expected, GS\_A and GS\_E are significant when the alternative hypothesis is _greater_.
@@ -178,11 +235,11 @@ print(wmwResult.less)
 
 ```
 ##                1           2           3
-## [1,] 0.992348913 0.992348913 0.992348913
-## [2,] 1.000000000 1.000000000 1.000000000
-## [3,] 0.002192387 0.002192387 0.002192387
-## [4,] 0.078389208 0.889240837 0.793302033
-## [5,] 0.992348913 0.992348913 0.992348913
+## GS_A 0.992348913 0.992348913 0.992348913
+## GS_B 1.000000000 1.000000000 1.000000000
+## GS_C 0.002192387 0.002192387 0.002192387
+## GS_D 0.078389208 0.889240837 0.793302033
+## GS_E 0.992348913 0.992348913 0.992348913
 ```
 As expected, GS\_C is significant when the alternative hypothesis is _less_.
 
@@ -194,11 +251,11 @@ print(wmwResult.two.sided)
 
 ```
 ##                1           2           3
-## [1,] 0.016371502 0.016371502 0.016371502
-## [2,] 1.000000000 1.000000000 1.000000000
-## [3,] 0.004384774 0.004384774 0.004384774
-## [4,] 0.156778415 0.228237741 0.423512555
-## [5,] 0.016371502 0.016371502 0.016371502
+## GS_A 0.016371502 0.016371502 0.016371502
+## GS_B 1.000000000 1.000000000 1.000000000
+## GS_C 0.004384774 0.004384774 0.004384774
+## GS_D 0.156778415 0.228237741 0.423512555
+## GS_E 0.016371502 0.016371502 0.016371502
 ```
 
 As expected, GS\_A, GS\_C, and GS\_E are significant when the alternative hypothesis is _two.sided_. 
@@ -213,11 +270,11 @@ print(wmwResult.Q)
 
 ```
 ##               1          2          3
-## [1,]  1.7859115  1.7859115  1.7859115
-## [2,]  0.0000000  0.0000000  0.0000000
-## [3,] -2.3580528 -2.3580528 -2.3580528
-## [4,] -0.8047137  0.6416125  0.3731337
-## [5,]  1.7859115  1.7859115  1.7859115
+## GS_A  1.7859115  1.7859115  1.7859115
+## GS_B  0.0000000  0.0000000  0.0000000
+## GS_C -2.3580528 -2.3580528 -2.3580528
+## GS_D -0.8047137  0.6416125  0.3731337
+## GS_E  1.7859115  1.7859115  1.7859115
 ```
 
 As expected, genesets GS\_A, GS\_C, and GS\_E have large absolute values, suggesting they are potentially enriched; while GS\_A and GS\_E are positively enriched, GS\_C is negatively enriched.
@@ -255,10 +312,10 @@ sessionInfo()
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] knitr_1.13          BioQC_1.02.0        Biobase_2.32.0     
-## [4] BiocGenerics_0.18.0 Rcpp_0.12.5        
+## [1] BioQC_1.02.0        Biobase_2.32.0      BiocGenerics_0.18.0
+## [4] Rcpp_0.12.5         knitr_1.13         
 ## 
 ## loaded via a namespace (and not attached):
-## [1] compiler_3.3.0 magrittr_1.5   formatR_1.4    markdown_0.7.7
-## [5] tools_3.3.0    stringi_1.1.1  stringr_1.0.0  evaluate_0.9
+## [1] compiler_3.3.0 magrittr_1.5   formatR_1.4    tools_3.3.0   
+## [5] stringi_1.1.1  stringr_1.0.0  evaluate_0.9
 ```
