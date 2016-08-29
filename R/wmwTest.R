@@ -344,6 +344,13 @@ wmwTestSignedGenesets.default <- function(matrix,
 setMethod("wmwTest", c("matrix", "SignedIndexList"), function(object, indexList, valType, simplify) {
     wmwTestSignedGenesets.default(object, indexList, valType, simplify)
 })
+setMethod("wmwTest", c("numeric", "SignedIndexList"), function(object, indexList, valType, simplify) {
+              object <- matrix(object, ncol=1L)
+              wmwTestSignedGenesets.default(object, indexList, valType, simplify)
+})
+setMethod("wmwTest", c("eSet", "SignedIndexList"), function(object, indexList, valType, simplify) {
+              wmwTestSignedGenesets.default(exprs(object), indexList, valType, simplify)
+          })
 
 ##setGeneric("wmwTest",function(object, sub, alternative, statistic) standardGeneric("wmwTest"))
 ##setGeneric("wmwTest",function(exprs, index, alternative) standardGeneric("wmwTest"))
