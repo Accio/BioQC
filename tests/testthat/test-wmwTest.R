@@ -254,4 +254,7 @@ testSignedEsetU <- wmwTest(testSignedEset, testSignedMatch, valType="U")
 test_that("wmwTest works for signed genesets and polymorphism", {
               expect_equivalent(testSignedUcol1, expSignedUBase)
               expect_equivalent(testSignedEsetU, expSignedU)
+
+              expect_equal(names(testSignedUcol1), names(testRawSignedGenesets))
+              expect_equal(rownames(testSignedEsetU), names(testRawSignedGenesets))
           })
