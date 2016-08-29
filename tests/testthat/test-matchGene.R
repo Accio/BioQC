@@ -62,15 +62,16 @@ testRawSignedGenesets <- list(GS1=list(name="GS1",
                               GS5=list(name="GS5", pos=NULL, neg=NULL))
 testSignedGenesets <- SignedGenesets(testRawSignedGenesets)
 testSignedMatch <- matchGenes(testSignedGenesets, testGenes)
-expSignedMatchList <- list(list(pos=1:2, neg=5:6),
-                           list(pos=3L, neg=4L),
-                           list(pos=NULL, neg=5:6),
-                           list(pos=4L, neg=NULL),
-                           list(pos=NULL, neg=NULL))
+expSignedMatchList <- list(GS1=list(pos=1:2, neg=5:6),
+                           GS2=list(pos=3L, neg=4L),
+                           GS3=list(pos=NULL, neg=5:6),
+                           GS4=list(pos=4L, neg=NULL),
+                           GS5=list(pos=NULL, neg=NULL))
 
 test_that("matchGenes works for SignedGenesets and character", {
     expect_equal(offset(testSignedMatch), 1L)
     expect_equivalent(testSignedMatch@.Data, expSignedMatchList)
+    expect_equal(names(testSignedMatch), names(expSignedMatchList))
 })
 
 testMatrixSignedMatch <- matchGenes(testSignedGenesets, testMatrix)
@@ -87,7 +88,11 @@ test_that("matchSignedGenes works for SignedGenesets and eSet", {
     expect_equal(offset(testEsetSignedMatch.myID), 1L)
     expect_equal(offset(testEsetSignedMatch.fname), 1L)
 
-    expect_equal(testEsetSignedMatch.GeneSymbol@.Data, expSignedMatchList)
-    expect_equal(testEsetSignedMatch.myID@.Data, expSignedMatchList)
-    expect_equal(testEsetSignedMatch.fname@.Data, expSignedMatchList)
+    expect_equal(names(testEsetSignedMatch.GeneSymbol), names(expSignedMatchList))
+    expect_equal(names(testEsetSignedMatch.myID), names(expSignedMatchList))
+    expect_equal(names(testEsetSignedMatch.fname), names(expSignedMatchList))
+    
+    expect_equivalent(testEsetSignedMatch.GeneSymbol@.Data, expSignedMatchList)
+    expect_equivalent(testEsetSignedMatch.myID@.Data, expSignedMatchList)
+    expect_equivalent(testEsetSignedMatch.fname@.Data, expSignedMatchList)
 })

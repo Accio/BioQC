@@ -1,7 +1,7 @@
 library(BioQC)
 
 ## readGmt
-context("Read in gmt file into a gmtlist object")
+context("Read gmt file into a GmtList object")
 testFile <- system.file("extdata/test.gmt", package="BioQC")
 testGmt <- readGmt(testFile)
 expGmt <- list(list(name="GS_A", desc="TestGeneSet_A", genes=c("AKT1", "AKT2", "AKT3")),
@@ -9,10 +9,22 @@ expGmt <- list(list(name="GS_A", desc="TestGeneSet_A", genes=c("AKT1", "AKT2", "
                list(name="GS_C_UP", desc="TestGeneSet_C", genes=c("ERBB2", "ERBB3")),
                list(name="GS_C_DN", desc="TestGeneSet_C", genes=c("EGFR", "ERBB4")),
                list(name="GS_D_UP", desc="TestGeneSet_D", genes=c("GATA2", "GATA4")),
+               list(name="GS_D_DN", desc="TestGeneSet_D", genes=c("GATA1", "GATA3")),
                list(name="GS_E_DN", desc="TestGeneSet_E", genes=c("TSC1", "TSC2")))
 test_that("readGmt",{
              expect_equivalent(expGmt, testGmt)
          })
+
+context("Read gmt file into a SignedGenesets object")
+testSignedGenesets <- readSignedGmt(testFile, nomatch="pos")
+expSignedGenesets <- list(list(name="GS_A", pos=c("AKT1", "AKT2", "AKT3"), neg=NULL),
+                          list(name="GS_B", pos=c("MAPK1", "MAPK3", "MAPK8"), neg=NULL),
+                          list(name="GS_C", pos=c("ERBB2", "ERBB3"), neg=c("EGFR", "ERBB4")),
+                          list(name="GS_D", pos=c("GATA2", "GATA4"), neg=c("GATA1", "GATA3")),
+                          list(name="GS_E", pos=NULL, neg=c("TSC1", "TSC2")))
+test_that("readSignedGmt", {
+              expect_equal(expSignedGenesets, testSignedGenesets@.Data)
+          })
 
 ## as.gmtlist
 context("Convert a list of gene symbols into a gmtlist object")
@@ -80,17 +92,17 @@ testSignedGenesets.neg <- readSignedGmt(testFile, nomatch="neg")
 expSignedGenesets.ignore <- list(GS_A=list(name="GS_A", pos=NULL, neg=NULL),
                                  GS_B=list(name="GS_B", pos=NULL, neg=NULL),
                                  GS_C=list(name="GS_C", pos=c("ERBB2", "ERBB3"), neg=c("EGFR", "ERBB4")),
-                                 GS_D=list(name="GS_D", pos=c("GATA2", "GATA4"), neg=NULL),
+                                 GS_D=list(name="GS_D", pos=c("GATA2", "GATA4"), neg=c("GATA1", "GATA3")),
                                  GS_E=list(name="GS_E", pos=NULL, neg=c("TSC1", "TSC2")))
 expSignedGenesets.pos <- list(GS_A=list(name="GS_A", pos=c("AKT1", "AKT2", "AKT3"), neg=NULL),
                               GS_B=list(name="GS_B", pos=c("MAPK1", "MAPK3", "MAPK8"), neg=NULL),
                               GS_C=list(name="GS_C", pos=c("ERBB2", "ERBB3"), neg=c("EGFR", "ERBB4")),
-                              GS_D=list(name="GS_D", pos=c("GATA2", "GATA4"), neg=NULL),
+                              GS_D=list(name="GS_D", pos=c("GATA2", "GATA4"), neg=c("GATA1", "GATA3")),
                               GS_E=list(name="GS_E", pos=NULL, neg=c("TSC1", "TSC2")))
 expSignedGenesets.neg <- list(GS_A=list(name="GS_A", pos=NULL, neg=c("AKT1", "AKT2", "AKT3")),
                               GS_B=list(name="GS_B", pos=NULL, neg=c("MAPK1", "MAPK3", "MAPK8")),
                               GS_C=list(name="GS_C", pos=c("ERBB2", "ERBB3"), neg=c("EGFR", "ERBB4")),
-                              GS_D=list(name="GS_D", pos=c("GATA2", "GATA4"), neg=NULL),
+                              GS_D=list(name="GS_D", pos=c("GATA2", "GATA4"), neg=c("GATA1", "GATA3")),
                               GS_E=list(name="GS_E", pos=NULL, neg=c("TSC1", "TSC2")))
 test_that("readSignedGmt, nomatch ingore",{
               expect_equivalent(testSignedGenesets.ignore, expSignedGenesets.ignore)
