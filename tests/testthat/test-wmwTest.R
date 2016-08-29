@@ -207,12 +207,40 @@ testRawSignedGenesets <- list(GS1=list(name="GS1",
                                   pos=NULL,
                                   neg=c("TSC1", "TSC2")),
                               GS4=list(name="GS4",
-                                  pos=c("ERBB2", "ERBB4", "PR", NA),
+                                  pos=c("EGFR", "ERBB2", "PR", NA),
                                   neg=NULL),
                               GS5=list(name="GS5", pos=NULL, neg=NULL))
 testSignedGenesets <- SignedGenesets(testRawSignedGenesets)
 testSignedMatch <- matchGenes(testSignedGenesets, testRows)
-testMatrix <- matrix(rnorm(1000),
+expSignedMatch <- list(list(pos=1:2, neg=5:6),
+                       list(pos=3L, neg=4L),
+                       list(pos=NULL, neg=5:6),
+                       list(pos=3:4, neg=NULL),
+                       list(pos=NULL, neg=NULL))
+
+testMatrix <- matrix(rnorm(1000, sd=0.1),
                      nrow=100,
                      dimnames=list(testRows, NULL))
-wmwTest(testMatrix, testSignedMatch)
+testMatrix[1,] <- testMatrix[1,]+20
+testMatrix[2,] <- testMatrix[2,]+10
+testMatrix[3,] <- testMatrix[3,]-40
+testMatrix[4,] <- testMatrix[4,]-30
+testMatrix[5,] <- testMatrix[5,]-20
+testMatrix[6,] <- testMatrix[6,]-10
+testMatrixRankHead <- apply(testMatrix, 2, rank)[1:6,]
+expMatrixRankHead <- matrix(rep(c(100, 99, 1, 2, 3, 4), each=10), ncol=10, byrow=TRUE)
+
+
+testSignedGreater <- wmwTest(testMatrix, testSignedMatch, valType="p.greater")
+testSignedLess <- wmwTest(testMatrix, testSignedMatch, valType="p.less")
+testSignedTwoSided <- wmwTest(testMatrix, testSignedMatch, valType="p.two.sided")
+testSignedQ <- wmwTest(testMatrix, testSignedMatch, valType="Q")
+testSignedU <- wmwTest(testMatrix, testSignedMatch, valType="U")
+## U statistic is calculated by hand
+expSignedU <- matrix(rep(c(0, 99, 4, 196, 0), each=10L), ncol=10, byrow=TRUE)
+                       
+test_that("wmwTest works for signed genesets", {
+              expect_equivalent(testMatrixRankHead, expMatrixRankHead)
+              expect_equivalent(testSignedMatch, expSignedMatch)
+              expect_equivalent(testSignedU, expSignedU)
+          })
