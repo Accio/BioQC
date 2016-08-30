@@ -19,11 +19,16 @@ matchGenes.default <- function(gmtList,geneSymbols) {
         stop(paste("geneSymbols be must characters; now it is", class(geneSymbols)))
     genes <- lapply(gmtList, function(x) x$genes)
     names(genes) <- sapply(gmtList, function(x) x$name)
-    indList <- sapply(genes, matchGeneExclNA, allGene=geneSymbols)
+    indList <- lapply(genes, matchGeneExclNA, allGene=geneSymbols)
     res <- IndexList(indList)
     return(res)
 }
 
+setMethod("matchGenes", c("character", "character"), function(list, object) {
+              tempList <- GmtList(list(TempGeneSet=list))
+              res <- matchGenes.default(tempList, object)
+              return(res)
+          })
 setMethod("matchGenes", c("GmtList", "character"), function(list, object) {
               matchGenes.default(list, object)
           })

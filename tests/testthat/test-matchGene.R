@@ -1,6 +1,12 @@
 context("Test matchGene for GmtList")
 
 testGenes <- c("AKT1", "AKT2", "EGFR", "ERBB2", "TSC1", "TSC2", NA)
+testTempQuery <- c("AKT1", "AKT2", "AKT3")
+expTempQuery <- list(TempGeneSet=c(1L,2L))
+test_that("matchGenes works for characters", {
+              expect_equivalent(matchGenes(testTempQuery, testGenes), expTempQuery)
+          })
+
 testRawGmtList <- list(GS1=c("AKT1", "AKT2"),
                        GS2=c("EGFR", "ERBB2", "ERBB3", "ERBB4"),
                        GS3=NULL,
