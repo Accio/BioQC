@@ -24,11 +24,7 @@ matchGenes.default <- function(gmtList,geneSymbols) {
     return(res)
 }
 
-setMethod("matchGenes", c("character", "character"), function(list, object) {
-              tempList <- GmtList(list(TempGeneSet=list))
-              res <- matchGenes.default(tempList, object)
-              return(res)
-          })
+
 setMethod("matchGenes", c("GmtList", "character"), function(list, object) {
               matchGenes.default(list, object)
           })
@@ -47,6 +43,18 @@ setMethod("matchGenes", c("GmtList", "eSet"), function(list, object, col="GeneSy
                   symbols <- fData(object)[,col]
               }
               matchGenes.default(list, as.character(symbols))
+          })
+setMethod("matchGenes", c("character", "character"), function(list, object) {
+              tempList <- GmtList(list(TempGeneSet=list))
+              matchGenes.default(tempList, object)
+          })
+setMethod("matchGenes", c("character", "matrix"), function(list, object) {
+              tempList <- GmtList(list(TempGeneSet=list))
+              matchGenes(tempList, object)
+          })
+setMethod("matchGenes", c("character", "eSet"), function(list, object) {
+              tempList <- GmtList(list(TempGeneSet=list))
+              matchGenes(tempList, object)
           })
 
 

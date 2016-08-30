@@ -1,10 +1,10 @@
 context("Test matchGene for GmtList")
 
 testGenes <- c("AKT1", "AKT2", "EGFR", "ERBB2", "TSC1", "TSC2", NA)
-testTempQuery <- c("AKT1", "AKT2", "AKT3")
-expTempQuery <- list(TempGeneSet=c(1L,2L))
-test_that("matchGenes works for characters", {
-              expect_equivalent(matchGenes(testTempQuery, testGenes), expTempQuery)
+testCharQuery <- c("AKT1", "AKT2", "AKT3")
+expCharQuery <- list(TempGeneSet=c(1L,2L))
+test_that("matchGenes works for characters and characters", {
+              expect_equivalent(matchGenes(testCharQuery, testGenes), expCharQuery)
           })
 
 testRawGmtList <- list(GS1=c("AKT1", "AKT2"),
@@ -32,6 +32,13 @@ test_that("matchGenes works for GmtList and matrix", {
     expect_equivalent(testMatrixMatch@.Data, expMatchList)
 })
 
+testMatrixCharMatch <- matchGenes(testCharQuery, testMatrix)
+test_that("matchGenes works for characters and matrix", {
+    expect_equal(offset(testMatrixCharMatch), 1L)
+    expect_equivalent(testMatrixCharMatch@.Data, expCharQuery)
+})
+
+
 testMatrix2 <- testMatrix; rownames(testMatrix2)[is.na(rownames(testMatrix2))] <- ""
 testEset <- new("ExpressionSet",
                 exprs=testMatrix2,
@@ -52,6 +59,10 @@ test_that("matchGenes works for GmtList and eSet", {
     expect_equivalent(testEsetMatch.fname@.Data, expMatchList)
 })
 
+testEsetCharMatch <- matchGenes(testCharQuery, testEset)
+test_that("matchGenes works for character and eSet", {
+    expect_equivalent(testEsetCharMatch, expCharQuery)
+})
 context("Test matchGene for SignedGenesets")
 testRawSignedGenesets <- list(GS1=list(name="GS1",
                                   pos=c("AKT1", "AKT2"),
