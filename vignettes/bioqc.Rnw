@@ -60,7 +60,7 @@ myEset <- new("ExpressionSet",
 
 Finally we run the BioQC algorithm and print the summary of the results. As expected, no single tissue scored significantly after multiple correction.
 <<runBioQC>>=
-dummyRes <- wmwTest(myEset, gmt, valType="p.greater")
+dummyRes <- wmwTest(myEset, gmt, valType="p.greater", simplify=TRUE)
 summary(p.adjust(dummyRes, "BH"))
 @ 
 
@@ -74,7 +74,7 @@ myMatrix <- matrix(rnorm(Nrow*Nsample),
 myList <- list(signature1=sample(1:Nrow, 100), 
                signature2=sample(1:Nrow, 50), 
                signature3=sample(1:Nrow, 200))
-wmwTest(myMatrix, myList)
+wmwTest(myMatrix, myList, valType="p.greater", simplify=TRUE)
 @ 
 
 \section{Case study with a real data set}
@@ -95,7 +95,7 @@ bm.Ngssize <- sapply(1:bm.Ngs, function(x) sample(1:bm.Nrow/2, replace=TRUE))
 ind <- lapply(1:bm.Ngs, function(i) sample(1:bm.Nrow, bm.Ngssize[i]))
 exprs <- matrix(round(rnorm(bm.Nrow*bw.Nsample),4), nrow=bm.Nrow)
 
-system.time(Cres <- wmwTest(exprs, ind, valType="p.less"))
+system.time(Cres <- wmwTest(exprs, ind, valType="p.less", simplify=TRUE))
 system.time(Rres <- apply(exprs, 2, function(x)
                           sapply(ind, function(y) 
                                  wmwTestInR(x, y, valType="p.less"))))
