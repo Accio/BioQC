@@ -3,10 +3,10 @@ R=R
 all:bioqc-signedGenesets.html bioqc.html
 
 clean:
-	rm -f *.html
-	rm -f *.md
-	rm -rf *_files
-	rm -rf *_cache
+	rm -fv *.html
+	rm -fv *.md
+	rm -rfv *_files
+	rm -rfv *_cache
 
 bioqc-signedGenesets.html:bioqc-signedGenesets.Rmd
 	Rscript -e "rmarkdown::render('bioqc-signedGenesets.Rmd')"
