@@ -1,7 +1,5 @@
 # BioQC: Detect tissue heterogeneity in gene expression data
 
-Detect tissue heterogeneity in gene expression data with **BioQC**
-==================================================================
 
 
 Introduction
@@ -105,7 +103,7 @@ system.time(Cres <- wmwTest(exprs, ind, valType="p.less", simplify=TRUE))
 
 ```
 ##    user  system elapsed 
-##   0.220   0.000   0.219
+##   0.136   0.000   0.135
 ```
 
 ```r
@@ -116,7 +114,7 @@ system.time(Rres <- apply(exprs, 2, function(x)
 
 ```
 ##    user  system elapsed 
-##   3.149   0.008   3.156
+##   2.892   0.006   2.898
 ```
 
 With 22000 genes, five samples, and five gene sets, the *BioQC* implementation is about 20x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the *BioQC* signature list), the *BioQC* implementation can be about 1000x faster than the R implementation.
@@ -131,8 +129,8 @@ sessionInfo()
 ```
 
 ```
-## R version 3.3.0 (2016-05-03)
-## Platform: x86_64-pc-linux-gnu (64-bit)
+## R version 3.1.3 (2015-03-09)
+## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
 ## 
 ## locale:
@@ -148,11 +146,11 @@ sessionInfo()
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] BioQC_1.02.1        Rcpp_0.12.6         Biobase_2.32.0     
-## [4] BiocGenerics_0.18.0 knitr_1.13         
+## [1] BioQC_1.02.1        Rcpp_0.12.0         Biobase_2.26.0     
+## [4] BiocGenerics_0.12.1 knitr_1.14         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] magrittr_1.5    formatR_1.4     tools_3.3.0     htmltools_0.3.5
-##  [5] yaml_2.1.13     stringi_1.1.1   rmarkdown_0.9.6 stringr_1.1.0  
-##  [9] digest_0.6.10   evaluate_0.9
+##  [1] digest_0.6.9    evaluate_0.9    formatR_1.4     htmltools_0.3.5
+##  [5] magrittr_1.5    rmarkdown_1.0   stringi_1.0-1   stringr_1.1.0  
+##  [9] tools_3.1.3     yaml_2.1.13
 ```
