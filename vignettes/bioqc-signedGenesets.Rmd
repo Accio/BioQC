@@ -1,10 +1,10 @@
-<!--
-%\VignetteEngine{knitr::docco_linear}
-%\VignetteIndexEntry{Using BioQC with signed genesets}
--->
+---
+title: Using BioQC with signed genesets
+output: 
+  html_document:
+    keep_md: yes
+---
 
-Using BioQC with signed genesets
-================================
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")

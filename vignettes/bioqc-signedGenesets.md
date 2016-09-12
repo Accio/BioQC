@@ -1,7 +1,4 @@
-<!--
-%\VignetteEngine{knitr::docco_linear}
-%\VignetteIndexEntry{Using BioQC with signed genesets}
--->
+# Using BioQC with signed genesets
 
 Using BioQC with signed genesets
 ================================
@@ -255,14 +252,15 @@ sessionInfo()
 ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
-## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
+## [1] parallel  methods   stats     graphics  grDevices utils     datasets 
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] BioQC_1.02.0        Biobase_2.32.0      BiocGenerics_0.18.0
+## [1] BioQC_1.02.1        Biobase_2.32.0      BiocGenerics_0.18.0
 ## [4] Rcpp_0.12.6         knitr_1.13         
 ## 
 ## loaded via a namespace (and not attached):
-## [1] compiler_3.3.0 magrittr_1.5   formatR_1.4    markdown_0.7.7
-## [5] tools_3.3.0    stringi_1.1.1  stringr_1.0.0  evaluate_0.9
+##  [1] magrittr_1.5    formatR_1.4     tools_3.3.0     htmltools_0.3.5
+##  [5] yaml_2.1.13     stringi_1.1.1   rmarkdown_0.9.6 stringr_1.1.0  
+##  [9] digest_0.6.10   evaluate_0.9
 ```

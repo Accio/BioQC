@@ -1,10 +1,10 @@
-<!--
-%\VignetteEngine{knitr::docco_linear}
-%\VignetteIndexEntry{BioQC: Detect tissue heterogeneity in gene expression data}
--->
+---
+title: "BioQC: Detect tissue heterogeneity in gene expression data"
+output:
+  html_document:
+    keep_md: yes
+---
 
-Detect tissue heterogeneity in gene expression data with **BioQC**
-==================================================================
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
