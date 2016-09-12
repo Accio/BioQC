@@ -34,7 +34,7 @@ genesets <- readSignedGmt(gmtFile)
 print(genesets)
 ```
 
-Note that though the GMT file contains 6 non-empty lines, only five signed genesets are returned by _readSignedGmt_ because a pair of negative and negative geneset of GS_C is available.
+Note that though the GMT file contains 7 non-empty lines, only 5 signed genesets are returned by _readSignedGmt_ because a pair of positive and negative genesets of GS_C and GS_D is available.
 
 Note that in its current form, no genes are reported for GS_A and GS_B, because the names of both sets do not match the patterns. User can decide how to handle such genesets that match patterns of neither positive nor negative sets (GS_A and GS_B in this case). By default, such genesets are ignored; however, user can decide to treat them as either positive or negative genesets. For the purpose of this tutorial, we treat these genesets as positive.
 
