@@ -1,7 +1,6 @@
 ---
 title: Detect issue heterogeneity in gene expression data with BioQC
-tags: [getting_started]
-sidebar: mydoc_sidebar
+sidebar: bioqc_sidebar
 permalink: index.html
 ---
 
