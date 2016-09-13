@@ -1,6 +1,2 @@
-*~
-*.o
-*.so
-.Rhistory
-*.rds
-*.html
+.sass-cache/
+.jekyll-metadata
