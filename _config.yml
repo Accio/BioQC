@@ -2,25 +2,25 @@
 output: web
 # this property is useful for conditional filtering of content that is separate from the PDF.
 
-topnav_title: Jekyll Documentation Theme
+topnav_title: BioQC
 # this appears on the top navigation bar next to the home button
 
-site_title: Jekyll theme for documentation
+site_title: BioQC Documentation and Examples
 # this appears in the html browser tab for the site title (seen mostly by search engines, not users)
 
-company_name: Your company
+company_name: F. Hoffmann-La Roche AG
 # this appears in the footer
 
-github_editme_path: tomjohnson1492/documentation-theme-jekyll/blob/gh-pages/pages/
+#github_editme_path: tomjohnson1492/documentation-theme-jekyll/blob/gh-pages/pages/
 # if you're using Github, provide the basepath to the branch you've created for reviews, following the sample here. if not, leave this value blank.
 
-disqus_shortname: idrbwjekyll
+#disqus_shortname: idrbwjekyll
 # if you're using disqus for comments, add the shortname here. if not, leave this value blank.
 
-host: 127.0.0.1
+host: 0.0.0.0
 # the preview server used. Leave as is.
 
-port: 4005
+port: 8889 
 # the port where the preview is rendered. You can leave this as is unless you have other Jekyll builds using this same port that might cause conflicts. in that case, use another port such as 4006.
 
 exclude:
@@ -28,9 +28,9 @@ exclude:
   - .gitignore
 # these are the files and directories that jekyll will exclude from the build
 
-feedback_subject_line: Jekyll documentation theme
+feedback_subject_line: BioQC
 
-feedback_email: tomjohnson1492@gmail.com
+feedback_email: jitao_david.zhang@roche.com
 # used as a contact email for the Feedback link in the top navigation bar
 
 # feedback_disable: true
@@ -101,4 +101,4 @@ description: "Intended as a documentation theme based on Jekyll for technical wr
 # the description is used in the feed.xml file
 
 # needed for sitemap.xml file only
-url: http://idratherbewriting.com
+#url: http://idratherbewriting.com
