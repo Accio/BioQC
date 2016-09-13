@@ -1,2 +1,0 @@
-ml load Ruby
-gem install --user jekyll
