@@ -1,6 +1,5 @@
 # This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
 
-accordion: false
 entries:
 - title: Sidebar
   product: BioQC 
