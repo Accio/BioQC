@@ -1,5 +1,5 @@
 ---
-title:  "BioQC Documentaion is now on github pages" 
+title:  "BioQC Documentation is now on github pages" 
 published: true
 permalink: samplepost.html
 summary: "This is some summary frontmatter for my sample post."
