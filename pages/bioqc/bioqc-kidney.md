@@ -108,7 +108,7 @@ heatmap(bioqcAbsLogRes, Colv=NA, Rowv=TRUE,
         labCol=1:ncol(bioqcAbsLogRes))
 ~~~~
 
-<img src="bioqc-kidney_files/figure-markdown_phpextra/heatmap-1.svg" alt="BioQC scores (defined as abs(log10(p))) of the samples visualized in heatmap. Red and blue indicate high and low scores respectively." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/heatmap-1.svg" alt="BioQC scores (defined as abs(log10(p))) of the samples visualized in heatmap. Red and blue indicate high and low scores respectively." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
 BioQC scores (defined as abs(log10(p))) of the samples visualized in
 heatmap. Red and blue indicate high and low scores respectively.
@@ -124,7 +124,7 @@ matplot(t(filRes), pch=c("K", "P"), type="b", lty=1L,
         ylab="BioQC score", xlab="Sample index")
 ~~~~
 
-<img src="bioqc-kidney_files/figure-markdown_phpextra/vis_bioqc-1.svg" alt="BioQC scores (defined as abs(log10(p))) of the samples. K and P represent kidney and pancreas signature scores respectively." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/vis_bioqc-1.svg" alt="BioQC scores (defined as abs(log10(p))) of the samples. K and P represent kidney and pancreas signature scores respectively." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
 BioQC scores (defined as abs(log10(p))) of the samples. K and P
 represent kidney and pancreas signature scores respectively.
@@ -156,7 +156,7 @@ plot(elastase~pancreasScore, log="y", pch=21, bg="red",
 text(pancreasScore[23:25],elastase[23:25], 23:25, pos=1)
 ~~~~
 
-<img src="bioqc-kidney_files/figure-markdown_phpextra/rt_pcr_result-1.svg" alt="Correlation between qRT-PCR results and BioQC pancreas score" style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/rt_pcr_result-1.svg" alt="Correlation between qRT-PCR results and BioQC pancreas score" style="display:block; margin: auto" />
 <p markdown="1" class="caption">
 Correlation between qRT-PCR results and BioQC pancreas score
 </p>
@@ -213,7 +213,7 @@ isDiff <- with(esetNephTbl, abs(Contam.logFC-ExclContam.logFC)>=2)
 with(esetNephTbl, points(Contam.logFC[isDiff]~ExclContam.logFC[isDiff], pch=16, col="red"))
 ~~~~
 
-<img src="bioqc-kidney_files/figure-markdown_phpextra/deg-1.svg" alt="Log2 fold change (logFC) values reported by *limma* with one contaminated sample included (y-axis) or excluded (x-axis). Genes strongly affected by the contamination are indicated by red dots." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/deg-1.svg" alt="Log2 fold change (logFC) values reported by *limma* with one contaminated sample included (y-axis) or excluded (x-axis). Genes strongly affected by the contamination are indicated by red dots." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
 Log2 fold change (logFC) values reported by *limma* with one
 contaminated sample included (y-axis) or excluded (x-axis). Genes

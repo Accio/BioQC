@@ -28,4 +28,5 @@ pagename=$pagepath$basename
 head -n2 $pagename > $pagename.tmp
 echo "permalink: ${basename/\.md/.html}" >> $pagename.tmp
 tail -n+3 $pagename >> $pagename.tmp
+sed -i -r "s#\"(.+)\.svg\"#\"$pagepath\1\.svg\"#g" $pagename.tmp
 mv $pagename.tmp $pagename
