@@ -2,10 +2,9 @@
 title: "BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data"
 permalink: bioqc-simulation.html
 output: 
-    md_document:
-        variant: markdown_phpextra
-        preserve_yaml: TRUE
-    html_document: default
+  md_document:
+    variant: markdown_phpextra
+    preserve_yaml: TRUE
 ---
 
 Supplementary Information for "Detect issue heterogenity in gene

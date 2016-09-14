@@ -5,7 +5,6 @@ output:
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
-  html_document: default
 ---
 
 Supplementary Information for "Detect issue heterogenity in gene
@@ -88,7 +87,7 @@ system.time(bioqcRes <- wmwTest(eset, gmt,
 ~~~~
 
     ##    user  system elapsed 
-    ##   3.136   0.016   3.150
+    ##   2.630   0.009   2.640
 
 The function returns *one-sided* *p*-values of Wilcoxon-Mann-Whitney
 test. We next visualize this metric after transformation.
