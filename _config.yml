@@ -1,6 +1,3 @@
-gems:
-  - jekyll-pandoc
-
 output: web
 # this property is useful for conditional filtering of content that is separate from the PDF.
 
@@ -44,8 +41,10 @@ feedback_email: jitao_david.zhang@roche.com
 # feedback_link: "http://helpy.io/"
 # if you uncomment the previous line, it changes where the feedback link points to
 
+#highlighter: rouge 
+# library used for syntax highlighting
 
-markdown: Pandoc 
+markdown: kramdown
 # filter used to process markdown. note that kramdown differs from github-flavored markdown in some subtle ways
 
 collections:
