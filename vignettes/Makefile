@@ -9,8 +9,8 @@ clean:
 	rm -rfv *_cache
 
 bioqc-signedGenesets.html:bioqc-signedGenesets.Rmd
-	Rscript -e "rmarkdown::render('bioqc-signedGenesets.Rmd')"
+	Rscript -e "rmarkdown::render('bioqc-signedGenesets.Rmd', output_format='all')"
 
 bioqc.html:bioqc.Rmd
-	Rscript -e "rmarkdown::render('bioqc.Rmd')"
+	Rscript -e "rmarkdown::render('bioqc.Rmd', output_format='all')"
 
