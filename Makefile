@@ -11,7 +11,6 @@
 ##                   - make dist     calls R CMD build
 ##
 ################################################################################
-## conditional: choose R version depending on the BICOSN value
 
 R=R
 PKG_ROOT_DIR=`pwd`
