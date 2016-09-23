@@ -427,11 +427,11 @@ sessionInfo()
     ## [22] knitr_1.14          
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] bitops_1.0-6       caTools_1.17.1     codetools_0.2-14  
-    ##  [4] crayon_1.3.2       digest_0.6.9       evaluate_0.9      
-    ##  [7] formatR_1.4        gdata_2.17.0       grid_3.1.3        
-    ## [10] gtable_0.2.0       gtools_3.5.0       highr_0.6         
-    ## [13] htmltools_0.3.5    KernSmooth_2.23-15 magrittr_1.5      
-    ## [16] R6_2.1.3           RCurl_1.95-4.8     rmarkdown_1.0     
-    ## [19] stringi_1.0-1      stringr_1.1.0      tools_3.1.3       
-    ## [22] XML_3.98-1.3       yaml_2.1.13
+    ##  [1] bitops_1.0-6       caTools_1.17.1     crayon_1.3.2      
+    ##  [4] digest_0.6.9       evaluate_0.9       formatR_1.4       
+    ##  [7] gdata_2.17.0       grid_3.1.3         gtable_0.2.0      
+    ## [10] gtools_3.5.0       highr_0.6          htmltools_0.3.5   
+    ## [13] KernSmooth_2.23-15 magrittr_1.5       R6_2.1.3          
+    ## [16] RCurl_1.95-4.8     rmarkdown_1.0      stringi_1.0-1     
+    ## [19] stringr_1.1.0      tools_3.1.3        XML_3.98-1.3      
+    ## [22] yaml_2.1.13
