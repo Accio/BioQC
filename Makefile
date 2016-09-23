@@ -1,4 +1,4 @@
-BIOQC_DIR=/apps64/bi/ribios/BioQC
+BIOQC_DIR=/apps64/bi/ribios/BioQC/vignettes
 BIOQC_EXAMPLE_DIR=/homebasel/biocomp/zhangj83/projects/2016-02-BioQCmanuscript/BioQC-example
 
 all:example-kidney example-simulation bioqc bioqc-signedGenesets
