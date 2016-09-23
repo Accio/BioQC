@@ -56,7 +56,7 @@ print(genesets)
 ##     negative[n=2]:TSC1,TSC2
 ```
 
-Note that though the GMT file contains 6 non-empty lines, only five signed genesets are returned by _readSignedGmt_ because a pair of negative and negative geneset of GS_C is available.
+Note that though the GMT file contains 7 non-empty lines, only 5 signed genesets are returned by _readSignedGmt_ because a pair of positive and negative genesets of GS_C and GS_D is available.
 
 Note that in its current form, no genes are reported for GS_A and GS_B, because the names of both sets do not match the patterns. User can decide how to handle such genesets that match patterns of neither positive nor negative sets (GS_A and GS_B in this case). By default, such genesets are ignored; however, user can decide to treat them as either positive or negative genesets. For the purpose of this tutorial, we treat these genesets as positive.
 
@@ -237,8 +237,8 @@ sessionInfo()
 ```
 
 ```
-## R version 3.1.3 (2015-03-09)
-## Platform: x86_64-unknown-linux-gnu (64-bit)
+## R version 3.3.0 (2016-05-03)
+## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
 ## 
 ## locale:
@@ -254,11 +254,11 @@ sessionInfo()
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] BioQC_1.02.1        Biobase_2.26.0      BiocGenerics_0.12.1
-## [4] Rcpp_0.12.0         knitr_1.14         
+## [1] BioQC_1.02.1        Biobase_2.32.0      BiocGenerics_0.18.0
+## [4] Rcpp_0.12.6         knitr_1.13         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] digest_0.6.9    evaluate_0.9    formatR_1.4     htmltools_0.3.5
-##  [5] magrittr_1.5    rmarkdown_1.0   stringi_1.0-1   stringr_1.1.0  
-##  [9] tools_3.1.3     yaml_2.1.13
+##  [1] magrittr_1.5    formatR_1.4     tools_3.3.0     htmltools_0.3.5
+##  [5] yaml_2.1.13     stringi_1.1.1   rmarkdown_0.9.6 stringr_1.1.0  
+##  [9] digest_0.6.10   evaluate_0.9
 ```
