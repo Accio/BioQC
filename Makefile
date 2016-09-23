@@ -1,15 +1,18 @@
+BIOQC_DIR=/apps64/bi/ribios/BioQC
+BIOQC_EXAMPLE_DIR=/homebasel/biocomp/zhangj83/projects/2016-02-BioQCmanuscript/BioQC-example
+
 all:example-kidney example-simulation bioqc bioqc-signedGenesets
 
-example-kidney: /homebasel/biocomp/sturmg/projects/BioQC-example/bioqc-kidney.md
+example-kidney: ${BIOQC_EXAMPLE_DIR}/bioqc-kidney.md
 	./fetch_content.sh $< 
 
-example-simulation: /homebasel/biocomp/sturmg/projects/BioQC-example/bioqc-simulation.md
+example-simulation: ${BIOQC_EXAMPLE_DIR}/bioqc-simulation.md
 	./fetch_content.sh $<
 
-bioqc: /homebasel/biocomp/sturmg/projects/BioQC/vignettes/bioqc.md
+bioqc: ${BIOQC_DIR}/bioqc.md
 	./fetch_content.sh $<
 
-bioqc-signedGenesets: /homebasel/biocomp/sturmg/projects/BioQC/vignettes/bioqc-signedGenesets.md
+bioqc-signedGenesets: ${BIOQC_DIR}/bioqc-signedGenesets.md
 	./fetch_content.sh $<
 
 clean:
