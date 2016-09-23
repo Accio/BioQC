@@ -87,7 +87,7 @@ system.time(bioqcRes <- wmwTest(eset, gmt,
 ~~~~
 
     ##    user  system elapsed 
-    ##   2.630   0.009   2.640
+    ##   1.705   0.007   1.711
 
 The function returns *one-sided* *p*-values of Wilcoxon-Mann-Whitney
 test. We next visualize this metric after transformation.
