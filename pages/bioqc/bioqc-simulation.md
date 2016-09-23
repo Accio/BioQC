@@ -130,9 +130,9 @@ with varying expectation and constant variance between 𝒩(0, 1) and
 𝒩(3, 1). To test the robustness of the algorithm, 10 samples are
 generated for each mean expression difference value.
 
-<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/sensitivity_benchmark_fig-1.svg" alt="__Figure 2___: Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. Left panel: enrichment scores reported by *BioQC* for the ovary signature, plotted against the differences in mean expression values; Right panel: rank of ovary enrichment scores in all 155 signatures plotted against the difference in mean expression values." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/sensitivity_benchmark_fig-1.svg" alt="__Figure 2__: Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. Left panel: enrichment scores reported by *BioQC* for the ovary signature, plotted against the differences in mean expression values; Right panel: rank of ovary enrichment scores in all 155 signatures plotted against the difference in mean expression values." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-**Figure 2**\_: Sensitivity benchmark. Expression levels of genes in the
+**Figure 2**: Sensitivity benchmark. Expression levels of genes in the
 ovary signature are dedicately sampled randomly from normal
 distributions with different mean values. Left panel: enrichment scores
 reported by *BioQC* for the ovary signature, plotted against the
@@ -234,6 +234,12 @@ reported in the following table:
 | GSM502610 | Spleen         | Monocytes                 | Erythroid\_cells      |
 | GSM502611 | Spleen         | Monocytes                 | Myeloblast            |
 
+**Table 1**: Quality control of the mixing benchmark input data with
+*BioQC*. Four columns (f.l.t.r.): sample index; tissue reported by the
+authors; the tissue signature with the highest enrichment score reported
+by *BioQC*; the tissue signature with the second-highest enrichment
+score.
+
 By comparing the tissue labels provided by the authors and the
 predictions of *BioQC*, we notice that in most cases the two match well
 (despite of ontological differences). In three cases (sample ID
@@ -330,6 +336,9 @@ of each column in the heatmap, except for diagonal and missing elements.
 | Pancreas       | 17.22%               |
 | SkeletalMuscle | 15.00%               |
 | Spleen         | 13.57%               |
+
+**Table 2**: Median lower detection limites of tissues as contamination
+sources.
 
 Interestingly, brain samples are a special case: if they contaminate
 other tissues, it is more difficult to identify (but not other way
