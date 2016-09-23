@@ -8,8 +8,8 @@ output:
 ---
 
 Supplementary Document 1 for "Detect issue heterogenity in gene
-expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
-David Zhang](mailto:jitao_david.zhang@roche.com), *et al.*)
+expression data with [*BioQC*](https://github.com/Accio/BioQC)" by
+[Jitao David Zhang](mailto:jitao_david.zhang@roche.com), *et al.*.
 
 In this vignette, we perform simulations with both model-generated and
 real-world data using *BioQC*. We show that *BioQC* is a fast and

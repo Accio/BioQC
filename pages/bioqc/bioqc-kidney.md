@@ -7,10 +7,9 @@ output:
     preserve_yaml: TRUE
 ---
 
-Supplementary Information for "Detect issue heterogenity in gene
-expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
-David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens
-Broger, Martin Ebeling and [Laura Badi](laura.badi@roche.com))
+Supplementary Document 2 for "Detect issue heterogenity in gene
+expression data with [*BioQC*](https://github.com/Accio/BioQC)" by
+[Jitao David Zhang](mailto:jitao_david.zhang@roche.com), *et al.*.
 
 Introduction {#introduction}
 ------------
@@ -87,7 +86,7 @@ system.time(bioqcRes <- wmwTest(eset, gmt,
 ~~~~
 
     ##    user  system elapsed 
-    ##   1.489   0.011   1.499
+    ##   1.740   0.006   1.743
 
 The function returns *one-sided* *p*-values of Wilcoxon-Mann-Whitney
 test. We next visualize this metric after transformation.
@@ -108,10 +107,11 @@ heatmap(bioqcAbsLogRes, Colv=NA, Rowv=TRUE,
         labCol=1:ncol(bioqcAbsLogRes))
 ~~~~
 
-<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/heatmap-1.svg" alt="BioQC scores (defined as abs(log10(p))) of the samples visualized in heatmap. Red and blue indicate high and low scores respectively." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/heatmap-1.svg" alt="__Figure 1__: BioQC scores (defined as abs(log10(p))) of the samples visualized in heatmap. Red and blue indicate high and low scores respectively." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-BioQC scores (defined as abs(log10(p))) of the samples visualized in
-heatmap. Red and blue indicate high and low scores respectively.
+**Figure 1**: BioQC scores (defined as abs(log10(p))) of the samples
+visualized in heatmap. Red and blue indicate high and low scores
+respectively.
 </p>
 
 Visual inspection reveals that there might be contaminations in samples
@@ -124,10 +124,10 @@ matplot(t(filRes), pch=c("K", "P"), type="b", lty=1L,
         ylab="BioQC score", xlab="Sample index")
 ~~~~
 
-<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/vis_bioqc-1.svg" alt="BioQC scores (defined as abs(log10(p))) of the samples. K and P represent kidney and pancreas signature scores respectively." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/vis_bioqc-1.svg" alt="__Figure 2__: BioQC scores (defined as abs(log10(p))) of the samples. K and P represent kidney and pancreas signature scores respectively." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-BioQC scores (defined as abs(log10(p))) of the samples. K and P
-represent kidney and pancreas signature scores respectively.
+**Figure 2**: BioQC scores (defined as abs(log10(p))) of the samples. K
+and P represent kidney and pancreas signature scores respectively.
 </p>
 
 Validation with quantitative RT-PCR {#validation-with-quantitative-rt-pcr}
@@ -156,9 +156,10 @@ plot(elastase~pancreasScore, log="y", pch=21, bg="red",
 text(pancreasScore[23:25],elastase[23:25], 23:25, pos=1)
 ~~~~
 
-<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/rt_pcr_result-1.svg" alt="Correlation between qRT-PCR results and BioQC pancreas score" style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/rt_pcr_result-1.svg" alt="__Figure 3__: Correlation between qRT-PCR results and BioQC pancreas score" style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-Correlation between qRT-PCR results and BioQC pancreas score
+**Figure 3**: Correlation between qRT-PCR results and BioQC pancreas
+score
 </p>
 
 Impact of sample removal on differential gene expression analysis {#impact-of-sample-removal-on-differential-gene-expression-analysis}
@@ -213,10 +214,10 @@ isDiff <- with(esetNephTbl, abs(Contam.logFC-ExclContam.logFC)>=2)
 with(esetNephTbl, points(Contam.logFC[isDiff]~ExclContam.logFC[isDiff], pch=16, col="red"))
 ~~~~
 
-<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/deg-1.svg" alt="Log2 fold change (logFC) values reported by *limma* with one contaminated sample included (y-axis) or excluded (x-axis). Genes strongly affected by the contamination are indicated by red dots." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-kidney_files/figure-markdown_phpextra/deg-1.svg" alt="__Figure 4__: Log2 fold change (logFC) values reported by *limma* with one contaminated sample included (y-axis) or excluded (x-axis). Genes strongly affected by the contamination are indicated by red dots." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-Log2 fold change (logFC) values reported by *limma* with one
-contaminated sample included (y-axis) or excluded (x-axis). Genes
+**Figure 4**: Log2 fold change (logFC) values reported by *limma* with
+one contaminated sample included (y-axis) or excluded (x-axis). Genes
 strongly affected by the contamination are indicated by red dots.
 </p>
 
