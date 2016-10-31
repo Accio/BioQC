@@ -20,3 +20,6 @@ bioqc-signedGenesets: ${BIOQC_DIR}/bioqc-signedGenesets.md
 
 clean:
 	rm -rfv ./pages/bioqc/*
+
+serve:
+	bundle exec jekyll serve
