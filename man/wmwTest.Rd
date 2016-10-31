@@ -7,10 +7,9 @@
 \description{
   We have implemented an highly efficient Wilcoxon-Mann-Whitney rank sum
   test for high-throughput expression profiling data. For datasets with
-  more than 100 features (genes), the function performs almost identical
-  to its R implementations (\code{wilcox.test} in \code{stats}, or
-  \code{rankSumTestWithCorrelation} in \code{limma}) can be more than
-  1000 times faster.
+  more than 100 features (genes), the function can be more than 1,000 
+  times faster than its R implementations (\code{wilcox.test} in 
+  \code{stats}, or \code{rankSumTestWithCorrelation} in \code{limma}).
 }
 \usage{
 wmwTest(x, ind.list, valType = c("p.greater", "p.less", "p.two.sided",
