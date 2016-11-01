@@ -15,4 +15,7 @@ bioqc.html:bioqc.Rmd
 	Rscript -e "rmarkdown::render('bioqc.Rmd', output_format='all')"
 
 bioqc-efficiency.html:bioqc-efficiency.Rmd
+	# copy ressources for the Jekyll page
+	mkdir -p bioqc-efficiency_files
+	cp wmw-speedup.svg bioqc-efficiency_files/
 	Rscript -e "rmarkdown::render('bioqc-efficiency.Rmd', output_format='all')"

@@ -29,8 +29,6 @@ library(hgu133plus2.db) ## to simulate an microarray expression dataset
 library(lattice)
 library(latticeExtra)
 library(gridExtra)
-library(GEOquery)
-library(xtable)
 library(gplots)
 library(rbenchmark)
 
@@ -55,8 +53,8 @@ to the native R implementation based on three modifications:
 
 1.  use the approximative WMW-statistic (Zar, J. H. (1999).
     Biostatistical analysis. Pearson Education India. *pp.* 174-177).
-    The differences are negligible for high-throughput gene expression
-    data.
+    The differences to the exact version are negligible for
+    high-throughput gene expression data.
 2.  use C instead of R as programming language
 3.  avoid futile expensive sorting operations
 
@@ -88,18 +86,14 @@ sets. Like this, *b* has to be sorted only once per sample. The
 individual gene sets still need to be sorted, which is not a major issue
 as they are small in comparison to the set of background genes.
 
-![bioqc-speedup](wmw-speedup.svg)
+<img src="bioqc-efficiency_files/wmw-speedup.svg" style="display:block; margin: auto" alt="bioqc speedup" />
 <p markdown="1" class="caption">
 **Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding
 futile sorting operations on the same sample.
 </p>
-
-Time benchmark {#time-benchmark}
---------------
-
-To demonstrate BioQC's superior performance, we apply both BioQC and the
-native R `wilcox.test` to random expression matrices and measure the
-runtime.
+Time benchmark --------------yyp To demonstrate BioQC's superior
+performance, we apply both BioQC and the native R `wilcox.test` to
+random expression matrices and measure the runtime.
 
 We setup random expression matrices of 20155 human protein-coding genes
 of 1, 5, 10, 50, or 100 samples. Genes are *i*.*i*.*d* distributed
@@ -160,20 +154,19 @@ sessionInfo()
     ## [8] datasets  base     
     ## 
     ## other attached packages:
-    ##  [1] rbenchmark_1.0.0     gplots_3.0.1         xtable_1.8-2        
-    ##  [4] GEOquery_2.32.0      gridExtra_2.2.1      latticeExtra_0.6-28 
-    ##  [7] RColorBrewer_1.1-2   lattice_0.20-33      hgu133plus2.db_3.0.0
-    ## [10] org.Hs.eg.db_3.0.0   RSQLite_1.0.0        DBI_0.4-1           
-    ## [13] AnnotationDbi_1.28.2 GenomeInfoDb_1.2.5   IRanges_2.0.1       
-    ## [16] S4Vectors_0.4.0      BioQC_1.02.1         Biobase_2.26.0      
-    ## [19] BiocGenerics_0.12.1  Rcpp_0.12.0          testthat_1.0.2      
-    ## [22] knitr_1.14          
+    ##  [1] rbenchmark_1.0.0     gplots_3.0.1         gridExtra_2.2.1     
+    ##  [4] latticeExtra_0.6-28  RColorBrewer_1.1-2   lattice_0.20-33     
+    ##  [7] hgu133plus2.db_3.0.0 org.Hs.eg.db_3.0.0   RSQLite_1.0.0       
+    ## [10] DBI_0.4-1            AnnotationDbi_1.28.2 GenomeInfoDb_1.2.5  
+    ## [13] IRanges_2.0.1        S4Vectors_0.4.0      BioQC_1.02.1        
+    ## [16] Biobase_2.26.0       BiocGenerics_0.12.1  Rcpp_0.12.0         
+    ## [19] testthat_1.0.2       knitr_1.14          
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] bitops_1.0-6       caTools_1.17.1     crayon_1.3.2      
     ##  [4] digest_0.6.9       evaluate_0.9       formatR_1.4       
     ##  [7] gdata_2.17.0       grid_3.1.3         gtable_0.2.0      
     ## [10] gtools_3.5.0       htmltools_0.3.5    KernSmooth_2.23-15
-    ## [13] magrittr_1.5       R6_2.1.3           RCurl_1.95-4.8    
-    ## [16] rmarkdown_1.0      stringi_1.0-1      stringr_1.1.0     
-    ## [19] tools_3.1.3        XML_3.98-1.3       yaml_2.1.13
+    ## [13] magrittr_1.5       R6_2.1.3           rmarkdown_1.0     
+    ## [16] stringi_1.0-1      stringr_1.1.0      tools_3.1.3       
+    ## [19] yaml_2.1.13

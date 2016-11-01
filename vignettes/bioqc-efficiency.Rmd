@@ -27,8 +27,6 @@ library(hgu133plus2.db) ## to simulate an microarray expression dataset
 library(lattice)
 library(latticeExtra)
 library(gridExtra)
-library(GEOquery)
-library(xtable)
 library(gplots)
 library(rbenchmark)
 
@@ -52,7 +50,7 @@ Algorithmic improvements
 We improved the computational efficiency of the WMW-test in comparison to the native R implementation based on 
 three modifications:
 
-1. use the approximative WMW-statistic (Zar, J. H. (1999). Biostatistical analysis. Pearson Education India. *pp.* 174-177). The differences are negligible for high-throughput gene expression data. 
+1. use the approximative WMW-statistic (Zar, J. H. (1999). Biostatistical analysis. Pearson Education India. *pp.* 174-177). The differences to the exact version are negligible for high-throughput gene expression data. 
 2. use C instead of R as programming language 
 3. avoid futile expensive sorting operations
 
@@ -65,10 +63,9 @@ Given an  $m \times n$ input matrix of gene expression data with $m$ genes and $
 Therefore, we approximate the WMW-test by extending $b$ to all genes in the sample, keeping the background unchanged when testing multiple gene sets. Like this, $b$ has to be sorted only once per sample.
 The individual gene sets still need to be sorted, which is not a major issue as they are small in comparison to the set of background genes. 
 
-<div class="figure" style="text-align: center">
-  ![bioqc-speedup](wmw-speedup.svg)
-  <p class="caption">**Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding futile sorting operations on the same sample.</p>
-</div>
+<img src="bioqc-efficiency_files/wmw-speedup.svg" style="display:block; margin: auto" alt="bioqc speedup" />
+<p class="caption">**Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding futile sorting operations on the same sample.
+</p>
 
 
 Time benchmark

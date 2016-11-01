@@ -135,7 +135,7 @@ system.time(Cres <- wmwTest(exprs, ind, valType="p.less", simplify=TRUE))
 ~~~~
 
     ##    user  system elapsed 
-    ##   0.133   0.000   0.134
+    ##   0.112   0.000   0.112
 
 ~~~~ r
 system.time(Rres <- apply(exprs, 2, function(x)
@@ -144,7 +144,7 @@ system.time(Rres <- apply(exprs, 2, function(x)
 ~~~~
 
     ##    user  system elapsed 
-    ##   2.800   0.035   2.832
+    ##   2.769   0.002   2.769
 
 With 22000 genes, five samples, and five gene sets, the *BioQC*
 implementation is about 20x faster than the R implementation (dependent
