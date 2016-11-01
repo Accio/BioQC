@@ -15,6 +15,15 @@ entries:
     - title: Gene Set Analysis
       url: /bioqc-signedGenesets.html
 
+  - title: The Algorithm
+    output: web
+    folderitems:
+
+    - title: Speeding up the WMW-test
+      url: /bioqc-efficiency.html
+    - title: WMW-test vs. t-test vs. KS-test 
+      url: /bioqc-wmw-test-performance.html
+
   - title: Case Studies
     output: web
 
