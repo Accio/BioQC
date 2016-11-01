@@ -1,5 +1,5 @@
 ---
-title: "BioQC Benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data"
+title: "BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data"
 permalink: bioqc-simulation.html
 output: 
   md_document:
@@ -7,15 +7,16 @@ output:
     preserve_yaml: TRUE
 ---
 
-Supplementary Document 1 for "Detect issue heterogenity in gene
-expression data with [*BioQC*](https://github.com/Accio/BioQC)" by
-[Jitao David Zhang](mailto:jitao_david.zhang@roche.com), *et al.*.
+Supplementary Information for "Detect issue heterogenity in gene
+expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
+David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens
+Broger, Martin Ebeling and [Laura Badi](laura.badi@roche.com))
 
 In this vignette, we perform simulations with both model-generated and
-real-world data using *BioQC*. We show that *BioQC* is a fast and
-sensitive method to detect tissue heterogeneity from high-throughput
-gene expression data. The source code used to produce this document can
-be found in the github repository
+real-world data using *BioQC*. We show that *BioQC* is a sensitive
+method to detect tissue heterogeneity from high-throughput gene
+expression data. The source code used to produce this document can be
+found in the github repository
 [BioQC-example](https://github.com/Accio/BioQC-example).
 
 *BioQC* is a R/Bioconductor package to detect tissue heterogeneity from
@@ -26,11 +27,8 @@ signatures that are ready to use 'out of the box'.
 Experiment setup {#experiment-setup}
 ----------------
 
-In this document, we perform three simulation studies with *BioQC*:
+In this document, we perform two simulation studies with *BioQC*:
 
--   **Time benchmark** tests the time-efficiency of the Wilcoxon test
-    implemented in *BioQC*, compared with the native implementation in
-    *R*;
 -   **Sensitivity benchmark** tests the sensitivity and specificity of
     *BioQC* detecting tissue heterogeneity using model-generated,
     simulated data;
@@ -41,7 +39,6 @@ All source code that is needed to reproduce the results can be found in
 the `.Rmd` file generating this document.
 
 ~~~~ r
-library(testthat)
 library(BioQC)
 library(hgu133plus2.db) ## to simulate an microarray expression dataset
 library(lattice)
@@ -50,7 +47,6 @@ library(gridExtra)
 library(GEOquery)
 library(xtable)
 library(gplots)
-library(rbenchmark)
 
 pdf.options(family="ArialMT", useDingbats=FALSE)
 
@@ -64,57 +60,6 @@ gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt",
                        package="BioQC")
 gmt <- readGmt(gmtFile)
 ~~~~
-
-Time benchmark {#time-benchmark}
---------------
-
-In the first experiment, we setup random expression matrices of 20155
-human protein-coding genes of 1, 5, 10, 50, or 100 samples. Genes are
-*i*.*i*.*d* distributed following 𝒩(0, 1). The native R and the *BioQC*
-implementations of the Wilcoxon-Mann-Whitney test are applied to the
-matrices respectively.
-
-The numeric results of both implementations, `bioqcNumRes` (from
-*BioQC*) and `rNumRes` (from *R*), are equivalent, as shown by the next
-command.
-
-~~~~ r
-expect_equal(bioqcNumRes, rNumRes)
-~~~~
-
-The *BioQC* implementation is more than 500 times much faster: while it
-takes about one second for BioQC to calculate enrichment scores of all
-155 signatures in 100 samples, the native R implementation takes about
-20 minutes:
-
-<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/time_benchmark_vis-1.svg" alt="__Figure 1__: Time benchmark results of BioQC and R implementation of Wilcoxon-Mann-Whitney test. Left panel: elapsed time in seconds (logarithmic Y-axis). Right panel: ratio of elapsed time by two implementations. All results achieved by a single thread on in a RedHat Linux server." style="display:block; margin: auto" />
-<p markdown="1" class="caption">
-**Figure 1**: Time benchmark results of BioQC and R implementation of
-Wilcoxon-Mann-Whitney test. Left panel: elapsed time in seconds
-(logarithmic Y-axis). Right panel: ratio of elapsed time by two
-implementations. All results achieved by a single thread on in a RedHat
-Linux server.
-</p>
-
-The main reason underlying the low performance of R implementation is
-that the `wilcox.test` function sorts two numeric vectors that are to be
-compared. When the function is repeatedly applied to gene expression
-data, it performs many expensive sorting operations which are futile,
-because the sorting of genes outside of the gene set (*background
-genes*) does not change between samples. *BioQC* sorts the background
-genes only once for each gene set, independent of how many samples are
-tested.
-
-In addition, *BioQC* implements an approximate Wilcoxon test instead of
-the exact version, because the difference between the two is negligible
-for high-throughput gene expression data. Last but not least, *BioQC*
-implements its core algorithm in C so as to maximize the time- and
-memory-efficiency.
-
-Putting these tweaks together, *BioQC* achieves identical results as the
-native implementation in two orders of magnitude less time. This renders
-*BioQC* a highly efficient tool for quality control of large-scale
-high-throughput gene expression data.
 
 Sensitivity Benchmark {#sensitivity-benchmark}
 ---------------------
@@ -130,15 +75,14 @@ with varying expectation and constant variance between 𝒩(0, 1) and
 𝒩(3, 1). To test the robustness of the algorithm, 10 samples are
 generated for each mean expression difference value.
 
-<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/sensitivity_benchmark_fig-1.svg" alt="__Figure 2__: Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. Left panel: enrichment scores reported by *BioQC* for the ovary signature, plotted against the differences in mean expression values; Right panel: rank of ovary enrichment scores in all 155 signatures plotted against the difference in mean expression values." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/sensitivity_benchmark_fig-1.svg" alt="Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. Left panel: enrichment scores reported by *BioQC* for the ovary signature, plotted against the differences in mean expression values; Right panel: rank of ovary enrichment scores in all 155 signatures plotted against the difference in mean expression values." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-**Figure 2**: Sensitivity benchmark. Expression levels of genes in the
-ovary signature are dedicately sampled randomly from normal
-distributions with different mean values. Left panel: enrichment scores
-reported by *BioQC* for the ovary signature, plotted against the
-differences in mean expression values; Right panel: rank of ovary
-enrichment scores in all 155 signatures plotted against the difference
-in mean expression values.
+Sensitivity benchmark. Expression levels of genes in the ovary signature
+are dedicately sampled randomly from normal distributions with different
+mean values. Left panel: enrichment scores reported by *BioQC* for the
+ovary signature, plotted against the differences in mean expression
+values; Right panel: rank of ovary enrichment scores in all 155
+signatures plotted against the difference in mean expression values.
 </p>
 
 The above figure visualizes the distribution of enrichment scores and
@@ -234,12 +178,6 @@ reported in the following table:
 | GSM502610 | Spleen         | Monocytes                 | Erythroid\_cells      |
 | GSM502611 | Spleen         | Monocytes                 | Myeloblast            |
 
-**Table 1**: Quality control of the mixing benchmark input data with
-*BioQC*. Four columns (f.l.t.r.): sample index; tissue reported by the
-authors; the tissue signature with the highest enrichment score reported
-by *BioQC*; the tissue signature with the second-highest enrichment
-score.
-
 By comparing the tissue labels provided by the authors and the
 predictions of *BioQC*, we notice that in most cases the two match well
 (despite of ontological differences). In three cases (sample ID
@@ -256,12 +194,12 @@ and mix them by different compositions. This allows us comparing
 enrichment scores and their ranks when the expression profiles of heart
 and jejunum are mixed *in silico*:
 
-<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/hjMixVis-1.svg" alt="__Figure 3__: Results of a mixing case study. Left panel: *BioQC* enrichment scores of small intestine and cardiac muscle varying upon different proportions of jejunum; Right panel: ranks of enrichment scores varying upon different proportions of jejunum." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/hjMixVis-1.svg" alt="Results of a mixing case study. Left panel: *BioQC* enrichment scores of small intestine and cardiac muscle varying upon different proportions of jejunum; Right panel: ranks of enrichment scores varying upon different proportions of jejunum." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-**Figure 3**: Results of a mixing case study. Left panel: *BioQC*
-enrichment scores of small intestine and cardiac muscle varying upon
-different proportions of jejunum; Right panel: ranks of enrichment
-scores varying upon different proportions of jejunum.
+Results of a mixing case study. Left panel: *BioQC* enrichment scores of
+small intestine and cardiac muscle varying upon different proportions of
+jejunum; Right panel: ranks of enrichment scores varying upon different
+proportions of jejunum.
 </p>
 
 We observe that with as little as 5% contamination of heart tissue in
@@ -294,14 +232,14 @@ experiments, producing weighted linear combinations of gene expression
 profiles of each pair of tissues (excluding self-mixing). The results
 are summaried in a heatmap:
 
-<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/dog_mix_vis-1.svg" alt="__Figure 4__: Results of the pairwise mixing experiment. Each cell represents the minimal percentage of tissue of the column as contamination in the tissue of the row that can be detected by *BioQC*. No values are available for cells on the diagonal because self-mixing was excluded. Heart  and skeletal muscle are very close to each other and therefore their detection limit is not considered." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/dog_mix_vis-1.svg" alt="Results of the pairwise mixing experiment. Each cell represents the minimal percentage of tissue of the column as contamination in the tissue of the row that can be detected by *BioQC*. No values are available for cells on the diagonal because self-mixing was excluded. Heart  and skeletal muscle are very close to each other and therefore their detection limit is not considered." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-**Figure 4**: Results of the pairwise mixing experiment. Each cell
-represents the minimal percentage of tissue of the column as
-contamination in the tissue of the row that can be detected by *BioQC*.
-No values are available for cells on the diagonal because self-mixing
-was excluded. Heart and skeletal muscle are very close to each other and
-therefore their detection limit is not considered.
+Results of the pairwise mixing experiment. Each cell represents the
+minimal percentage of tissue of the column as contamination in the
+tissue of the row that can be detected by *BioQC*. No values are
+available for cells on the diagonal because self-mixing was excluded.
+Heart and skeletal muscle are very close to each other and therefore
+their detection limit is not considered.
 </p>
 
 The heatmap visualization summarizes the detection limit of
@@ -337,9 +275,6 @@ of each column in the heatmap, except for diagonal and missing elements.
 | SkeletalMuscle | 15.00%               |
 | Spleen         | 13.57%               |
 
-**Table 2**: Median lower detection limites of tissues as contamination
-sources.
-
 Interestingly, brain samples are a special case: if they contaminate
 other tissues, it is more difficult to identify (but not other way
 around). It can be partially explained by the experiment design: Briggs
@@ -349,15 +284,14 @@ prefrontal cortex signature scored highest in the canine brain samples,
 its score is relative low (7.45), and the genes in the signature are not
 too far away from the background genes:
 
-<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/brain_low_exp-1.svg" alt="__Figure 5__: Tissue-specific genes' expression in respective average tissue profiles. For each tissue (*e.g.* brain), we calculate the median ratio of gene expression level of specific genes over the median expression level of background genes. The value reflects the specificity of tissue-specific genes in respective tissues. Likely due to the sampling of different brain regions, the score of brain ranks the lowest." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/brain_low_exp-1.svg" alt="Tissue-specific genes' expression in respective average tissue profiles. For each tissue (*e.g.* brain), we calculate the median ratio of gene expression level of specific genes over the median expression level of background genes. The value reflects the specificity of tissue-specific genes in respective tissues. Likely due to the sampling of different brain regions, the score of brain ranks the lowest." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-**Figure 5**: Tissue-specific genes' expression in respective average
-tissue profiles. For each tissue (*e.g.* brain), we calculate the median
-ratio of gene expression level of specific genes over the median
-expression level of background genes. The value reflects the specificity
-of tissue-specific genes in respective tissues. Likely due to the
-sampling of different brain regions, the score of brain ranks the
-lowest.
+Tissue-specific genes' expression in respective average tissue profiles.
+For each tissue (*e.g.* brain), we calculate the median ratio of gene
+expression level of specific genes over the median expression level of
+background genes. The value reflects the specificity of tissue-specific
+genes in respective tissues. Likely due to the sampling of different
+brain regions, the score of brain ranks the lowest.
 </p>
 
 Therefore only a strong contamination by brain in this dataset will be
@@ -386,10 +320,10 @@ Appendix {#appendix}
 In the context of the dog transcriptome dataset, we can compare the
 results of principal component analysis (PCA) with that of *BioQC*:
 
-<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/pca-1.svg" alt="__Figure 6__: Sample separation revealed by principal component analysis (PCA) of the dog transcriptome dataset." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-simulation_files/figure-markdown_phpextra/pca-1.svg" alt="Sample separation revealed by principal component analysis (PCA) of the dog transcriptome dataset." style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-**Figure 6**: Sample separation revealed by principal component analysis
-(PCA) of the dog transcriptome dataset.
+Sample separation revealed by principal component analysis (PCA) of the
+dog transcriptome dataset.
 </p>
 
 PCA sugggests that samples from each tissue tend to cluster together, in
@@ -427,21 +361,19 @@ sessionInfo()
     ## [8] datasets  base     
     ## 
     ## other attached packages:
-    ##  [1] rbenchmark_1.0.0     gplots_3.0.1         xtable_1.8-2        
-    ##  [4] GEOquery_2.32.0      gridExtra_2.2.1      latticeExtra_0.6-28 
-    ##  [7] RColorBrewer_1.1-2   lattice_0.20-33      hgu133plus2.db_3.0.0
-    ## [10] org.Hs.eg.db_3.0.0   RSQLite_1.0.0        DBI_0.4-1           
-    ## [13] AnnotationDbi_1.28.2 GenomeInfoDb_1.2.5   IRanges_2.0.1       
-    ## [16] S4Vectors_0.4.0      BioQC_1.02.1         Biobase_2.26.0      
-    ## [19] BiocGenerics_0.12.1  Rcpp_0.12.0          testthat_1.0.2      
-    ## [22] knitr_1.14          
+    ##  [1] gplots_3.0.1         xtable_1.8-2         GEOquery_2.32.0     
+    ##  [4] gridExtra_2.2.1      latticeExtra_0.6-28  RColorBrewer_1.1-2  
+    ##  [7] lattice_0.20-33      hgu133plus2.db_3.0.0 org.Hs.eg.db_3.0.0  
+    ## [10] RSQLite_1.0.0        DBI_0.4-1            AnnotationDbi_1.28.2
+    ## [13] GenomeInfoDb_1.2.5   IRanges_2.0.1        S4Vectors_0.4.0     
+    ## [16] BioQC_1.02.1         Biobase_2.26.0       BiocGenerics_0.12.1 
+    ## [19] Rcpp_0.12.0          knitr_1.14          
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] bitops_1.0-6       caTools_1.17.1     crayon_1.3.2      
-    ##  [4] digest_0.6.9       evaluate_0.9       formatR_1.4       
-    ##  [7] gdata_2.17.0       grid_3.1.3         gtable_0.2.0      
-    ## [10] gtools_3.5.0       highr_0.6          htmltools_0.3.5   
-    ## [13] KernSmooth_2.23-15 magrittr_1.5       R6_2.1.3          
-    ## [16] RCurl_1.95-4.8     rmarkdown_1.0      stringi_1.0-1     
-    ## [19] stringr_1.1.0      tools_3.1.3        XML_3.98-1.3      
-    ## [22] yaml_2.1.13
+    ##  [1] bitops_1.0-6       caTools_1.17.1     digest_0.6.9      
+    ##  [4] evaluate_0.9       formatR_1.4        gdata_2.17.0      
+    ##  [7] grid_3.1.3         gtable_0.2.0       gtools_3.5.0      
+    ## [10] highr_0.6          htmltools_0.3.5    KernSmooth_2.23-15
+    ## [13] magrittr_1.5       RCurl_1.95-4.8     rmarkdown_1.0     
+    ## [16] stringi_1.0-1      stringr_1.1.0      tools_3.1.3       
+    ## [19] XML_3.98-1.3       yaml_2.1.13
