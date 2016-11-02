@@ -7,9 +7,6 @@ output:
   html_document: default
 ---
 
-Using BioQC with signed genesets {#using-bioqc-with-signed-genesets}
-================================
-
 Introduction {#introduction}
 ------------
 

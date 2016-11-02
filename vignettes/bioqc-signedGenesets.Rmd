@@ -7,8 +7,6 @@ output:
   html_document: default
 ---
 
-Using BioQC with signed genesets
-================================
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")

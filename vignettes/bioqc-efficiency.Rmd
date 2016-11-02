@@ -6,7 +6,7 @@ output:
     preserve_yaml: TRUE
   html_document: default
 ---
-Supplementary Information for "Detect issue heterogenity in gene expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens Broger, Martin Ebeling and [Laura Badi](laura.badi@roche.com))
+Supplementary Information for "Detect issue heterogenity in gene expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello, Gregor Sturm and [Laura Badi](laura.badi@roche.com))
 
 
 ```{r setup, include=FALSE}
@@ -15,12 +15,12 @@ library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
 ```
 
-In this vignette, explain the underlaying algorithmic details of our implementation of the Wilcoxon-Mann-Whitney (WMW)-test. The source code used to produce this document can be found in the github repository [BioQC](https://github.com/Accio/BioQC/vignettes).
+In this vignette, explain the underlaying algorithmic details of our implementation of the Wilcoxon-Mann-Whitney test. The source code used to produce this document can be found in the github repository [BioQC](https://github.com/Accio/BioQC/vignettes).
 
 *BioQC* is a R/Bioconductor package to detect tissue heterogeneity from high-throughput gene expression profiling data. It implements an efficient Wilcoxon-Mann-Whitney test, and offers tissue-specific gene signatures that are ready to use 'out of the box'.
 
 
-```{r lib, warning=FALSE, message=FALSE, results="hide"}
+```{r lib, warning=FALSE, message=FALSE, results="hide", include=FALSE}
 library(testthat)
 library(BioQC)
 library(hgu133plus2.db) ## to simulate an microarray expression dataset
@@ -47,7 +47,9 @@ gmt <- readGmt(gmtFile)
 Algorithmic improvements
 ------------------------
 
-We improved the computational efficiency of the WMW-test in comparison to the native R implementation based on 
+The Wilcoxon-Mann-Whitney (WMW) test is a non-parametric statistical test to test if two population means are equal or not. Unlike the t-test, it does not require the assumption of normal distributions making it more robust against noise. 
+
+We improved the computational efficiency of the Wilcoxon-Mann-Whitney test in comparison to the native R implementation based on 
 three modifications:
 
 1. use the approximative WMW-statistic (Zar, J. H. (1999). Biostatistical analysis. Pearson Education India. *pp.* 174-177). The differences to the exact version are negligible for high-throughput gene expression data. 
@@ -58,18 +60,21 @@ While (1) and (2) are straightforward, we elaborate (3) in the following.
 
 Let $W_{a,b}$ be the approximative WMW test of two gene vectors $a,b$, where $a$ is the gene set of interest, typically containing less than a few hundreds of genes, and $b$ is the set of all genes outside the gene set (*background genes*) typically containing $>10000$ genes. In the context of BioQC, the gene sets are referred to as *tissue signatures*.  
 
-Given an  $m \times n$ input matrix of gene expression data with $m$ genes and $n$ samples $s_1, \dots, s_n$, and $k$ gene sets $d_1, \dots, d_k$, the WMW-test needs to be applied for each sample $s_i, i \in 1..n$ and each gene set $d_j, j \in 1..k$. The runtime of the WMW-test is essentially determined by the sorting operation on the two input vectors. Using native R `wilcox.test`, the vectors $a$ and $b$ are sorted individually for each gene set. However, in the context of gene set analysis, this is futile, as the (large) background set changes insignificantly in relation to the (small) gene set when testing different gene sets on the same sample. 
+Given an  $m \times n$ input matrix of gene expression data with $m$ genes and $n$ samples $s_1, \dots, s_n$, and $k$ gene sets $d_1, \dots, d_k$, the WMW-test needs to be applied for each sample $s_i, i \in 1..n$ and each gene set $d_j, j \in 1..k$. The runtime of the WMW-test is essentially determined by the sorting operation on the two input vectors. Using native R `wilcox.test`, the vectors $a$ and $b$ are sorted individually for each gene set. However, in the context of gene set analysis, this is futile, as the (large) background set changes insignificantly in relation to the (small) gene set, when testing different gene sets on the same sample. 
 
 Therefore, we approximate the WMW-test by extending $b$ to all genes in the sample, keeping the background unchanged when testing multiple gene sets. Like this, $b$ has to be sorted only once per sample.
-The individual gene sets still need to be sorted, which is not a major issue as they are small in comparison to the set of background genes. 
+The individual gene sets still need to be sorted, which is not a major issue, as they are small in comparison to the set of background genes. 
 
 <img src="bioqc-efficiency_files/wmw-speedup.svg" style="display:block; margin: auto" alt="bioqc speedup" />
-<p class="caption">**Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding futile sorting operations on the same sample.
-</p>
+<p class="caption">**Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding futile sorting operations on the same sample.</p>
+
+&nbsp;
+
 
 
 Time benchmark
 --------------
+
 To demonstrate BioQC's superior performance, we apply both BioQC and the native R `wilcox.test` to random expression matrices and measure the runtime. 
 
 We setup random expression matrices of `r length(humanGenes)` human protein-coding genes of 1, 5, 10, 50, or 100 samples. Genes  are $i.i.d$ distributed following $\mathcal{N}(0,1)$. The native R and the *BioQC* implementations of the Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
