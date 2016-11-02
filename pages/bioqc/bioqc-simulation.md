@@ -10,7 +10,8 @@ output:
 Supplementary Information for "Detect issue heterogenity in gene
 expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
 David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens
-Broger, Martin Ebeling and [Laura Badi](laura.badi@roche.com))
+Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines
+Pomposiello, Gregor Sturm and [Laura Badi](laura.badi@roche.com))
 
 In this vignette, we perform simulations with both model-generated and
 real-world data using *BioQC*. We show that *BioQC* is a sensitive

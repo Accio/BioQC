@@ -11,11 +11,12 @@ output:
 Supplementary Information for "Detect issue heterogenity in gene
 expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
 David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens
-Broger, Martin Ebeling and [Laura Badi](laura.badi@roche.com))
+Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines
+Pomposiello, Gregor Sturm and [Laura Badi](laura.badi@roche.com))
 
 In this vignette, explain the underlaying algorithmic details of our
-implementation of the Wilcoxon-Mann-Whitney (WMW)-test. The source code
-used to produce this document can be found in the github repository
+implementation of the Wilcoxon-Mann-Whitney test. The source code used
+to produce this document can be found in the github repository
 [BioQC](https://github.com/Accio/BioQC/vignettes).
 
 *BioQC* is a R/Bioconductor package to detect tissue heterogeneity from
@@ -23,34 +24,17 @@ high-throughput gene expression profiling data. It implements an
 efficient Wilcoxon-Mann-Whitney test, and offers tissue-specific gene
 signatures that are ready to use 'out of the box'.
 
-~~~~ r
-library(testthat)
-library(BioQC)
-library(hgu133plus2.db) ## to simulate an microarray expression dataset
-library(lattice)
-library(latticeExtra)
-library(gridExtra)
-library(gplots)
-library(rbenchmark)
-
-pdf.options(family="ArialMT", useDingbats=FALSE)
-
-set.seed(1887)
-
-## list human genes
-humanGenes <- unique(na.omit(unlist(as.list(hgu133plus2SYMBOL))))
-
-## read tissue-specific gene signatures
-gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt",
-                       package="BioQC")
-gmt <- readGmt(gmtFile)
-~~~~
-
 Algorithmic improvements {#algorithmic-improvements}
 ------------------------
 
-We improved the computational efficiency of the WMW-test in comparison
-to the native R implementation based on three modifications:
+The Wilcoxon-Mann-Whitney (WMW) test is a non-parametric statistical
+test to test if two population means are equal or not. Unlike the
+t-test, it does not require the assumption of normal distributions
+making it more robust against noise.
+
+We improved the computational efficiency of the Wilcoxon-Mann-Whitney
+test in comparison to the native R implementation based on three
+modifications:
 
 1.  use the approximative WMW-statistic (Zar, J. H. (1999).
     Biostatistical analysis. Pearson Education India. *pp.* 174-177).
@@ -78,23 +62,28 @@ essentially determined by the sorting operation on the two input
 vectors. Using native R `wilcox.test`, the vectors *a* and *b* are
 sorted individually for each gene set. However, in the context of gene
 set analysis, this is futile, as the (large) background set changes
-insignificantly in relation to the (small) gene set when testing
+insignificantly in relation to the (small) gene set, when testing
 different gene sets on the same sample.
 
 Therefore, we approximate the WMW-test by extending *b* to all genes in
 the sample, keeping the background unchanged when testing multiple gene
 sets. Like this, *b* has to be sorted only once per sample. The
-individual gene sets still need to be sorted, which is not a major issue
-as they are small in comparison to the set of background genes.
+individual gene sets still need to be sorted, which is not a major
+issue, as they are small in comparison to the set of background genes.
 
 <img src="pages/bioqc/bioqc-efficiency_files/wmw-speedup.svg" style="display:block; margin: auto" alt="bioqc speedup" />
 <p markdown="1" class="caption">
 **Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding
 futile sorting operations on the same sample.
 </p>
-Time benchmark --------------yyp To demonstrate BioQC's superior
-performance, we apply both BioQC and the native R `wilcox.test` to
-random expression matrices and measure the runtime.
+ 
+
+Time benchmark {#time-benchmark}
+--------------
+
+To demonstrate BioQC's superior performance, we apply both BioQC and the
+native R `wilcox.test` to random expression matrices and measure the
+runtime.
 
 We setup random expression matrices of 20155 human protein-coding genes
 of 1, 5, 10, 50, or 100 samples. Genes are *i*.*i*.*d* distributed

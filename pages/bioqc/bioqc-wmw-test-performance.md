@@ -1,5 +1,5 @@
 ---
-title: "Comparing the Wilcoxon-Mann-Whitney to alternative statistic tests. "
+title: "Comparing the Wilcoxon-Mann-Whitney to alternative statistical tests"
 permalink: bioqc-wmw-test-performance.html
 output: 
   md_document:
@@ -7,92 +7,41 @@ output:
     preserve_yaml: TRUE
 ---
 
-Supplementary Information for "Detect issue heterogenity in gene
-expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
-David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens
-Broger, Martin Ebeling and [Laura Badi](laura.badi@roche.com))
-
-In this document, we show that the Wilcoxon-Mann-Whitney (WMW)-test is
+In this document, we show that the Wilcoxon-Mann-Whitney test is
 comparable or superior to alternative methods.
 
-*BioQC* is a R/Bioconductor package to detect tissue heterogeneity from
-high-throughput gene expression profiling data. It implements an
-efficient Wilcoxon-Mann-Whitney test, and offers tissue-specific gene
-signatures that are ready to use 'out of the box'.
-
-~~~~ r
-library(testthat)
-library(BioQC)
-library(hgu133plus2.db) ## to simulate an microarray expression dataset
-library(lattice)
-library(latticeExtra)
-library(gridExtra)
-library(GEOquery)
-library(xtable)
-library(gplots)
-library(reshape2)
-library(ggplot2)
-library(rbenchmark)
-
-pdf.options(family="ArialMT", useDingbats=FALSE)
-
-set.seed(1887)
-
-## list human genes
-humanGenes <- unique(na.omit(unlist(as.list(hgu133plus2SYMBOL))))
-
-## read tissue-specific gene signatures
-gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt",
-                       package="BioQC")
-gmt <- readGmt(gmtFile)
-~~~~
-
 Two alternative methods could be compared with the Wilcoxon-Mann-Whitney
-test proposed by BioQC: the Kolmogonov-Smirnov test (KS-test hereafter),
-and the Student’s t-test (t-test hereafter), or more particularly, the
-Welch’s test which does not assume equal sample number or equal
-variance, which is appropriate in the setting of gene expression
-studies.
+(WMW) test proposed by BioQC: the Kolmogonov-Smirnov (KS) test, and the
+Student’s t-test, or more particularly, the Welch’s test which does not
+assume equal sample number or equal variance, which is appropriate in
+the setting of gene expression studies.
 
-1.  It is documented in statistics literature that the
-    Wilcoxon-Mann-Whitney test offers a higher power than the
-    Kolmogorov-Smirnov test. [^1][^2].
-2.  Compared with parameterized test methods such as the t-test, the
-    Wilcoxon-Mann-Whitney test is (a) resistance to monotone
-    transformation, (b) suffers less from outliers, and (c) provides
-    higher efficiency when many genes are profiled and the distribution
-    of gene expression deviates from the normal distribution, which are
-    important criteria in genome-wide expression data.
+1.  It is documented in statistics literature that the WMW test offers a
+    higher power than the Kolmogorov-Smirnov test[^1],[^2].
+2.  Compared with parameterized test methods such as the t-test, the WMW
+    test is (a) resistance to monotone transformation, (b) suffers less
+    from outliers, and (c) provides higher efficiency when many genes
+    are profiled and the distribution of gene expression deviates from
+    the normal distribution, which are important criteria in genome-wide
+    expression data.
 
 Based on these considerations, BioQC implements a computationally
-efficient version of the Wilcoxon-Mann-Whitney test. In order not to
-confuse end-users, no alternative methods are implemented.
+efficient version of the WMW test. In order not to confuse end-users, no
+alternative methods are implemented.
 
-Nevertheless, in order to demonstrate the power of Wilcoxon-Mann-Whitney
-test in comparison with the KS-test or the t-test, we performed the
-sensitivity benchmark described in the [simulation
-studies](bioqc-simulation.html), for the two alternative tests
-respectively.
+Nevertheless, in order to demonstrate the power of WMW test in
+comparison with the KS-test or the t-test, we performed the sensitivity
+benchmark described in the [simulation studies](bioqc-simulation.html),
+for the two alternative tests respectively.
 
-    ## 
-    ## Attaching package: 'plyr'
-
-    ## The following object is masked from 'package:IRanges':
-    ## 
-    ##     desc
-
-    ## The following object is masked from 'package:S4Vectors':
-    ## 
-    ##     rename
-
-<img src="pages/bioqc/bioqc-wmw-test-performance_files/figure-markdown_phpextra/sensitivity_benchmark_fig-1.svg" alt="Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. The lines show the enrichment score for the Wilcoxon-Mann-Whitney test, the t-test and the Kolmogorov-Smirnov test respectively. In the right panel, noise was added by adding a value drawn from an additional normal distribution to a fraction of the genes." style="display:block; margin: auto" />
+<img src="pages/bioqc/bioqc-wmw-test-performance_files/figure-markdown_phpextra/sensitivity_benchmark_fig-1.svg" alt="**Figure 1:** Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. The lines show the enrichment score for the Wilcoxon-Mann-Whitney test, the t-test and the Kolmogorov-Smirnov test respectively. In the right panel, outliers were added by adding a random value to 1% of the simulated genes. " style="display:block; margin: auto" />
 <p markdown="1" class="caption">
-Sensitivity benchmark. Expression levels of genes in the ovary signature
-are dedicately sampled randomly from normal distributions with different
-mean values. The lines show the enrichment score for the
-Wilcoxon-Mann-Whitney test, the t-test and the Kolmogorov-Smirnov test
-respectively. In the right panel, noise was added by adding a value
-drawn from an additional normal distribution to a fraction of the genes.
+**Figure 1:** Sensitivity benchmark. Expression levels of genes in the
+ovary signature are dedicately sampled randomly from normal
+distributions with different mean values. The lines show the enrichment
+score for the Wilcoxon-Mann-Whitney test, the t-test and the
+Kolmogorov-Smirnov test respectively. In the right panel, outliers were
+added by adding a random value to 1% of the simulated genes.
 </p>
 
 As expected, the results suggest, that both the KS-test and the WMW-test
@@ -100,8 +49,18 @@ are robust to noise, while the performance of the t-test drops
 significantly on noisy data. Additionally, the WMW-test appears to be
 superior to the KS-test for low expression differences.
 
-References {#references}
-----------
+Computational Performance {#computational-performance}
+-------------------------
+
+Since the KS-test is so slow, we did not replicate the sensitivity
+benchmark from the [simulation studies](bioqc-simulation.html) using the
+enrichment score rank. While it takes BioQC about 5 seconds on a single
+thread to test all 155 signatures, it already takes the KS-test about 13
+seconds to test a single signature.
+
+    ##       test replications elapsed relative
+    ## 2  runKS()           10 129.918     2.41
+    ## 1 runWMW()           10  53.900     1.00
 
 R Session Info {#r-session-info}
 --------------
@@ -147,6 +106,9 @@ sessionInfo()
     ## [19] rmarkdown_1.0      scales_0.3.0       stringi_1.0-1     
     ## [22] stringr_1.1.0      tools_3.1.3        XML_3.98-1.3      
     ## [25] yaml_2.1.13
+
+References {#references}
+----------
 
 [^1]: Irizarry, Rafael A., et al. "Gene set enrichment analysis made
     simple."Statistical methods in medical research 18.6 (2009):

@@ -10,7 +10,8 @@ output:
 Supplementary Information for "Detect issue heterogenity in gene
 expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
 David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens
-Broger, Martin Ebeling and [Laura Badi](laura.badi@roche.com))
+Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines
+Pomposiello, Gregor Sturm and [Laura Badi](laura.badi@roche.com))
 
 Introduction {#introduction}
 ------------
@@ -27,7 +28,7 @@ package used to detect tissue heterogeneity from high-throughput gene
 expression profiling data with tissue-specific gene signatures. For its
 basic use please refer to the documentation and vignettes shipped along
 with the package, or to the other vignette
-[bioqc-simulation](bioqc-simulation.md) which applies the algorithm to
+[bioqc-simulation](bioqc-simulation.html) which applies the algorithm to
 simulated datsets. Here we demonstrate its use with a real biological
 data set, which is not included in the package distribution due to size
 limitations.
@@ -87,7 +88,7 @@ system.time(bioqcRes <- wmwTest(eset, gmt,
 ~~~~
 
     ##    user  system elapsed 
-    ##   1.684   0.029   1.712
+    ##   1.672   0.052   1.722
 
 The function returns *one-sided* *p*-values of Wilcoxon-Mann-Whitney
 test. We next visualize this metric after transformation.
