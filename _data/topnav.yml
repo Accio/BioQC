@@ -5,6 +5,8 @@ topnav:
   items:
     - title: News
       url: /news
+    - title: "@github"
+      url: https://github.com/accio/bioqc
 
 #Topnav dropdowns
 topnav_dropdowns:

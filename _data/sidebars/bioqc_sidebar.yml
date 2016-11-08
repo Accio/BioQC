@@ -3,6 +3,7 @@
 entries:
 - title: Sidebar
   product: BioQC 
+  url: /index.html
   version: 
   folders:
 
@@ -14,6 +15,15 @@ entries:
 
     - title: Gene Set Analysis
       url: /bioqc-signedGenesets.html
+
+  - title: The Algorithm
+    output: web
+    folderitems:
+
+    - title: Advantages of the WMW test
+      url: /bioqc-wmw-test-performance.html
+    - title: Speeding up the WMW-test
+      url: /bioqc-efficiency.html
 
   - title: Case Studies
     output: web
