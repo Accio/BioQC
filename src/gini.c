@@ -40,14 +40,24 @@ double stat_gini(double x[], int num) {
   return gini - 1.0 - (1.0/(double)num);
 }
 
-SEXP gini(SEXP value) {
-  double g=stat_gini(REAL(value), length(value));
-
+SEXP gini_matrix(SEXP value,
+		 SEXP nrowR,
+		 SEXP ncolR) {
+  double *pmat = REAL(value);
+  int nrow = INTEGER(nrowR)[0];
+  int ncol = INTEGER(ncolR)[0];
+  double rowvec[ncol];
+  int i, j;
+  
   SEXP res;
-  PROTECT(res=allocVector(REALSXP, 1));
-  double *pres=REAL(res);
-  *pres=g;
+  PROTECT(res = allocVector(REALSXP,
+			    nrow));
+  for (i=0; i<nrow; i++) {
+    for(j=0; j<ncol; j++) {
+      rowvec[j]=pmat[i+j*nrow];
+    }
+    REAL(res)[i] = stat_gini(rowvec, ncol);
+  }
   UNPROTECT(1);
-
   return(res);
 }
