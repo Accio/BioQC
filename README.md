@@ -7,8 +7,12 @@ BioQC is a R/[Bioconductor](https://bioconductor.org/packages/release/bioc/html/
 Simulation studies show that BioQC is both fast and sensitive in detecting tissue heterogeneity. 
 
 ## Usage
+The usage is documented on our [website](https://accio.github.io/BioQC) or in the following two
+vignettes: 
+
 * [Basic Usage](vignettes/bioqc.md)
 * [Gene Set Analysis with BioQC](vignettes/bioqc-signedGenesets.md)
 
+
 ## Case studies
-check out the [BioQC-example](https://github.com/Accio/BioQC-example) repository!
+There are case-studies available on our [website](https://accio.github.io/BioQC) or in the [BioQC-example](https://github.com/Accio/BioQC-example) github repository. 
