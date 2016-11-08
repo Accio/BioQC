@@ -1,4 +1,12 @@
 gini <- function(x, na.rm=FALSE)  {
-  if(na.rm) x <- x[!is.na(x)]
-  .Call("gini", as.numeric(x))
+    ## TODO: fix na.rm for matrix
+    if(na.rm) x <- x[!is.na(x)]
+    isVec <- !is.matrix(x)
+    if(isVec)
+        x <- matrix(x, nrow=1L, byrow=TRUE)
+    storage.mode(x) <- "double"
+    res <- .Call("gini_matrix", x, nrow(x), ncol(x))
+    if(isVec)
+        res <- res[1]
+    return(res)
 }
