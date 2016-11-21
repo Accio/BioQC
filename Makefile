@@ -1,5 +1,5 @@
-BIOQC_DIR=/homebasel/biocomp/sturmg/projects/BioQC/vignettes
-BIOQC_EXAMPLE_DIR=/homebasel/biocomp/sturmg/projects/BioQC-example
+BIOQC_DIR=/apps64/bi/BioQC/BioQC/vignettes
+BIOQC_EXAMPLE_DIR=/apps64/bi/BioQC/BioQC-example
 
 all: examples vignettes
 
