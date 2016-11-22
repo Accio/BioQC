@@ -11,7 +11,7 @@ In this document, we show that the Wilcoxon-Mann-Whitney test is
 comparable or superior to alternative methods.
 
 Two alternative methods could be compared with the Wilcoxon-Mann-Whitney
-(WMW) test proposed by BioQC: the Kolmogonov-Smirnov (KS) test, and the
+(WMW) test proposed by BioQC: the Kolmogorov-Smirnov (KS) test, and the
 Student’s t-test, or more particularly, the Welch’s test which does not
 assume equal sample number or equal variance, which is appropriate in
 the setting of gene expression studies.
@@ -105,7 +105,7 @@ sessionInfo()
     ## [19] htmltools_0.3.5    munsell_0.4.3      grid_3.3.1        
     ## [22] XML_3.98-1.5       colorspace_1.3-1   magrittr_1.5      
     ## [25] lazyeval_0.2.0     yaml_2.1.13        crayon_1.3.2      
-    ## [28] codetools_0.2-15   tibble_1.2
+    ## [28] tibble_1.2
 
 References {#references}
 ----------
