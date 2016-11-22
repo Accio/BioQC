@@ -1,3 +1,3 @@
 ---
-BUNDLE_PATH: "/homebasel/biocomp/sturmg/.gem"
-BUNDLE_DISABLE_SHARED_GEMS: "true"
+BUNDLE_PATH: "~/.gem"
+BUNDLE_DISABLE_SHARED_GEMS: '1'
