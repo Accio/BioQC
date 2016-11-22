@@ -110,7 +110,7 @@ Given the expression profile of a sample of tissue A
 (**Y**<sub>*A*</sub>), and that of a sample of tissue B
 (**Y**<sub>*B*</sub>), the weighted linear mixing produces a new profile
 **Y** = *ω***Y**<sub>**A**</sub> + (1 − *ω*)**Y**<sub>**B**</sub>, where
-*ω* ∈ [0, 1]. In essence the profiles of two tissue types are linearly
+*ω* ∈ \[0, 1\]. In essence the profiles of two tissue types are linearly
 mixed in different proportions, which simulates varying severities of
 contaminations. We asked whether BioQC could detect such mixings, and if
 so, how sensitive is the method.
@@ -210,7 +210,7 @@ enhance the rank to 4 and 3 respectively. If we start from the other
 end, namely assuming jejunum contamination in heart samples, the BioQC
 algorithms ranks jejunum the 7th only when there are more than 25%
 contamination. If we set enrichment score equal or over 3 as the
-threshold of calling a suspected contamination event (*p* \< 0.001 in
+threshold of calling a suspected contamination event (*p* &lt; 0.001 in
 the one-sided Wilcoxon-Mann-Whitney test), it takes about 10% heart in
 jejunum tissue or about 30% jejunum tissue in heart to make a call. It
 means the sensitivity of contamination detection is not symmetric
@@ -247,7 +247,7 @@ The heatmap visualization summarizes the detection limit of
 contamination of each pair of tissues. Take the cell in row 1 column 2
 from top left: its value (0.15) means that if there are 15% or more
 contamination by heart in the brain sample, *BioQC* will be able to
-detect it (with the threshold enrichment score  ≥ 3 or the rank  ≤ 10),
+detect it (with the threshold enrichment score ≥3 or the rank ≤10),
 because the enrichment score is equal to or larger than 3, or the heart
 tissue signature ranks in the top 10 of all tissue signatures.
 
@@ -345,36 +345,36 @@ R Session Info {#r-session-info}
 sessionInfo()
 ~~~~
 
-    ## R version 3.1.3 (2015-03-09)
-    ## Platform: x86_64-unknown-linux-gnu (64-bit)
-    ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
+    ## R version 3.3.1 (2016-06-21)
+    ## Platform: i686-pc-linux-gnu (32-bit)
+    ## Running under: Linux Mint 18
     ## 
     ## locale:
-    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+    ##  [1] LC_CTYPE=de_CH.UTF-8       LC_NUMERIC=C              
+    ##  [3] LC_TIME=de_CH.UTF-8        LC_COLLATE=de_CH.UTF-8    
+    ##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=de_CH.UTF-8   
+    ##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
     ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+    ## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
     ## [1] stats4    parallel  methods   stats     graphics  grDevices utils    
     ## [8] datasets  base     
     ## 
     ## other attached packages:
-    ##  [1] gplots_3.0.1         xtable_1.8-2         GEOquery_2.32.0     
+    ##  [1] gplots_3.0.1         xtable_1.8-2         GEOquery_2.36.0     
     ##  [4] gridExtra_2.2.1      latticeExtra_0.6-28  RColorBrewer_1.1-2  
-    ##  [7] lattice_0.20-33      hgu133plus2.db_3.0.0 org.Hs.eg.db_3.0.0  
-    ## [10] RSQLite_1.0.0        DBI_0.4-1            AnnotationDbi_1.28.2
-    ## [13] GenomeInfoDb_1.2.5   IRanges_2.0.1        S4Vectors_0.4.0     
-    ## [16] BioQC_1.02.1         Biobase_2.26.0       BiocGenerics_0.12.1 
-    ## [19] Rcpp_0.12.0          knitr_1.14          
+    ##  [7] lattice_0.20-34      hgu133plus2.db_3.2.2 org.Hs.eg.db_3.2.3  
+    ## [10] RSQLite_1.0.0        DBI_0.5-1            AnnotationDbi_1.32.3
+    ## [13] IRanges_2.4.8        S4Vectors_0.8.11     BioQC_1.02.1        
+    ## [16] Biobase_2.30.0       BiocGenerics_0.16.1  Rcpp_0.12.8         
+    ## [19] knitr_1.15          
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] bitops_1.0-6       caTools_1.17.1     digest_0.6.9      
-    ##  [4] evaluate_0.9       formatR_1.4        gdata_2.17.0      
-    ##  [7] grid_3.1.3         gtable_0.2.0       gtools_3.5.0      
-    ## [10] highr_0.6          htmltools_0.3.5    KernSmooth_2.23-15
-    ## [13] magrittr_1.5       RCurl_1.95-4.8     rmarkdown_1.0     
-    ## [16] stringi_1.0-1      stringr_1.1.0      tools_3.1.3       
-    ## [19] XML_3.98-1.3       yaml_2.1.13
+    ##  [1] magrittr_1.5       highr_0.6          stringr_1.1.0     
+    ##  [4] caTools_1.17.1     tools_3.3.1        grid_3.3.1        
+    ##  [7] gtable_0.2.0       KernSmooth_2.23-15 gtools_3.5.0      
+    ## [10] htmltools_0.3.5    yaml_2.1.13        assertthat_0.1    
+    ## [13] digest_0.6.10      tibble_1.2         bitops_1.0-6      
+    ## [16] RCurl_1.95-4.8     evaluate_0.10      rmarkdown_1.1     
+    ## [19] gdata_2.17.0       stringi_1.1.2      XML_3.98-1.5
