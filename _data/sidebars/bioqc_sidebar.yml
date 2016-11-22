@@ -29,8 +29,9 @@ entries:
     output: web
 
     folderitems:
+    - title: Benchmark
+      url: /bioqc-simulation.html
+
     - title: Kidney Expression Example
       url: /bioqc-kidney.html
 
-    - title: Benchmark
-      url: /bioqc-simulation.html
