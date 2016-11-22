@@ -25,7 +25,7 @@ We explain why we chose the Wilcoxon-Mann-Whitney test as underlying statistical
 
 ## Case studies
 We present two case-studies, the first is a practical example where BioQC successfully identified contamination of pancreas in a liver gene expression study. In the second, we benchmark sensitivity and specificity of BioQC with both simulated and real data. 
-* [Kidney Expression Example](bioqc-kidney.html)
 * [Benchmark: Sensitivity and Specificity](bioqc-simulation.html)
+* [Kidney Expression Example](bioqc-kidney.html)
 
 {% include links.html %}
