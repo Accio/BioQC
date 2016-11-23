@@ -16,7 +16,7 @@ R=R
 PKG_ROOT_DIR=`pwd`
 
 PKG=BioQC
-PKG_VERSION=`/bin/awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' ${PKG}/DESCRIPTION`
+PKG_VERSION=`awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' ${PKG}/DESCRIPTION`
 
 PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
 
