@@ -1,5 +1,5 @@
-BIOQC_DIR=/apps64/bi/BioQC/BioQC/vignettes
-BIOQC_EXAMPLE_DIR=/apps64/bi/BioQC/BioQC-example
+BIOQC_DIR=../BioQC/vignettes
+BIOQC_EXAMPLE_DIR=../BioQC-example
 
 all: examples vignettes
 
