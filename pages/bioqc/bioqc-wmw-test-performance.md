@@ -54,13 +54,13 @@ Computational Performance {#computational-performance}
 
 Since the KS-test is so slow, we did not replicate the sensitivity
 benchmark from the [simulation studies](bioqc-simulation.html) using the
-enrichment score rank. While it takes BioQC about 6 seconds on a single
-thread to test all 155 signatures, it already takes the KS-test about 8
+enrichment score rank. While it takes BioQC about 5 seconds on a single
+thread to test all 155 signatures, it already takes the KS-test about 9
 seconds to test a single signature.
 
     ##       test replications elapsed relative
-    ## 2  runKS()           10  75.200     1.16
-    ## 1 runWMW()           10  64.816     1.00
+    ## 2  runKS()           10  94.867    1.737
+    ## 1 runWMW()           10  54.630    1.000
 
 R Session Info {#r-session-info}
 --------------
@@ -69,17 +69,17 @@ R Session Info {#r-session-info}
 sessionInfo()
 ~~~~
 
-    ## R version 3.3.1 (2016-06-21)
-    ## Platform: i686-pc-linux-gnu (32-bit)
-    ## Running under: Linux Mint 18
+    ## R version 3.3.0 (2016-05-03)
+    ## Platform: x86_64-pc-linux-gnu (64-bit)
+    ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
     ## 
     ## locale:
-    ##  [1] LC_CTYPE=de_CH.UTF-8       LC_NUMERIC=C              
-    ##  [3] LC_TIME=de_CH.UTF-8        LC_COLLATE=de_CH.UTF-8    
-    ##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=de_CH.UTF-8   
-    ##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
+    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
     ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-    ## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
+    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
     ## [1] stats4    parallel  methods   stats     graphics  grDevices utils    
@@ -88,24 +88,25 @@ sessionInfo()
     ## other attached packages:
     ##  [1] plyr_1.8.4           rbenchmark_1.0.0     ggplot2_2.2.0       
     ##  [4] reshape2_1.4.2       gplots_3.0.1         xtable_1.8-2        
-    ##  [7] GEOquery_2.36.0      gridExtra_2.2.1      latticeExtra_0.6-28 
-    ## [10] RColorBrewer_1.1-2   lattice_0.20-34      hgu133plus2.db_3.2.2
-    ## [13] org.Hs.eg.db_3.2.3   RSQLite_1.0.0        DBI_0.5-1           
-    ## [16] AnnotationDbi_1.32.3 IRanges_2.4.8        S4Vectors_0.8.11    
-    ## [19] BioQC_1.02.1         Biobase_2.30.0       BiocGenerics_0.16.1 
-    ## [22] Rcpp_0.12.8          testthat_1.0.2       knitr_1.15          
+    ##  [7] GEOquery_2.38.4      gridExtra_2.2.1      latticeExtra_0.6-28 
+    ## [10] RColorBrewer_1.1-2   lattice_0.20-34      hgu133plus2.db_3.2.3
+    ## [13] org.Hs.eg.db_3.3.0   AnnotationDbi_1.34.4 IRanges_2.6.1       
+    ## [16] S4Vectors_0.10.1     BioQC_1.02.1         Biobase_2.32.0      
+    ## [19] BiocGenerics_0.18.0  Rcpp_0.12.6          testthat_1.0.2      
+    ## [22] knitr_1.15          
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] gdata_2.17.0       bitops_1.0-6       stringr_1.1.0     
-    ##  [4] gtools_3.5.0       labeling_0.3       highr_0.6         
-    ##  [7] tools_3.3.1        RCurl_1.95-4.8     rmarkdown_1.1     
-    ## [10] R6_2.2.0           scales_0.4.1       assertthat_0.1    
-    ## [13] digest_0.6.10      gtable_0.2.0       evaluate_0.10     
-    ## [16] KernSmooth_2.23-15 stringi_1.1.2      caTools_1.17.1    
-    ## [19] htmltools_0.3.5    munsell_0.4.3      grid_3.3.1        
-    ## [22] XML_3.98-1.5       colorspace_1.3-1   magrittr_1.5      
-    ## [25] lazyeval_0.2.0     yaml_2.1.13        crayon_1.3.2      
-    ## [28] tibble_1.2
+    ##  [1] highr_0.6          bitops_1.0-6       tools_3.3.0       
+    ##  [4] digest_0.6.10      RSQLite_1.0.0      evaluate_0.10     
+    ##  [7] tibble_1.2         gtable_0.2.0       DBI_0.5-1         
+    ## [10] yaml_2.1.14        stringr_1.1.0      httr_1.2.1        
+    ## [13] caTools_1.17.1     gtools_3.5.0       grid_3.3.0        
+    ## [16] R6_2.2.0           XML_3.98-1.5       rmarkdown_1.1     
+    ## [19] gdata_2.17.0       magrittr_1.5       scales_0.4.1      
+    ## [22] htmltools_0.3.5    assertthat_0.1     colorspace_1.3-0  
+    ## [25] labeling_0.3       KernSmooth_2.23-15 stringi_1.1.2     
+    ## [28] lazyeval_0.2.0     munsell_0.4.3      RCurl_1.95-4.8    
+    ## [31] crayon_1.3.2
 
 References {#references}
 ----------

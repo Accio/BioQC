@@ -259,27 +259,27 @@ R session info {#r-session-info}
 sessionInfo()
 ~~~~
 
-    ## R version 3.3.1 (2016-06-21)
-    ## Platform: i686-pc-linux-gnu (32-bit)
-    ## Running under: Linux Mint 18
+    ## R version 3.1.3 (2015-03-09)
+    ## Platform: x86_64-unknown-linux-gnu (64-bit)
+    ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
     ## 
     ## locale:
-    ##  [1] LC_CTYPE=de_CH.UTF-8       LC_NUMERIC=C              
-    ##  [3] LC_TIME=de_CH.UTF-8        LC_COLLATE=de_CH.UTF-8    
-    ##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=de_CH.UTF-8   
-    ##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
+    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
     ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-    ## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
+    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
     ## [1] parallel  methods   stats     graphics  grDevices utils     datasets 
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] BioQC_1.02.1        Biobase_2.30.0      BiocGenerics_0.16.1
-    ## [4] Rcpp_0.12.8         knitr_1.15         
+    ## [1] BioQC_1.02.1        Biobase_2.26.0      BiocGenerics_0.12.1
+    ## [4] Rcpp_0.12.0         knitr_1.14         
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] magrittr_1.5    assertthat_0.1  tools_3.3.1     htmltools_0.3.5
-    ##  [5] yaml_2.1.13     tibble_1.2      stringi_1.1.2   rmarkdown_1.1  
-    ##  [9] stringr_1.1.0   digest_0.6.10   evaluate_0.10
+    ##  [1] digest_0.6.9    evaluate_0.9    formatR_1.4     htmltools_0.3.5
+    ##  [5] magrittr_1.5    rmarkdown_1.0   stringi_1.0-1   stringr_1.1.0  
+    ##  [9] tools_3.1.3     yaml_2.1.13

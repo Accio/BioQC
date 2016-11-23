@@ -88,7 +88,7 @@ system.time(bioqcRes <- wmwTest(eset, gmt,
 ~~~~
 
     ##    user  system elapsed 
-    ##   1.664   1.088   3.431
+    ##   1.535   0.017   1.551
 
 The function returns *one-sided* *p*-values of Wilcoxon-Mann-Whitney
 test. We next visualize this metric after transformation.
@@ -252,29 +252,28 @@ sessionInfo()
 ~~~~
 
     ## R version 3.3.1 (2016-06-21)
-    ## Platform: i686-pc-linux-gnu (32-bit)
-    ## Running under: Linux Mint 18
+    ## Platform: x86_64-pc-linux-gnu (64-bit)
+    ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
     ## 
     ## locale:
-    ##  [1] LC_CTYPE=de_CH.UTF-8       LC_NUMERIC=C              
-    ##  [3] LC_TIME=de_CH.UTF-8        LC_COLLATE=de_CH.UTF-8    
-    ##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=de_CH.UTF-8   
-    ##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
+    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
     ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-    ## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
+    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
     ## [1] parallel  methods   stats     graphics  grDevices utils     datasets 
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] limma_3.26.9        RColorBrewer_1.1-2  BioQC_1.02.1       
-    ## [4] Biobase_2.30.0      BiocGenerics_0.16.1 Rcpp_0.12.8        
-    ## [7] knitr_1.15         
+    ## [1] limma_3.28.14       RColorBrewer_1.1-2  BioQC_1.02.1       
+    ## [4] Biobase_2.32.0      BiocGenerics_0.18.0 Rcpp_0.12.8        
+    ## [7] knitr_1.13         
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] digest_0.6.10      assertthat_0.1     magrittr_1.5      
-    ##  [4] evaluate_0.10      KernSmooth_2.23-15 highr_0.6         
-    ##  [7] stringi_1.1.2      rmarkdown_1.1      tools_3.3.1       
-    ## [10] stringr_1.1.0      yaml_2.1.13        htmltools_0.3.5   
-    ## [13] tibble_1.2
+    ##  [1] digest_0.6.9       formatR_1.4        magrittr_1.5      
+    ##  [4] evaluate_0.9       highr_0.6          KernSmooth_2.23-15
+    ##  [7] stringi_1.1.1      rmarkdown_1.0      tools_3.3.1       
+    ## [10] stringr_1.0.0      yaml_2.1.13        htmltools_0.3.5
