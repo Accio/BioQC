@@ -10,7 +10,7 @@ Simulation studies show that BioQC is both fast and sensitive in detecting tissu
 
 BioQC is part of the following publication: 
 
-> Jitao David Zhang, Klas Hatje, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello, Gregor Sturm and Laura Badi "Detect tissue heterogeneity in gene expression data with BioQC", *BMC Genomics*: [*submitted*]. 
+> Jitao David Zhang, Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello and Laura Badi "Detect tissue heterogeneity in gene expression data with BioQC", *BMC Genomics*: [*in revision*]. 
 
 ## Usage
 In this section, we demonstrate how to apply BioQC to a gene expression dataset. Moreover, we 
