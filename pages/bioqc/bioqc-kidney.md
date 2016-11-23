@@ -9,9 +9,9 @@ output:
 
 Supplementary Information for "Detect issue heterogenity in gene
 expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
-David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens
-Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines
-Pomposiello, Gregor Sturm and [Laura Badi](laura.badi@roche.com))
+David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Gregor
+Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi,
+Silvia Ines Pomposiello and [Laura Badi](laura.badi@roche.com))
 
 Introduction {#introduction}
 ------------
@@ -88,7 +88,7 @@ system.time(bioqcRes <- wmwTest(eset, gmt,
 ~~~~
 
     ##    user  system elapsed 
-    ##   1.535   0.017   1.551
+    ##   1.082   0.008   1.089
 
 The function returns *one-sided* *p*-values of Wilcoxon-Mann-Whitney
 test. We next visualize this metric after transformation.
@@ -269,7 +269,7 @@ sessionInfo()
     ## 
     ## other attached packages:
     ## [1] limma_3.28.14       RColorBrewer_1.1-2  BioQC_1.02.1       
-    ## [4] Biobase_2.32.0      BiocGenerics_0.18.0 Rcpp_0.12.8        
+    ## [4] Biobase_2.32.0      BiocGenerics_0.18.0 Rcpp_0.12.5        
     ## [7] knitr_1.13         
     ## 
     ## loaded via a namespace (and not attached):
