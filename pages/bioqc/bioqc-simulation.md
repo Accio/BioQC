@@ -11,7 +11,7 @@ Supplementary Information for "Detect issue heterogenity in gene
 expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao
 David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Gregor
 Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi,
-Silvia Ines Pomposiello and [Laura Badi](laura.badi@roche.com))
+Silvia Ines Pomposiello and [Laura Badi](mailto:laura.badi@roche.com))
 
 In this vignette, we perform simulations with both model-generated and
 real-world data using *BioQC*. We show that *BioQC* is a sensitive
@@ -125,7 +125,7 @@ from a non-human mammal species, because it has been shown that
 tissue-preferential expression patterns tend to be conserved between
 mammal species. We identified a dataset of *Canis lupus familiaris*
 (dog), which is publicly available in Gene Expression Omnibus
-([GDS4164](http://www.ncbi.nlm.nih.%20gov/sites/GDSbrowser?acc=GDS4164)).
+([GDS4164](http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS4164)).
 
 In this study, the authors examined 39 samples from 10 pathologically
 normal tissues (liver, kidney, heart, lung, brain, lymph node, spleen,
@@ -370,14 +370,14 @@ sessionInfo()
     ##  [7] lattice_0.20-33      hgu133plus2.db_3.2.3 org.Hs.eg.db_3.3.0  
     ## [10] AnnotationDbi_1.34.4 IRanges_2.6.1        S4Vectors_0.10.2    
     ## [13] BioQC_1.02.1         Biobase_2.32.0       BiocGenerics_0.18.0 
-    ## [16] Rcpp_0.12.5          knitr_1.13          
+    ## [16] Rcpp_0.12.8          knitr_1.13          
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] formatR_1.4        highr_0.6          bitops_1.0-6      
     ##  [4] tools_3.3.1        digest_0.6.9       RSQLite_1.0.0     
-    ##  [7] evaluate_0.9       gtable_0.2.0       DBI_0.4-1         
+    ##  [7] evaluate_0.9       gtable_0.2.0       DBI_0.5-1         
     ## [10] yaml_2.1.13        stringr_1.0.0      httr_1.2.1        
     ## [13] gtools_3.5.0       caTools_1.17.1     grid_3.3.1        
-    ## [16] R6_2.1.2           XML_3.98-1.4       rmarkdown_1.0     
+    ## [16] R6_2.1.2           XML_3.98-1.5       rmarkdown_1.0     
     ## [19] gdata_2.17.0       magrittr_1.5       htmltools_0.3.5   
     ## [22] KernSmooth_2.23-15 stringi_1.1.1      RCurl_1.95-4.8
