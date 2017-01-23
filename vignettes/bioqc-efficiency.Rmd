@@ -76,7 +76,7 @@ Time benchmark
 
 To demonstrate BioQC's superior performance, we apply both BioQC and the native R `wilcox.test` to random expression matrices and measure the runtime. 
 
-We setup random expression matrices of `r length(humanGenes)` human protein-coding genes of 1, 5, 10, 50, or 100 samples. Genes  are $i.i.d$ distributed following $\mathcal{N}(0,1)$. The native R and the *BioQC* implementations of the Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
+We setup random expression matrices of `r length(humanGenes)` human protein-coding genes of 1, 5, 10, 50, or 100 samples. Genes are $i.i.d$ distributed following $\mathcal{N}(0,1)$. The native R and the *BioQC* implementations of the Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
 
 
 ```{r time_benchmark, cache=TRUE, echo=FALSE}
