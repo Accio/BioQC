@@ -6,7 +6,7 @@ output:
     preserve_yaml: TRUE
   html_document: default
 ---
-Supplementary Information for "Detect issue heterogenity in gene expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello, Gregor Sturm and [Laura Badi](laura.badi@roche.com))
+Supplementary Information for "Detect issue heterogenity in gene expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello and [Laura Badi](laura.badi@roche.com))
 
 
 ```{r setup, include=FALSE}
@@ -15,7 +15,7 @@ library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
 ```
 
-In this vignette, explain the underlaying algorithmic details of our implementation of the Wilcoxon-Mann-Whitney test. The source code used to produce this document can be found in the github repository [BioQC](https://github.com/Accio/BioQC/vignettes).
+In this vignette, we explain the underlaying algorithmic details of our implementation of the Wilcoxon-Mann-Whitney test. The source code used to produce this document can be found in the github repository [BioQC](https://github.com/Accio/BioQC/vignettes).
 
 *BioQC* is a R/Bioconductor package to detect tissue heterogeneity from high-throughput gene expression profiling data. It implements an efficient Wilcoxon-Mann-Whitney test, and offers tissue-specific gene signatures that are ready to use 'out of the box'.
 
@@ -47,14 +47,13 @@ gmt <- readGmt(gmtFile)
 Algorithmic improvements
 ------------------------
 
-The Wilcoxon-Mann-Whitney (WMW) test is a non-parametric statistical test to test if two population means are equal or not. Unlike the t-test, it does not require the assumption of normal distributions making it more robust against noise. 
+The Wilcoxon-Mann-Whitney (WMW) test is a non-parametric statistical test to test if median values of two population are equal or not. Unlike the t-test, it does not require the assumption of normal distributions, which makes it more robust against noise. 
 
-We improved the computational efficiency of the Wilcoxon-Mann-Whitney test in comparison to the native R implementation based on 
-three modifications:
+We improved the computational efficiency of the Wilcoxon-Mann-Whitney test in comparison to the native R implementation based on three modifications:
 
-1. use the approximative WMW-statistic (Zar, J. H. (1999). Biostatistical analysis. Pearson Education India. *pp.* 174-177). The differences to the exact version are negligible for high-throughput gene expression data. 
-2. use C instead of R as programming language 
-3. avoid futile expensive sorting operations
+1. The approximative WMW-statistic (Zar, J. H. (1999). Biostatistical analysis. Pearson Education India. *pp.* 174-177) is used. The differences to the exact version are negligible for high-throughput gene expression data. 
+2. The core algorithm is implemented in C instead of R as programming language.
+3. BioQC avoids futile expensive sorting operations.
 
 While (1) and (2) are straightforward, we elaborate (3) in the following. 
 
@@ -77,7 +76,7 @@ Time benchmark
 
 To demonstrate BioQC's superior performance, we apply both BioQC and the native R `wilcox.test` to random expression matrices and measure the runtime. 
 
-We setup random expression matrices of `r length(humanGenes)` human protein-coding genes of 1, 5, 10, 50, or 100 samples. Genes  are $i.i.d$ distributed following $\mathcal{N}(0,1)$. The native R and the *BioQC* implementations of the Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
+We setup random expression matrices of `r length(humanGenes)` human protein-coding genes of 1, 5, 10, 50, or 100 samples. Genes are $i.i.d$ distributed following $\mathcal{N}(0,1)$. The native R and the *BioQC* implementations of the Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
 
 
 ```{r time_benchmark, cache=TRUE, echo=FALSE}
@@ -159,7 +158,7 @@ op <- list(layout.widths = list(left.padding = 0, key.ylab.padding = 0.5,
            par.ylab.text=list(cex=1.4))
 ```
 
-```{r time_benchmark_vis, echo=FALSE, fig.width=8, fig.height=3, dev='svg', dev.args=list(pointsize=2.5), fig.cap="**Figure 2**: Time benchmark results of BioQC and R implementation of Wilcoxon-Mann-Whitney test. Left panel: elapsed time in seconds (logarithmic Y-axis). Right panel: ratio of elapsed time by two implementations. All results achieved by a single thread on in a RedHat Linux server."}
+```{r time_benchmark_vis, echo=FALSE, fig.width=8, fig.height=4.5, dev='svg', dev.args=list(pointsize=2.5), fig.cap="**Figure 2**: Time benchmark results of BioQC and R implementation of Wilcoxon-Mann-Whitney test. Left panel: elapsed time in seconds (logarithmic Y-axis). Right panel: ratio of elapsed time by two implementations. All results achieved by a single thread on in a RedHat Linux server."}
 getTimeRes <- function(x) x$elapTime["elapsed"]
 bioqcTimeRes <- sapply(bioqcRes, getTimeRes)
 rTimeRes <- sapply(rRes, getTimeRes)
