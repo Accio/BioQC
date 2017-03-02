@@ -1,6 +1,4 @@
-gini <- function(x, na.rm=FALSE)  {
-    ## TODO: fix na.rm for matrix
-    if(na.rm) x <- x[!is.na(x)]
+gini <- function(x)  {
     isVec <- !is.matrix(x)
     if(isVec)
         x <- matrix(x, nrow=1L, byrow=TRUE)

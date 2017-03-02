@@ -47,16 +47,21 @@ SEXP gini_matrix(SEXP value,
   int nrow = INTEGER(nrowR)[0];
   int ncol = INTEGER(ncolR)[0];
   double rowvec[ncol];
-  int i, j;
+  double curr;
+  int i, j, k;
   
   SEXP res;
   PROTECT(res = allocVector(REALSXP,
 			    nrow));
   for (i=0; i<nrow; i++) {
+    k=0;
     for(j=0; j<ncol; j++) {
-      rowvec[j]=pmat[i+j*nrow];
+      curr=pmat[i+j*nrow];
+      if(!ISNA(curr)) {
+	rowvec[k++]=curr;
+      }
     }
-    REAL(res)[i] = stat_gini(rowvec, ncol);
+    REAL(res)[i] = stat_gini(rowvec, k);
   }
   UNPROTECT(1);
   return(res);
