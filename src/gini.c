@@ -18,6 +18,27 @@ static void sortAscending (double x[], int num) {
       }
 }
 
+double stat_gini_sorted(double xsorted[], int num) {
+  /**
+     Calculate Gini index.<br>
+     Implementation follows R code of package ineq (function Gini(x) )<br>
+     Precondition: x is ascendingly sorted and contains no NA
+     @param[in] xsorted - numbers ascendingly sorted
+     @param[in] num - how many
+     @return Gini index
+  */ 
+  double sum = 0.0;
+  double gini = 0.0;
+  int i;
+  
+  for (i=0;i<num;i++) {
+    gini += (double)(i+1)*xsorted[i];
+    sum += xsorted[i];
+  }
+  gini = 2.0*(gini/((double)num*sum));
+  return gini - 1.0 - (1.0/(double)num);
+}
+
 double stat_gini(double x[], int num) {
   /**
      Calculate Gini index.<br>
@@ -27,36 +48,26 @@ double stat_gini(double x[], int num) {
      @param[in] num - how many
      @return Gini index
   */ 
-  double sum = 0.0;
-  double gini = 0.0;
-  int i;
-  
   sortAscending (x,num);
-  for (i=0;i<num;i++) {
-    gini += (double)(i+1)*x[i];
-    sum += x[i];
-  }
-  gini = 2.0*(gini/((double)num*sum));
-  return gini - 1.0 - (1.0/(double)num);
+  return(stat_gini_sorted(x, num));
 }
 
 SEXP gini_numeric(SEXP value, SEXP len) {
+  /**
+     Calculate Gini index.<br>
+     Implementation follows R code of package ineq (function Gini(x) )<br>
+     Postcondition: value is sorted ascendingly
+     @param[in] value - numbers
+     @param[in] len - how many
+     @return Gini index
+  */ 
   double *ptr = REAL(value);
   int ptrLen = INTEGER(len)[0];
   int i,k;
   SEXP res;
   
-  double ptrCpy[ptrLen];
-  k=0;
-  for(i=0; i<ptrLen; ++i) {
-    if(!ISNA(ptr[i])) {
-      ptrCpy[k] = ptr[i];
-      k++;
-    }
-  }
-
   PROTECT(res = allocVector(REALSXP, 1));
-  REAL(res)[0] = stat_gini(ptrCpy, k);
+  REAL(res)[0] = stat_gini_sorted(ptr, ptrLen);
   UNPROTECT(1);
   
   return(res);

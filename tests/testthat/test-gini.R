@@ -2,8 +2,10 @@ library(ineq)
 
 vec1 <- c(2.0, 3.0, 4.0, 5.0)
 vec2 <- rep(2.0, 4)
+vec3 <- c(4.0, 5.0, 2.0, 3.0, NA, 4.4)
+vec4 <- c(1L, 2L, 4L, 3L, 5L, NA)
 
-context("Test gini")
+context("Test gini for vectors")
 
 test_that("BioQC::gini works as well as ineq::Gini",
           expect_equal(ineq::Gini(vec1),
@@ -12,6 +14,14 @@ test_that("BioQC::gini works as well as ineq::Gini",
 test_that("BioQC::gini works as well as ineq::Gini for all-equal cases",
           expect_equal(ineq::Gini(vec2),
                        BioQC::gini(vec2)))
+
+test_that("BioQC::gini works well for unsorted numeric vectors with NA values",
+          expect_equal(ineq::Gini(vec3[!is.na(vec3)]),
+                       BioQC::gini(vec3)))
+
+test_that("BioQC::gini works well for unsorted integer vectors with NA values",
+          expect_equal(ineq::Gini(vec4[!is.na(vec4)]),
+                       BioQC::gini(vec4)))
 
 context("Test gini for matrix")
 
