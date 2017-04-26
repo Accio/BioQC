@@ -40,6 +40,28 @@ double stat_gini(double x[], int num) {
   return gini - 1.0 - (1.0/(double)num);
 }
 
+SEXP gini_numeric(SEXP value, SEXP len) {
+  double *ptr = REAL(value);
+  int ptrLen = INTEGER(len)[0];
+  int i,k;
+  SEXP res;
+  
+  double ptrCpy[ptrLen];
+  k=0;
+  for(i=0; i<ptrLen; ++i) {
+    if(!ISNA(ptr[i])) {
+      ptrCpy[k] = ptr[i];
+      k++;
+    }
+  }
+
+  PROTECT(res = allocVector(REALSXP, 1));
+  REAL(res)[0] = stat_gini(ptrCpy, k);
+  UNPROTECT(1);
+  
+  return(res);
+}
+
 SEXP gini_matrix(SEXP value,
 		 SEXP nrowR,
 		 SEXP ncolR) {
