@@ -14,4 +14,3 @@ matchGenes.signedDefault(signedGenesets, geneSymbols)
 \description{
 Match genes in a SignedGenesets to a vector of genesymbols
 }
-

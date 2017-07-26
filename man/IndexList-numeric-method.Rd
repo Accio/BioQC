@@ -22,4 +22,3 @@ Convert several numeric vectors into an index list
 IndexList(1:3, 4:5, 7:9)
 IndexList(1:3, 4:5, 7:9, offset=0)
 }
-

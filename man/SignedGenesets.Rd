@@ -22,4 +22,3 @@ testSigndGS <- SignedGenesets(testList)
 \seealso{
 \code{GmtList}
 }
-

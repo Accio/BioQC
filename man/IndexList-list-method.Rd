@@ -20,4 +20,3 @@ Convert a list of numeric (integer) vectors into an index list
 IndexList(list(A=1:3, B=4:5, C=7:9))
 IndexList(list(A=1:3, B=4:5, C=7:9), offset=0)
 }
-

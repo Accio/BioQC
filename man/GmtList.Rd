@@ -27,4 +27,3 @@ testGeneGmt <- GmtList(testGeneList)
 \seealso{
 If a list of gene symbols need to be converted into a GmtList, use 'as.gmtlist' instead
 }
-

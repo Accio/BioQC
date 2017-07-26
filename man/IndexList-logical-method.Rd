@@ -21,4 +21,3 @@ Convert several logical vectors into an index list
 \examples{
 IndexList(c(FALSE, TRUE, TRUE), c(FALSE, FALSE, TRUE), c(TRUE, FALSE, FALSE), offset=0)
 }
-

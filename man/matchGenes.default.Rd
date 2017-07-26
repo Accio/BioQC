@@ -14,4 +14,3 @@ matchGenes.default(gmtList, geneSymbols)
 \description{
 Match genes in a GmtList to a vector of genesymbols
 }
-

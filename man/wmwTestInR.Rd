@@ -24,4 +24,3 @@ wmwTestInR(testNums, testSub, valType="p.two.sided")
 wmwTestInR(testNums, testSub, valType="p.less")
 wmwTestInR(testNums, testSub, valType="W")
 }
-

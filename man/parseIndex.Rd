@@ -26,4 +26,3 @@ testList <- list(GS_A=c(1,2,3,4,3),
                  GS_E=c(2,4))
 testIndexList <- IndexList(testList)
 }
-

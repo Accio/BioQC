@@ -20,4 +20,3 @@ testVec <- list(GeneSet1=c("AKT1", "AKT2"),
                GeneSet3=NULL)
 testVecGmtlist <- as.gmtlist(testVec)
 }
-

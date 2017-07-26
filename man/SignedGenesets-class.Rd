@@ -7,4 +7,3 @@
 \description{
 An S4 class to hold signed genesets, each item in the list is in in turn a list containing following items: name, pos, and neg.
 }
-

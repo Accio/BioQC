@@ -7,4 +7,3 @@
 \description{
 An S4 class to hold geneset in the GMT file in a list, each item in the list is in in turn a list containing following items: name, desc, and genes.
 }
-
