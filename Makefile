@@ -11,17 +11,21 @@
 ##                   - make dist     calls R CMD build
 ##
 ################################################################################
-## conditional: choose R version depending on the BICOSN value
-
 R=R
 PKG_ROOT_DIR=`pwd`
 
 PKG=BioQC
-PKG_VERSION=`/bin/awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' ${PKG}/DESCRIPTION`
+
+PKG_VERSION=`awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' ${PKG}/DESCRIPTION`
 
 PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
 
-dist:	clean
+roxygenise:
+	@echo '====== roxygenize ======'	
+	@(cd ..; ${R} --vanilla -q -e "library(roxygen2);roxygenise(\"$(PKG)\")")
+	@echo ' '
+
+dist:	clean roxygenise
 	@echo '====== Building Distribution ======'
 	@(cd ..; ${R} CMD build ${DISTADD} $(PKG) )
 	@echo '====== Building finished ======'
@@ -32,6 +36,9 @@ install: dist
 	(cd ..; ${R} CMD INSTALL ${PKG}_${PKG_VERSION}.tar.gz) 
 	@echo '====== Installing finished ======'
 	@echo ' '
+
+install-test: 
+	${R} CMD INSTALL ../${PKG} && ${R} -e "library(testthat); test_dir('./tests')"
 
 check:	dist
 	@echo '====== Checking Package ======'
@@ -46,7 +53,7 @@ envcheck: dist
 
 clean:
 	@echo '====== Cleaning Package ======'
-	@(rm -f $(PKG_SRC_DIR)/*.o $(PKG_SRC_DIR)/*.so $(PKG_SRC_DIR)/*.dll)
+	@(rm -f $(PKG_SRC_DIR)/*.o $(PKG_SRC_DIR)/*.so $(PKG_SRC_DIR)/*.dll $(PKG_SRC_DIR)/*.rds)
 	@(find . -type f -name "*~" -exec rm '{}' \;)
 	@(find . -type f -name ".Rhistory" -exec rm '{}' \;)
 	@echo ' '

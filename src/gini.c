@@ -18,6 +18,27 @@ static void sortAscending (double x[], int num) {
       }
 }
 
+double stat_gini_sorted(double xsorted[], int num) {
+  /**
+     Calculate Gini index.<br>
+     Implementation follows R code of package ineq (function Gini(x) )<br>
+     Precondition: x is ascendingly sorted and contains no NA
+     @param[in] xsorted - numbers ascendingly sorted
+     @param[in] num - how many
+     @return Gini index
+  */ 
+  double sum = 0.0;
+  double gini = 0.0;
+  int i;
+  
+  for (i=0;i<num;i++) {
+    gini += (double)(i+1)*xsorted[i];
+    sum += xsorted[i];
+  }
+  gini = 2.0*(gini/((double)num*sum));
+  return gini - 1.0 - (1.0/(double)num);
+}
+
 double stat_gini(double x[], int num) {
   /**
      Calculate Gini index.<br>
@@ -27,27 +48,54 @@ double stat_gini(double x[], int num) {
      @param[in] num - how many
      @return Gini index
   */ 
-  double sum = 0.0;
-  double gini = 0.0;
-  int i;
-  
   sortAscending (x,num);
-  for (i=0;i<num;i++) {
-    gini += (double)(i+1)*x[i];
-    sum += x[i];
-  }
-  gini = 2.0*(gini/((double)num*sum));
-  return gini - 1.0 - (1.0/(double)num);
+  return(stat_gini_sorted(x, num));
 }
 
-SEXP gini(SEXP value) {
-  double g=stat_gini(REAL(value), length(value));
-
+SEXP gini_numeric(SEXP value, SEXP len) {
+  /**
+     Calculate Gini index.<br>
+     Implementation follows R code of package ineq (function Gini(x) )<br>
+     Postcondition: value is sorted ascendingly
+     @param[in] value - numbers
+     @param[in] len - how many
+     @return Gini index
+  */ 
+  double *ptr = REAL(value);
+  int ptrLen = INTEGER(len)[0];
+  int i,k;
   SEXP res;
-  PROTECT(res=allocVector(REALSXP, 1));
-  double *pres=REAL(res);
-  *pres=g;
+  
+  PROTECT(res = allocVector(REALSXP, 1));
+  REAL(res)[0] = stat_gini_sorted(ptr, ptrLen);
   UNPROTECT(1);
+  
+  return(res);
+}
 
+SEXP gini_matrix(SEXP value,
+		 SEXP nrowR,
+		 SEXP ncolR) {
+  double *pmat = REAL(value);
+  int nrow = INTEGER(nrowR)[0];
+  int ncol = INTEGER(ncolR)[0];
+  double rowvec[ncol];
+  double curr;
+  int i, j, k;
+  
+  SEXP res;
+  PROTECT(res = allocVector(REALSXP,
+			    nrow));
+  for (i=0; i<nrow; i++) {
+    k=0;
+    for(j=0; j<ncol; j++) {
+      curr=pmat[i+j*nrow];
+      if(!ISNA(curr)) {
+	rowvec[k++]=curr;
+      }
+    }
+    REAL(res)[i] = stat_gini(rowvec, k);
+  }
+  UNPROTECT(1);
   return(res);
 }
