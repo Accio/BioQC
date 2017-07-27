@@ -165,14 +165,14 @@ sessionInfo()
     ## [16] testthat_1.0.2       knitr_1.16.6        
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] bit_1.1-12         digest_0.6.12      htmltools_0.3.6   
-    ##  [4] R6_2.2.2           rprojroot_1.2      grid_3.4.0        
-    ##  [7] bitops_1.0-6       stringr_1.2.0      gdata_2.18.0      
-    ## [10] RSQLite_2.0        highr_0.6          compiler_3.4.0    
-    ## [13] tibble_1.3.3       pkgconfig_2.0.1    DBI_0.7           
-    ## [16] KernSmooth_2.23-15 bit64_0.9-7        stringi_1.1.5     
-    ## [19] magrittr_1.5       caTools_1.17.1     gtable_0.2.0      
-    ## [22] rmarkdown_1.6      evaluate_0.10.1    blob_1.1.0        
-    ## [25] rlang_0.1.1.9000   yaml_2.1.14        tools_3.4.0       
-    ## [28] gtools_3.5.0       crayon_1.3.2       backports_1.1.0   
-    ## [31] memoise_1.1.0
+    ##  [1] bit_1.1-12         codetools_0.2-15   digest_0.6.12     
+    ##  [4] htmltools_0.3.6    R6_2.2.2           rprojroot_1.2     
+    ##  [7] grid_3.4.0         bitops_1.0-6       stringr_1.2.0     
+    ## [10] gdata_2.18.0       RSQLite_2.0        highr_0.6         
+    ## [13] compiler_3.4.0     tibble_1.3.3       pkgconfig_2.0.1   
+    ## [16] DBI_0.7            KernSmooth_2.23-15 bit64_0.9-7       
+    ## [19] stringi_1.1.5      magrittr_1.5       caTools_1.17.1    
+    ## [22] gtable_0.2.0       rmarkdown_1.6      evaluate_0.10.1   
+    ## [25] blob_1.1.0         rlang_0.1.1.9000   yaml_2.1.14       
+    ## [28] tools_3.4.0        gtools_3.5.0       crayon_1.3.2      
+    ## [31] backports_1.1.0    memoise_1.1.0
