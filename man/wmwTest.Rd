@@ -7,14 +7,13 @@
 \description{
   We have implemented an highly efficient Wilcoxon-Mann-Whitney rank sum
   test for high-throughput expression profiling data. For datasets with
-  more than 100 features (genes), the function performs almost identical
-  to its R implementations (\code{wilcox.test} in \code{stats}, or
-  \code{rankSumTestWithCorrelation} in \code{limma}) can be more than
-  1000 times faster.
+  more than 100 features (genes), the function can be more than 1,000 
+  times faster than its R implementations (\code{wilcox.test} in 
+  \code{stats}, or \code{rankSumTestWithCorrelation} in \code{limma}).
 }
 \usage{
-wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided",
-"U","abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify = TRUE)
+wmwTest(x, ind.list, valType = c("p.greater", "p.less", "p.two.sided",
+"U","abs.log10p.greater","log10p.less","abs.log10p.two.sided","Q"), simplify = TRUE)
 }
 \arguments{
   \item{x}{A numeric matrix. All other data types (e.g. numeric vectors
@@ -24,7 +23,7 @@ wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided",
   of numeric or logical vectors, or a numeric or logical vector) are
   coerced into such a list. See \code{details} below for a special case
   using GMT files.}
-  \item{alternative}{The value type to be returned, allowed values
+  \item{valType}{The value type to be returned, allowed values
     include \code{greater} and \code{less} (one-sided tests),
     \code{two.sided}, and \code{U} statistic, and their log10
     transformation variants. See details below.}
@@ -43,13 +42,13 @@ wmwTest(x, ind.list, alternative = c("greater", "less", "two.sided",
   that one column named \code{GeneSymbol} in the \code{featureData}
   contain gene symbols used in the GMT file. See the example below.
 
-  Besides the conventional alternatives such as \sQuote{greater},
-  \sQuote{less}, \sQuote{two.sided}, and \sQuote{U}, \code{wmwTest}
-  (from version 0.99-1) provides further alternatives:
-  \code{abs.log10.greater} and \code{log10.less} perform log10
+  Besides the conventional value types such as \sQuote{p.greater},
+  \sQuote{p.less}, \sQuote{p.two.sided} , and \sQuote{U} (the U-statistic), \code{wmwTest}
+  (from version 0.99-1) provides further value types:
+  \code{abs.log10p.greater} and \code{log10p.less} perform log10
   transformation on respective \emph{p}-values and give the
   transformed value a proper sign (positive for greater than, and
-  negative for less than); \code{abs.log10.two.sided} transforms
+  negative for less than); \code{abs.log10p.two.sided} transforms
   two-sided \emph{p}-values to non-negative values; and \code{Q} score
   reports absolute log10-transformation of \emph{p}-value of the
   two-side variant,  and gives a proper sign to it, depending on whether it is rather greater than (positive) or  less than (negative). 
@@ -88,41 +87,41 @@ Zar, JH (1999). _Biostatistical Analysis 4th Edition_. Prentice-Hall Internation
 set.seed(1887)
 rd <- rnorm(1000)
 rl <- sample(c(TRUE, FALSE), 1000, replace=TRUE)
-wmwTest(rd, rl, alternative="two.sided")
-wmwTest(rd, which(rl), alternative="two.sided")
+wmwTest(rd, rl, valType="p.two.sided")
+wmwTest(rd, which(rl), valType="p.two.sided")
 rd1 <- rd + ifelse(rl, 0.5, 0)
-wmwTest(rd1, rl, alternative="greater")
-wmwTest(rd1, rl, alternative="U")
+wmwTest(rd1, rl, valType="p.greater")
+wmwTest(rd1, rl, valType="U")
 rd2 <- rd - ifelse(rl, 0.2, 0)
-wmwTest(rd2, rl, alternative="greater")
-wmwTest(rd2, rl, alternative="two.sided")
-wmwTest(rd2, rl, alternative="less")
+wmwTest(rd2, rl, valType="p.greater")
+wmwTest(rd2, rl, valType="p.two.sided")
+wmwTest(rd2, rl, valType="p.less")
 
 ## matrix forms
 rmat <- matrix(c(rd, rd1, rd2), ncol=3, byrow=FALSE)
-wmwTest(rmat, rl, alternative="two.sided")
-wmwTest(rmat, rl, alternative="greater")
+wmwTest(rmat, rl, valType="p.two.sided")
+wmwTest(rmat, rl, valType="p.greater")
 
-wmwTest(rmat, which(rl), alternative="two.sided")
-wmwTest(rmat, which(rl), alternative="greater")
+wmwTest(rmat, which(rl), valType="p.two.sided")
+wmwTest(rmat, which(rl), valType="p.greater")
 
-## other alternatives
-wmwTest(rmat, which(rl), alternative="U")
-wmwTest(rmat, which(rl), alternative="abs.log10.greater")
-wmwTest(rmat, which(rl), alternative="log10.less")
-wmwTest(rmat, which(rl), alternative="abs.log10.two.sided")
-wmwTest(rmat, which(rl), alternative="Q")
+## other valTypes
+wmwTest(rmat, which(rl), valType="U")
+wmwTest(rmat, which(rl), valType="abs.log10p.greater")
+wmwTest(rmat, which(rl), valType="log10p.less")
+wmwTest(rmat, which(rl), valType="abs.log10p.two.sided")
+wmwTest(rmat, which(rl), valType="Q")
 
 ## using ExpressionSet
 data(sample.ExpressionSet)
 testSet <- sample.ExpressionSet
 fData(testSet)$GeneSymbol <- paste("GENE_",1:nrow(testSet), sep="")
 mySig1 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.25, 0.75), replace=TRUE)
-wmwTest(testSet, which(mySig1), alternative="greater")
+wmwTest(testSet, which(mySig1), valType="p.greater")
 
 ## using integer
 exprs(testSet)[,1L] <- exprs(testSet)[,1L] + ifelse(mySig1, 50, 0)
-wmwTest(testSet, which(mySig1), alternative="greater")
+wmwTest(testSet, which(mySig1), valType="p.greater")
 
 ## using lists
 mySig2 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.6, 0.4), replace=TRUE)
@@ -137,6 +136,6 @@ eset<-new("ExpressionSet",
           exprs=matrix(rnorm(10000), nrow=1000L),
           phenoData=new("AnnotatedDataFrame", data.frame(Sample=LETTERS[1:10])),
           featureData=new("AnnotatedDataFrame",data.frame(GeneSymbol=gss)))
-esetWmwRes <- wmwTest(eset ,gmt_list, alternative="greater")
+esetWmwRes <- wmwTest(eset ,gmt_list, valType="p.greater")
 summary(esetWmwRes)
 }

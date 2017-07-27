@@ -1,0 +1,142 @@
+---
+title: Using BioQC with signed genesets
+author: "Jitao David Zhang and Gregor Sturm"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Using BioQC with signed genesets}
+output: 
+  md_document:
+    variant: markdown_phpextra
+    preserve_yaml: TRUE
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
+```
+
+Introduction
+------------
+
+Besides being used as a QC-tool for gene expression data, _BioQC_ can be used for general-purpose gene-set enrichment analysis. Its core function, _wmwTest_, can handle not only "normal", unsigned gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated respectively. 
+
+This vignette describes an example of such applications. First we load the BioQC library.
+
+```{r lib, warning=FALSE, message=FALSE, results="hide"}
+library(BioQC)
+```
+
+GMT read-in
+----------
+We first open a toy GMT file containing signed genesets with _readSignedGmt_. The function reads the file into a _SignedGenesets_ object.
+
+```{r gmt}
+gmtFile <- system.file("extdata/test.gmt", package="BioQC")
+## print the file context
+cat(readLines(gmtFile), sep="\n")
+## read the file into SignedGenesets
+genesets <- readSignedGmt(gmtFile)
+print(genesets)
+```
+
+Note that though the GMT file contains 6 non-empty lines, only five signed genesets are returned by _readSignedGmt_ because a pair of negative and negative geneset of GS_C is available.
+
+Note that in its current form, no genes are reported for GS_A and GS_B, because the names of both sets do not match the patterns. User can decide how to handle such genesets that match patterns of neither positive nor negative sets (GS_A and GS_B in this case). By default, such genesets are ignored; however, user can decide to treat them as either positive or negative genesets. For the purpose of this tutorial, we treat these genesets as positive.
+
+```{r gmtPos}
+genesets <- readSignedGmt(gmtFile, nomatch="pos")
+print(genesets)
+```
+
+Expression object construction
+------------------------------
+Next we construct an ExpressionSet object containing 100 genes, with some of the genes in the GMT file present. 
+
+```{r data}
+set.seed(1887)
+testN <- 100L
+testSampleCount <- 3L
+testGenes <- c("AKT1", "AKT2", "ERBB2", "ERBB3", "EGFR","TSC1", "TSC2", "GATA2", "GATA4", "GATA1", "GATA3")
+testRows <- c(testGenes, paste("Gene", (length(testGenes)+1):testN, sep=""))
+testMatrix <- matrix(rnorm(testN*testSampleCount, sd=0.1), nrow=testN, dimnames=list(testRows, NULL))
+testMatrix[1:2,] <- testMatrix[1:2,]+10
+testMatrix[6:7,] <- testMatrix[6:7,]-10
+testMatrix[3:4,] <- testMatrix[3:4,]-5
+testMatrix[5,] <- testMatrix[5,]+5
+testEset <- new("ExpressionSet", exprs=testMatrix)
+```
+The expression of somes genes are delibrately changed so that some genesets are expected to be significantly enriched.
+
+* AKT1 and AKT2 are higher expressed than the background genes ('background' hereafter). 
+* TSC1 and TSC2 are lower expressed than the background.
+* ERBB2 and ERBB3 are moderately lower expressed than the background.
+* EGFR is moderately higher expressed than the background.
+
+Considering the geneset composition printed above, we can expect that
+* GS_A shall be significantly up-regulated; 
+* GS_B shall not be significant, because its genes are missing;
+* GS_C shall be significantly down-regulated, with positive targets down-regulated and negative targets up-regulated;
+* GS_D shall not always be significant, because its genes are comparable to the background;
+* GS_E shall be significantly up-regulated, because its negative targets are down-regulated.
+
+
+Match genes
+-----------
+
+With both _SignedGenesets_ and _ExpressionSet_ objects at hand, we can query the indices of genes of genesets in the _ExpressionSet_ object.
+
+```{r index}
+testIndex <- matchGenes(genesets, testEset, col=NULL)
+print(testIndex)
+```
+
+If the _ExpressionSet_ object has GeneSymbols in its featureData other than the feature names, user can specify the parameter _col_ in _matchGenes_ to make the match working. _matchGene_ also works with characters and matrix as input, please check out the help pages for such uses.
+
+Perform the analysis
+--------------------
+
+```{r runWmwGreater}
+wmwResult.greater <- wmwTest(testEset, testIndex, valType="p.greater")
+print(wmwResult.greater)
+```
+
+As expected, GS\_A and GS\_E are significant when the alternative hypothesis is _greater_.
+
+```{r runWmwLess}
+wmwResult.less <- wmwTest(testEset, testIndex, valType="p.less")
+print(wmwResult.less)
+```
+As expected, GS\_C is significant when the alternative hypothesis is _less_.
+
+```{r runWmwTwoSided}
+wmwResult.two.sided <- wmwTest(testEset, testIndex, valType="p.two.sided")
+print(wmwResult.two.sided)
+```
+
+As expected, GS\_A, GS\_C, and GS\_E are significant when the alternative hypothesis is _two.sided_. 
+
+A simple way to integrate the results of both alternative hypotheses into one numerical value is the _Q_ value, which is defined as absolute log10 transformation of the smaller p value of the two hypotheses, times the sign defined by _greater_=1 and _less_=-1.
+
+```{r runWmwQ}
+wmwResult.Q <- wmwTest(testEset, testIndex, valType="Q")
+print(wmwResult.Q)
+```
+
+As expected, genesets GS\_A, GS\_C, and GS\_E have large absolute values, suggesting they are potentially enriched; while GS\_A and GS\_E are positively enriched, GS\_C is negatively enriched.
+
+Conclusions
+-----------
+In summary, _BioQC_ can be used to perform gene-set enrichment analysis with signed genesets. Its speed is comparable to that of unsigned genesets.
+
+Acknowledgement
+----------------
+I would like to thank the authors of the gCMAP package with the idea of integrating signed genesets into the framework of Wilcoxon-Mann-Whitney test.
+
+R session info
+--------------
+```{r session}
+sessionInfo()
+```

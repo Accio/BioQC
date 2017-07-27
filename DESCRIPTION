@@ -1,12 +1,34 @@
 Package: BioQC
 Type: Package
 Title: Detect tissue heterogeneity in expression profiles with gene sets
-Version: 1.5.0
-Date: 2015-11-24
-Author: Jitao David Zhang <jitao_david.zhang@roche.com>, with inputs from Laura Badi
+Version: 1.5.1
+Date: 2017-07-26
+Author: Jitao David Zhang <jitao_david.zhang@roche.com>, Gregor Sturm, with inputs from Laura
+    Badi
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
-Description: BioQC performs quality control of high-throughput expression data based on tissue gene signatures
-Depends: Rcpp, Biobase
-Suggests: testthat
+Description: BioQC performs quality control of high-throughput expression data
+    based on tissue gene signatures. It can detect tissue heterogeneity in gene
+    expression data. The core algorithm is a Wilcoxon-Mann-Whitney test is optimised
+    for high performance.
+Depends:
+    utils,
+    Rcpp,
+    Biobase,
+    methods,
+    stats
+Collate:
+    AllClasses.R
+    AllMethods.R
+    utils.R
+    entropy.R
+    gini.R
+    readGmt.R
+    matchGenes.R
+    wmwTest.R
+Suggests:
+    testthat,
+    knitr,
+    ineq
 biocViews: GeneExpression,QualityControl,StatisticalMethod
-License: LGPL (>=2)
+License: GPL (>=3)
+RoxygenNote: 6.0.1.9000

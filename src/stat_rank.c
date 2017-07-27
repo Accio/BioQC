@@ -31,6 +31,14 @@ void destroyDRank(DRank it) {
   free(it);
 }
 
+/*! \brief clear an DRank object */
+void clearDRank(DRank it) {
+  it->vPtr=NULL;
+  it->rank=-1.0;
+  it->index=-1;
+  free(it);
+}
+
 /*! \brief compare item objects by value */
 int compareDRank (const void* a, const void* b) // dereference void pointer: *((T*)ptr)
 {
@@ -73,6 +81,14 @@ void destroyDRankList(DRankList list) {
   free(list);
 }
 
+void clearDRankList(DRankList list) {
+  int i;
+  for(i=0;i<list->len;i++)
+    clearDRank(list->list[i]);
+  list->ulen=-1;
+  list->tieCoef=1.0;
+}
+
 /*! \brief print an DRankList object
 */
 #ifdef DEBUG
@@ -113,9 +129,7 @@ void sortRankDRankList(DRankList list) {
   for(i=0;i<len; ++i)
     backup[i]=*(ll[i]->vPtr);
 
-  // qsort does not work properly!
   qsort(ll, len, sizeof(DRank), compareDRank);
-
 
   for(i=0; i<len;i=j+1) {
     j=i;
@@ -132,7 +146,7 @@ void sortRankDRankList(DRankList list) {
 }
 
 /*! \brief: rankDRankList
- * \param list An DRankList
+ * \param list A DRankList object
  * It calls sortRankDRankList if the DRankList has not been ranked before
  * The items in the list are sorted by input index
  */
@@ -144,7 +158,7 @@ void rankDRankList(DRankList list) {
 }
 
 /*! \brief: sortDRankList
- * \param list An DRankList
+ * \param list A DRankList object
  * It calls sortRankDRankList if the DRankList has not been ranked before
  * The items in the list are sorted by ascending order of the values.
  */
@@ -155,3 +169,39 @@ void sortDRankList(DRankList list) {
   qsort(ll, len, sizeof(DRank), compareDRank);
 }
 
+/*! \brief: prepareDRankList
+ * \param list A DRankList object
+ * It prepares a DRankList object to be used in Wilcoxon-Mann-Whitney tests
+ */
+
+int len(DRankList list) {return(list->len);}
+int ulen(DRankList list) {return(list->ulen);}
+double tieCoef(DRankList list) {return(list->tieCoef);}
+
+void prepareDRankList(DRankList list) {
+  rankDRankList(list);
+  
+  if(len(list)==ulen(list)) {
+    list->tieCoef=1.0;
+    return;
+  } else {
+    int n=len(list);
+    int un=ulen(list);
+    int *tbl=(int*)malloc(ulen(list) * sizeof(int));
+    int ncount=0;
+    double mTieCoef=0.0;
+    int i, j;
+    sortDRankList(list);
+    for(i=0;i<n;i=j+1) {
+      j=i;
+      while(j<n-1 && (*(list->list[j+1]->vPtr)==*(list->list[j]->vPtr))) ++j;
+      tbl[ncount++]=j-i+1;
+    }
+    for(i=0;i<un;++i)
+      mTieCoef+=(0.0+tbl[i])/n*(tbl[i]+1)/(n+1)*(tbl[i]-1)/(n-1);
+    list->tieCoef=1-mTieCoef;
+    free(tbl);
+    rankDRankList(list);
+    return;
+  }
+}

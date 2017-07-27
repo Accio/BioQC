@@ -1,3 +1,6 @@
+Version 0.99.4 (Dec 23, 2015)
+  + wmw_test (C function) is refactored
+
 Version 0.99-1 (Jun 19, 2014)
   + read_gmt checks whether a GMT line is valid; if not, it prints warning message to the error console and skips the line.
   + Add following alternatives to wmwTest in order to make the downstream analysis easier: abs.log10.greater, log10.less, abs.log10.two.sided, and Q.

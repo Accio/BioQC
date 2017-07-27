@@ -1,85 +1,270 @@
-wmw.test <- function(x, sub, alternative=c("two.sided", "less", "greater"), statistic=FALSE) {
-  if(!any(sub)) return(ifelse(statistic, 0, 1))
-  wt <- wilcox.test(x[sub],
-                    x[!sub], alternative=alternative)
-  return(ifelse(statistic, wt$statistic, wt$p.value))
+## FOR REFERENCE rankSumTestWithCorrelation function from the limma package (version 3.18.13)
+
+## authors: Gordon Smyth and Di Wu, following Zar, JD (1999) Biostatistical Analysis 4th Edition
+## used under GPL(>=2) license. The function has been slihtly modified to allow reporting results
+
+rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df = Inf) {
+    n <- length(statistics)
+    r <- rank(statistics)
+    r1 <- r[index]
+    n1 <- length(r1)
+    n2 <- n - n1
+    U <- n1 * n2 + n1 * (n1 + 1)/2 - sum(r1)
+    mu <- n1 * n2/2
+    if (correlation == 0 || n1 == 1) {
+        sigma2 <- n1 * n2 * (n + 1)/12
+    }
+    else {
+        sigma2 <- asin(1) * n1 * n2 + asin(0.5) * n1 * n2 * (n2 - 
+            1) + asin(correlation/2) * n1 * (n1 - 1) * n2 * (n2 - 
+            1) + asin((correlation + 1)/2) * n1 * (n1 - 1) * 
+            n2
+        sigma2 <- sigma2/2/pi
+    }
+    TIES <- (length(r) != length(unique(r)))
+    if (TIES) {
+        NTIES <- table(r)
+        prod <- sum(NTIES * (NTIES + 1) * (NTIES - 1))
+        denom <- (n * (n + 1) * (n - 1))
+        adjustment <- prod/denom
+        sigma2 <- sigma2 * (1 - adjustment)
+    }
+    zlowertail <- (U + 0.5 - mu)/sqrt(sigma2)
+    zuppertail <- (U - 0.5 - mu)/sqrt(sigma2)
+    less <-pt(zuppertail, df = df, lower.tail = FALSE)
+    greater <- pt(zlowertail, df = df)
+    res <- c(U=U,
+             mu=mu,
+             n1=n1,
+             n2=n2,
+             sigma2=sigma2,
+             r1sum=sum(r1),
+             zlt=zlowertail,
+             zut=zuppertail,
+             less = less,
+             greater = greater)
+    return(res)
 }
 
-wmwTest <- function(x, ind.list,
-                    alternative=c("greater", "less", "two.sided", "U",
-                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
-  isMatVec <- FALSE
-  isIndVec <- FALSE
-  if(is(x, "eSet")) {
-    matrix <- exprs(x)
-  } else if (!is.matrix(x) & is.numeric(x)) {
-    matrix <- matrix(x, ncol=1L)
-    isMatVec <- TRUE
-  } else if (is.matrix(x)) {
-    matrix <- x
-  } else {
-    stop("'matrix' must be a numeric matrix, or a numeric vector, or an eSet object")
-  }
 
-  if(is.numeric(ind.list) || is.logical(ind.list)) {
-    ind.list <- list(ind.list)
-    isIndVec <- TRUE
-  } else if (is(ind.list, "gmtlist")) {
-    if(!(is(x, "eSet") & "GeneSymbol" %in% colnames(fData(x))))
-      stop("When ind.list is a 'gmtlist', 'x' must be an eSet object with a column 'GeneSymbol' in fData.")
-    genes <- lapply(ind.list, function(x) x$genes)
-    names(genes) <- sapply(ind.list, function(x) x$name)
-    ind.list <- sapply(genes, function(g) match(g, fData(x)$GeneSymbol))
-  }
-  
-  indC <- lapply(ind.list, function(x) {
-    if(is.logical(x))
-      x <- which(x)
-    if(is.numeric(x)) {
-      x <- as.integer(x[!is.na(x)])
-      if(any(x<1L))
-          stop("Indices in ind.list must be equal to or greater than one!")
-      return(x-1L)
+#' Wilcoxon-Mann-Whitney test in R
+#'
+#' @param x A numerical vector
+#' @param sub A logical vector or integer vector to subset \code{x}. Numbers in \code{sub} are compared with numbers out of \code{sub}
+#' @param valType Type of retured-value. Supported values: p.greater, p.less, p.two.sided, and W statistic (note it is different from the U statistic)
+#' 
+#' @examples
+#' testNums <- 1:10
+#' testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
+#' wmwTestInR(testNums, testSub)
+#' wmwTestInR(testNums, testSub, valType="p.two.sided")
+#' wmwTestInR(testNums, testSub, valType="p.less")
+#' wmwTestInR(testNums, testSub, valType="W")
+wmwTestInR <- function(x, sub, valType=c("p.greater", "p.less", "p.two.sided",  "W")) {
+    if(is.numeric(sub)) {
+        tmp <- rep(FALSE, length(x))
+        tmp[sub] <- TRUE
+        sub <- tmp
+    }
+    valType <- match.arg(valType)
+    if(!is.logical(sub))
+        stop("sub must be either numeric indices or logical")
+    isStat <- valType=="W"
+    if(!any(sub)) return(ifelse(isStat, 0, 1))
+    if(!isStat) {
+        alternative <- substr(valType, 3, nchar(valType))
+        stopifnot(alternative %in% c("greater", "less", "two.sided"))
     } else {
-      stop("index must be either integer vector")
+        alternative <- "two.sided"
     }
-  })
-  
-  type <- match.arg(alternative)
-  if(type=="greater") {
-    val <- 0L
-  } else if (type=="less") {
-    val <- 1L
-  } else if (type=="two.sided") {
-    val <- 2L
-  } else if (type=="U") {
-    val <- 3L
-  } else if (type=="abs.log10.greater") {
-    val <- 4L
-  } else if (type=="log10.less") {
-    val <- 5L
-  } else if (type=="abs.log10.two.sided") {
-    val <- 6L
-  } else if (type=="Q") {
-    val <- 7L
-  } else {
-    stop("Should not happen")
-  }
-  res <- .Call("wmw_test", indC, matrix, val)
-  rownames(res) <- names(ind.list)
-  colnames(res) <- colnames(matrix)
-  if(simplify) {
-    if(isMatVec & isIndVec) {
-      res <- res[1L, 1L] 
-    } else if (isMatVec) {
-      res <- res[,1L]
-    } else if (isIndVec) {
-      res <- res[1L,]
-    }
-  }
-  
-  return(res)
+    wt <- wilcox.test(x[sub],x[!sub],
+                      alternative=alternative, exact=FALSE)
+    return(ifelse(isStat, wt$statistic, wt$p.value))
 }
+
+## type2int and formatMatrixInd are helper functions for wmwTest and wmwSignedTest
+TYPE_CODES <- c("p.greater"=0L, "p.less"=1L,
+                "p.two.sided"=2L, "U"=3L,
+                "abs.log10p.greater"=4L,
+                "log10p.less"=5L,
+                "abs.log10p.two.sided"=6L,
+                "Q"=7L)
+
+valTypes <- function() names(TYPE_CODES)
+
+type2int <- function(type) {
+    if(!type %in% names(TYPE_CODES))
+        stop("Should not happen! This is the wrong code")
+    return(TYPE_CODES[type])
+}
+
+##----------------------------------------##
+## wmwTest
+##----------------------------------------##
+wmwTest.default <- function(matrix,
+                            indexList,
+                            valType=c("p.greater", "p.less", "p.two.sided", "U",
+                                "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
+                                "Q"),
+                            simplify=TRUE) {
+    if(!is.matrix(matrix) || !is(indexList, "IndexList"))
+        stop("'matrix' and 'indexList' must be matrix and an IndexList object, respectively")
+    if(missing(simplify))  simplify <- TRUE
+    if(missing(valType)) {
+        valType <- "p.greater"
+    } else {
+        valType <- match.arg(valType)
+    }
+    typeInt <- type2int(valType)
+    
+    if(storage.mode(matrix)=="character")
+        stop("Input must be a numeric matrix or anything that can be converted into a numeric matrix")
+    
+    if(storage.mode(matrix)!="double")
+        storage.mode(matrix) <- "double"
+
+    if(offset(indexList)!=0L)
+        offset(indexList) <- 0L
+    
+    res <- .Call("wmw_test", matrix, indexList, typeInt)
+    rownames(res) <- names(indexList)
+    colnames(res) <- colnames(matrix)
+
+    if(simplify) {
+        res <- simplifyMatrix(res)
+    }
+    return(res)
+}
+
+setMethod("wmwTest", c("matrix", "IndexList"),
+          function(object,indexList,
+                   valType, simplify) {
+              wmwTest.default(object, indexList, valType=valType, simplify=simplify)
+          })
+
+setMethod("wmwTest", c("numeric", "IndexList"),
+          function(object, indexList,
+                    valType, simplify) {
+              object <- matrix(object, ncol=1)
+              wmwTest.default(object, indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("matrix", "GmtList"),
+          function(object, indexList,
+                   valType, simplify) {
+              indexList <- matchGenes(indexList, object)
+              wmwTest.default(object, indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("eSet", "GmtList"),
+          function(object, indexList, col="GeneSymbol",
+                   valType, simplify) {
+              indexList <- matchGenes(indexList, object, col=col)
+              wmwTest.default(exprs(object), indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("eSet", "numeric"),
+          function(object, indexList, col="GeneSymbol",
+                   valType, simplify) {
+              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("eSet", "logical"),
+          function(object, indexList, col="GeneSymbol",
+                   valType, simplify) {
+              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("eSet", "list"),
+          function(object, indexList, col="GeneSymbol",
+                   valType, simplify) {
+              indexList <- IndexList(indexList)
+              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("ANY", "numeric"),
+          function(object, indexList, valType, simplify) {
+              indexList <- IndexList(indexList)
+              wmwTest(object, indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("ANY", "logical"),
+          function(object, indexList, valType,simplify) {
+              indexList <- IndexList(indexList)
+              wmwTest(object, indexList, valType=valType, simplify=simplify)
+          })
+setMethod("wmwTest", c("ANY", "list"),
+          function(object, indexList, valType,simplify) {
+              indexList <- IndexList(indexList)
+              wmwTest(object, indexList, valType=valType, simplify=simplify)
+          })
+##
+##wmwTest <- function(x, ind.list,
+##                    alternative=c("greater", "less", "two.sided", "U",
+##                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
+##
+##    matrixObj <- formatMatrix(x)
+##    matrix <- matrixObj$matrix
+##    
+##    indObj <- formatInd(ind.list, x, nrow(matrix))
+##    indC <- indObj$indC
+##    
+##    typeInt <- type2int(match.arg(alternative))
+##
+##    res <- .Call("wmw_test", matrix, indC, typeInt)
+##    
+##    rownames(res) <- names(ind.list)
+##    colnames(res) <- colnames(matrix)
+##    
+##    if(simplify) {
+##        res <- simplifyMatrix(res)
+##    }
+##  
+##  return(res)
+##}
+
+##----------------------------------------##
+## wmwTestSignedGenesets
+##----------------------------------------##
+wmwTestSignedGenesets.default <- function(matrix,
+                                          signedIndexList,
+                                          valType=c("p.greater", "p.less", "p.two.sided", "U",
+                                              "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
+                                              "Q"),
+                                          simplify=TRUE) {
+    if(!is.matrix(matrix) || !is(signedIndexList, "SignedIndexList"))
+        stop("'matrix' and 'signedIndexList' must be matrix and an SignedIndexList object, respectively")
+    if(missing(simplify))  simplify <- TRUE
+    if(missing(valType)) {
+        valType <- "p.greater"
+    } else {
+        valType <- match.arg(valType)
+    }
+    typeInt <- type2int(valType)
+    
+    if(storage.mode(matrix)=="character")
+        stop("Input must be a numeric matrix or anything that can be converted into a numeric matrix")
+    
+    if(storage.mode(matrix)!="double")
+        storage.mode(matrix) <- "double"
+
+    if(offset(signedIndexList)!=0L)
+        offset(signedIndexList) <- 0L
+    
+    res <- .Call("signed_wmw_test", matrix,
+                 signedIndexList,
+                 typeInt)
+    rownames(res) <- names(signedIndexList)
+    colnames(res) <- colnames(matrix)
+
+    if(simplify) {
+        res <- simplifyMatrix(res)
+    }
+    return(res)
+}
+setMethod("wmwTest", c("matrix", "SignedIndexList"), function(object, indexList, valType, simplify) {
+    wmwTestSignedGenesets.default(object, indexList, valType, simplify)
+})
+setMethod("wmwTest", c("numeric", "SignedIndexList"), function(object, indexList, valType, simplify) {
+              object <- matrix(object, ncol=1L)
+              wmwTestSignedGenesets.default(object, indexList, valType, simplify)
+})
+setMethod("wmwTest", c("eSet", "SignedIndexList"), function(object, indexList, valType, simplify) {
+              wmwTestSignedGenesets.default(exprs(object), indexList, valType, simplify)
+          })
 
 ##setGeneric("wmwTest",function(object, sub, alternative, statistic) standardGeneric("wmwTest"))
 ##setGeneric("wmwTest",function(exprs, index, alternative) standardGeneric("wmwTest"))
