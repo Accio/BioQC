@@ -1,0 +1,18 @@
+citHeader("Please cite the paper below for the BioQC software itself")
+
+
+citEntry(entry="article",
+         title = "Detect tissue heterogeneity in gene expression data with {BioQC}",
+         author = personList(as.person("Jitao David Zhang"), as.person("Klas Hatje"), as.person("Gregor Sturm"),
+			     as.person("Clemens Broger"), as.person("Martin Ebeling"), as.person("Martine Burtin"),
+			     as.person("Fabiola Terzi"), as.person("Silvia Ines Pomposiello"), as.person("Laura Badi")),
+	 journal = "BMC Genomics",
+         year = 2017,
+         volume = 18,
+	 number = 1,
+         pages = 277,
+         url    = "http://accio.github.io/BioQC/",
+         
+         textVersion = "Zhang, J.D., Hatje, K., Sturm, G., Broger, C., Ebeling, M., Burtin, M., Terzi, F., Pomposiello, S.I., Badi, L. (2017). Detect tissue heterogeneity in gene expression data with BioQC. BMC genomics 18(1): 277."
+	)
+
