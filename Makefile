@@ -25,6 +25,11 @@ roxygenise:
 	@(cd ..; ${R} --vanilla -q -e "library(devtools);document(\"$(PKG)\")")
 	@echo ' '
 
+doVignettes:
+	@echo "====== vignettes ======"
+	@(${R} --vanilla -q -e "library(devtools); devtools::build_vignettes()")
+	@echo ' '
+
 dist:	clean roxygenise
 	@echo '====== Building Distribution ======'
 	@(cd ..; ${R} CMD build ${DISTADD} $(PKG) )
