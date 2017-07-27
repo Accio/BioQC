@@ -2,15 +2,14 @@
 title: Using BioQC with signed genesets
 author: "Jitao David Zhang and Gregor Sturm"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Using BioQC with signed genesets}
+  %\usepackage[utf8]{inputenc}
 output: 
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
