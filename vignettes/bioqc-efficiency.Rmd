@@ -1,16 +1,17 @@
 ---
 title: "BioQC Algorithm: Speeding up the Wilcoxon-Mann-Whitney Test"
 author: "Gregor Sturm and Jitao David Zhang"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{BioQC Alogrithm: Speeding up the Wilcoxon-Mann-Whitney Test}
+package: BioQC
 output: 
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
-  html_document: default
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{BioQC Alogrithm: Speeding up the Wilcoxon-Mann-Whitney Test}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
 ---
 
 Supplementary Information for "Detect issue heterogenity in gene expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello and [Laura Badi](laura.badi@roche.com))
