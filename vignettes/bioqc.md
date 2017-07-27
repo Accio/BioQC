@@ -10,6 +10,8 @@ output:
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE 
+  html_document:
+    toc: true
 ---
 
 Introduction {#introduction}
@@ -140,7 +142,7 @@ system.time(Cres <- wmwTest(exprs, ind, valType="p.less", simplify=TRUE))
 ~~~~
 
     ##    user  system elapsed 
-    ##   0.148   0.000   0.149
+    ##   0.140   0.000   0.139
 
 ~~~~ r
 system.time(Rres <- apply(exprs, 2, function(x)
@@ -149,7 +151,7 @@ system.time(Rres <- apply(exprs, 2, function(x)
 ~~~~
 
     ##    user  system elapsed 
-    ##   2.420   0.020   2.448
+    ##   2.392   0.012   2.414
 
 With 22000 genes, five samples, and five gene sets, the *BioQC*
 implementation is about 20x faster than the R implementation (dependent
