@@ -45,9 +45,9 @@ install: dist
 install-test: 
 	${R} CMD INSTALL ../${PKG} && ${R} -e "library(testthat); test_dir('./tests')"
 
-check:	dist
+check:
 	@echo '====== Checking Package ======'
-	@(cd ..; ${R} CMD check ${CHECKADD} ${PKG}_${PKG_VERSION}.tar.gz)
+	@(cd ..; ${R} --vanilla -q -e "library(devtools);check(\"$(PKG)\")")
 	@echo '====== Checking finished ======'
 	@echo ' '
 
