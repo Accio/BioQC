@@ -1,5 +1,4 @@
-#include "bioqc.h"
-
+#include <Rinternals.h>
 /* sortAscending and stat_gini procedures are copied from BIOS library */
 
 static void sortAscending (double x[], int num) {
