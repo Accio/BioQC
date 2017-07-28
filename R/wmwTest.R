@@ -126,7 +126,7 @@ wmwTest.default <- function(matrix,
     if(offset(indexList)!=0L)
         offset(indexList) <- 0L
     
-    res <- .Call("wmw_test", matrix, indexList, typeInt)
+    res <- .Call(C_wmw_test, matrix, indexList, typeInt)
     rownames(res) <- names(indexList)
     colnames(res) <- colnames(matrix)
 
@@ -221,7 +221,7 @@ wmwTestSignedGenesets.default <- function(matrix,
     if(offset(signedIndexList)!=0L)
         offset(signedIndexList) <- 0L
     
-    res <- .Call("signed_wmw_test", matrix,
+    res <- .Call(C_signed_wmw_test, matrix,
                  signedIndexList,
                  typeInt)
     rownames(res) <- names(signedIndexList)
