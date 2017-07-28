@@ -1,4 +1,5 @@
 #include <R_ext/Rdynload.h>
+#include <R_ext/Visibility.h>
 #include "bioqc.h"
 
 static const R_CallMethodDef callMethods[] = {
@@ -11,7 +12,7 @@ static const R_CallMethodDef callMethods[] = {
 };
 
 
-void R_init_BioQC(DllInfo *info) {
+void attribute_visible R_init_BioQC(DllInfo *info) {
   R_registerRoutines(info, NULL, callMethods, NULL, NULL);
   /* the line below says that the DLL is not to be searched
    * for entry points specified by character strings so
