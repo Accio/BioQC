@@ -30,4 +30,4 @@ export(valTypes)
 export(wmwTestInR)
 export(wmwTest)
 
-useDynLib(BioQC, read_gmt)
+useDynLib(BioQC, .registration=TRUE, .fixes="C_")
