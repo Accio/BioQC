@@ -7,9 +7,9 @@
 matchGenes.signedDefault(signedGenesets, geneSymbols)
 }
 \arguments{
-\item{geneSymbols}{Gene symbols to be matched; they can come from a column in an eSet object, for example}
+\item{signedGenesets}{A SignedGenesets object}
 
-\item{gmtList}{A SignedGenesets object}
+\item{geneSymbols}{Gene symbols to be matched; they can come from a column in an eSet object, for example}
 }
 \description{
 Match genes in a SignedGenesets to a vector of genesymbols
