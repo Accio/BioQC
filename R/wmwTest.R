@@ -89,7 +89,7 @@ TYPE_CODES <- c("p.greater"=0L, "p.less"=1L,
                 "log10p.less"=5L,
                 "abs.log10p.two.sided"=6L,
                 "Q"=7L)
-
+#'prints the options of valTypes of wmwTest
 valTypes <- function() names(TYPE_CODES)
 
 type2int <- function(type) {
@@ -101,6 +101,9 @@ type2int <- function(type) {
 ##----------------------------------------##
 ## wmwTest
 ##----------------------------------------##
+
+
+
 wmwTest.default <- function(matrix,
                             indexList,
                             valType=c("p.greater", "p.less", "p.two.sided", "U",
@@ -135,67 +138,208 @@ wmwTest.default <- function(matrix,
     }
     return(res)
 }
-
+#'@describeIn wmwTest \code{x} is a \code{matrix} and \code{indexList} is a \code{IndexList}
 setMethod("wmwTest", c("matrix", "IndexList"),
-          function(object,indexList,
-                   valType, simplify) {
-              wmwTest.default(object, indexList, valType=valType, simplify=simplify)
+          function(x, indexList,
+                   valType, simplify = TRUE) {
+              wmwTest.default(x, indexList, valType=valType, simplify=simplify)
           })
-
+#'@describeIn wmwTest \code{x} is a \code{numeric} and \code{indexList} is a \code{IndexList}
 setMethod("wmwTest", c("numeric", "IndexList"),
-          function(object, indexList,
-                    valType, simplify) {
-              object <- matrix(object, ncol=1)
-              wmwTest.default(object, indexList, valType=valType, simplify=simplify)
+          function(x, indexList,
+                    valType, simplify = TRUE) {
+              x <- matrix(x, ncol=1)
+              wmwTest.default(x, indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is a \code{matrix} and \code{indexList} is a \code{GmtList}
 setMethod("wmwTest", c("matrix", "GmtList"),
-          function(object, indexList,
-                   valType, simplify) {
-              indexList <- matchGenes(indexList, object)
-              wmwTest.default(object, indexList, valType=valType, simplify=simplify)
+          function(x, indexList,
+                   valType, simplify = TRUE) {
+              indexList <- matchGenes(indexList, x)
+              wmwTest.default(x, indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{GmtList}
 setMethod("wmwTest", c("eSet", "GmtList"),
-          function(object, indexList, col="GeneSymbol",
-                   valType, simplify) {
-              indexList <- matchGenes(indexList, object, col=col)
-              wmwTest.default(exprs(object), indexList, valType=valType, simplify=simplify)
+          function(x, indexList,
+                   valType, simplify = TRUE) {
+              indexList <- matchGenes(indexList, x)
+              wmwTest.default(exprs(x), indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{numeric}
 setMethod("wmwTest", c("eSet", "numeric"),
-          function(object, indexList, col="GeneSymbol",
-                   valType, simplify) {
-              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          function(x, indexList,
+                   valType, simplify = TRUE) {
+              wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{logical}
 setMethod("wmwTest", c("eSet", "logical"),
-          function(object, indexList, col="GeneSymbol",
-                   valType, simplify) {
-              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+          function(x, indexList,
+                   valType, simplify = TRUE) {
+              wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{list}
 setMethod("wmwTest", c("eSet", "list"),
-          function(object, indexList, col="GeneSymbol",
-                   valType, simplify) {
+          function(x, indexList,
+                   valType, simplify = TRUE) {
               indexList <- IndexList(indexList)
-              wmwTest(exprs(object), indexList, valType=valType, simplify=simplify)
+              wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is \code{ANY} and \code{indexList} is a \code{numeric}
 setMethod("wmwTest", c("ANY", "numeric"),
-          function(object, indexList, valType, simplify) {
+          function(x, indexList, valType, simplify = TRUE) {
               indexList <- IndexList(indexList)
-              wmwTest(object, indexList, valType=valType, simplify=simplify)
+              wmwTest(x, indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is \code{ANY} and \code{indexList} is a \code{logical}
 setMethod("wmwTest", c("ANY", "logical"),
-          function(object, indexList, valType,simplify) {
+          function(x, indexList, valType, simplify = TRUE) {
               indexList <- IndexList(indexList)
-              wmwTest(object, indexList, valType=valType, simplify=simplify)
+              wmwTest(x, indexList, valType=valType, simplify=simplify)
           })
+#'@describeIn wmwTest \code{x} is \code{ANY} and \code{indexList} is a \code{list}
 setMethod("wmwTest", c("ANY", "list"),
-          function(object, indexList, valType,simplify) {
+          function(x, indexList, valType, simplify = TRUE) {
               indexList <- IndexList(indexList)
-              wmwTest(object, indexList, valType=valType, simplify=simplify)
+              wmwTest(x, indexList, valType=valType, simplify=simplify)
           })
 
 
 ##----------------------------------------##
 ## wmwTestSignedGenesets
 ##----------------------------------------##
+#'@title
+#' 
+#'Wilcoxon-Mann-Whitney rank sum test for high-throughput expression
+#'profiling data
+#'
+#'@description
+#'We have implemented an highly efficient Wilcoxon-Mann-Whitney rank sum
+#'test for high-throughput expression profiling data. For datasets with
+#'more than 100 features (genes), the function can be more than 1,000 
+#'times faster than its R implementations (\code{wilcox.test} in 
+#'\code{stats}, or \code{rankSumTestWithCorrelation} in \code{limma}).
+#'
+#'
+#'@param x A numeric matrix. All other data types (e.g. numeric vectors
+#'or \code{ExpressionSet} objects) are coerced into matrix.
+#'
+#'@param indexList A list of integer indices (starting from 1) indicating
+#'signature genes. Can be of length zero. Other data types (e.g. a list
+#'of numeric or logical vectors, or a numeric or logical vector) are
+#'coerced into such a list. See \code{details} below for a special case
+#'using GMT files.
+#'
+#'@param valType The value type to be returned, allowed values
+#'include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and 
+#'\code{abs.log10p.less} (one-sided tests),\code{p.two.sided}, and \code{U} 
+#'statistic, and their log10 transformation variants. See details below.
+#'
+#'@param simplify Logical. If not, the returning value is in matrix
+#'format; if set to \code{TRUE}, the results are simplified into
+#'vectors when possible (default).
+#'
+#'@details The basic application of the function is to test the enrichment of
+#'gene sets in expression profiling data or differentially expressed
+#'data (the matrix with feature/gene in rows and samples in columns).
+#'
+#'A special case is when \code{x} is an \code{eSet} object
+#'(e.g. \code{ExpressionSet}), and \code{indexList} is a list returned
+#'from \code{readGmt} function. In this case, the only requirement is
+#'that one column named \code{GeneSymbol} in the \code{featureData}
+#'contain gene symbols used in the GMT file. See the example below.
+#'
+#'Besides the conventional value types such as \sQuote{p.greater},
+#'\sQuote{p.less}, \sQuote{p.two.sided} , and \sQuote{U} (the U-statistic), 
+#'\code{wmwTest} (from version 0.99-1) provides further value types:
+#'\code{abs.log10p.greater} and \code{log10p.less} perform log10
+#'transformation on respective \emph{p}-values and give the
+#'transformed value a proper sign (positive for greater than, and
+#'negative for less than); \code{abs.log10p.two.sided} transforms
+#'two-sided \emph{p}-values to non-negative values; and \code{Q} score
+#'reports absolute log10-transformation of \emph{p}-value of the
+#'two-side variant,  and gives a proper sign to it, depending on whether it is
+#'rather greater than (positive) or  less than (negative). 
+#'
+#'@return A numeric matrix or vector containing the statistic.
+#'
+#'@references Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional categories in microarray data. _Annals of Applied Statistics_ 2, 286-315.
+#'
+#'Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test
+#'accounting for inter-gene correlation. _Nucleic Acids Research_ 40(17):e133
+#'
+#'Zar, JH (1999). _Biostatistical Analysis 4th Edition_. Prentice-Hall International, Upper Saddle River, New Jersey.
+#'
+#'@author Jitao David Zhang <jitao_david.zhang@roche.com>
+#'
+#'@note The function has been optimized for expression profiling data. It
+#'avoids repetitive ranking of data as done by native R implementations
+#'and uses efficient C code to increase the performance and control
+#'memory use. Simulation studies using expression profiles of 22000
+#'genes in 2000 samples and 200 gene sets suggested that the C
+#'implementation can be >1000 times faster than the R
+#'implementation. And it is possible to further accelerate by
+#'parallel calling the function with \code{mclapply} in the \code{multicore} package.
+#'
+#'@seealso code{wilcox.test} in the \code{stats} package, and \code{rankSumTestWithCorrelation} in
+#'the \code{limma} package.
+#'#'@examples 
+#'## R-native data structures
+#'set.seed(1887)
+#'rd <- rnorm(1000)
+#'rl <- sample(c(TRUE, FALSE), 1000, replace=TRUE)
+#'wmwTest(rd, rl, valType="p.two.sided")
+#'wmwTest(rd, which(rl), valType="p.two.sided")
+#'rd1 <- rd + ifelse(rl, 0.5, 0)
+#'wmwTest(rd1, rl, valType="p.greater")
+#'wmwTest(rd1, rl, valType="U")
+#'rd2 <- rd - ifelse(rl, 0.2, 0)
+#'wmwTest(rd2, rl, valType="p.greater")
+#'wmwTest(rd2, rl, valType="p.two.sided")
+#'wmwTest(rd2, rl, valType="p.less")
+#'
+#'## matrix forms
+#'rmat <- matrix(c(rd, rd1, rd2), ncol=3, byrow=FALSE)
+#'wmwTest(rmat, rl, valType="p.two.sided")
+#'wmwTest(rmat, rl, valType="p.greater")
+#'
+#'wmwTest(rmat, which(rl), valType="p.two.sided")
+#'wmwTest(rmat, which(rl), valType="p.greater")
+#'
+#'## other valTypes
+#'wmwTest(rmat, which(rl), valType="U")
+#'wmwTest(rmat, which(rl), valType="abs.log10p.greater")
+#'wmwTest(rmat, which(rl), valType="log10p.less")
+#'wmwTest(rmat, which(rl), valType="abs.log10p.two.sided")
+#'wmwTest(rmat, which(rl), valType="Q")
+#'
+#'## using ExpressionSet
+#'data(sample.ExpressionSet)
+#'testSet <- sample.ExpressionSet
+#'fData(testSet)$GeneSymbol <- paste("GENE_",1:nrow(testSet), sep="")
+#'mySig1 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.25, 0.75), replace=TRUE)
+#'wmwTest(testSet, which(mySig1), valType="p.greater")
+#'
+#'## using integer
+#'exprs(testSet)[,1L] <- exprs(testSet)[,1L] + ifelse(mySig1, 50, 0)
+#'wmwTest(testSet, which(mySig1), valType="p.greater")
+#'
+#'## using lists
+#'mySig2 <- sample(c(TRUE, FALSE), nrow(testSet), prob=c(0.6, 0.4), replace=TRUE)
+#'wmwTest(testSet, list(first=mySig1, second=mySig2))
+
+#'## using GMT file
+#'gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
+#'gmt_list <- readGmt(gmt_file)
+#'
+#'gss <- sample(unlist(sapply(gmt_list, function(x) x$genes)), 1000)
+#'eset<-new("ExpressionSet",
+#'          exprs=matrix(rnorm(10000), nrow=1000L),
+#'          phenoData=new("AnnotatedDataFrame", data.frame(Sample=LETTERS[1:10])),
+#'          featureData=new("AnnotatedDataFrame",data.frame(GeneSymbol=gss)))
+#'esetWmwRes <- wmwTest(eset ,gmt_list, valType="p.greater")
+#'summary(esetWmwRes)
+#'@name wmwTest
+NULL
 wmwTestSignedGenesets.default <- function(matrix,
                                           signedIndexList,
                                           valType=c("p.greater", "p.less", "p.two.sided", "U",
@@ -232,15 +376,21 @@ wmwTestSignedGenesets.default <- function(matrix,
     }
     return(res)
 }
-setMethod("wmwTest", c("matrix", "SignedIndexList"), function(object, indexList, valType, simplify) {
-    wmwTestSignedGenesets.default(object, indexList, valType, simplify)
+#'@describeIn wmwTest \code{x} is a \code{matrix} and \code{indexList} is a 
+#'\code{SignedIndexList}
+setMethod("wmwTest", c("matrix", "SignedIndexList"), function(x, indexList, valType, simplify = TRUE) {
+    wmwTestSignedGenesets.default(x, indexList, valType, simplify = simplify)
 })
-setMethod("wmwTest", c("numeric", "SignedIndexList"), function(object, indexList, valType, simplify) {
-              object <- matrix(object, ncol=1L)
-              wmwTestSignedGenesets.default(object, indexList, valType, simplify)
+#'@describeIn wmwTest \code{x} is a \code{numeric} and \code{indexList} is a 
+#'\code{SignedIndexList}
+setMethod("wmwTest", c("numeric", "SignedIndexList"), function(x, indexList, valType, simplify = TRUE) {
+              x <- matrix(x, ncol=1L)
+              wmwTestSignedGenesets.default(x, indexList, valType, simplify = simplify)
 })
-setMethod("wmwTest", c("eSet", "SignedIndexList"), function(object, indexList, valType, simplify) {
-              wmwTestSignedGenesets.default(exprs(object), indexList, valType, simplify)
+#'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a 
+#'\code{SignedIndexList}
+setMethod("wmwTest", c("eSet", "SignedIndexList"), function(x, indexList, valType, simplify = TRUE) {
+              wmwTestSignedGenesets.default(exprs(x), indexList, valType, simplify = simplify)
           })
 
 ##setGeneric("wmwTest",function(object, sub, alternative, statistic) standardGeneric("wmwTest"))
