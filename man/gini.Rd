@@ -23,12 +23,11 @@ the same. A Gini coefficient of one expresses maximal inequality among values.
 \examples{
 testValues <- runif(100)
 gini(testValues)
-   
 }
 \references{
 Gini. C. (1912) \emph{Variability and Mutability}, C. Cuppini, Bologna
 156 pages.
 }
 \author{
-Jitao David Zhang
+Jitao David Zhang <jitao_david.zhang@roche.com>
 }
