@@ -38,12 +38,13 @@ matchGenes(list, object, ...)
 \arguments{
 \item{list}{A GmtList, list, character or SignedGenesets object}
 
-\item{object}{Gene symbols to be matched; they can come from a column in an 
-eSet object, for example}
+\item{object}{Gene symbols to be matched; they can come from a vector of character strings, or 
+a column in the fData of an \code{eSet} object.}
 
-\item{...}{additional arguments like col}
+\item{...}{additional arguments like \code{col}}
 
-\item{col}{A string used with an \code{eSet}, currently defaults to "GeneSymbol"}
+\item{col}{Column name of \code{fData} in an \code{eSet} to specify where gene symbols are stored.
+The default value is set to "GeneSymbol"}
 }
 \description{
 Match genes in a list-like object to a vector of genesymbols

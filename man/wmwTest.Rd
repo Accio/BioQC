@@ -86,7 +86,7 @@ vectors when possible (default).}
 A numeric matrix or vector containing the statistic.
 }
 \description{
-We have implemented an highly efficient Wilcoxon-Mann-Whitney rank sum
+We have implemented a highly efficient Wilcoxon-Mann-Whitney rank sum
 test for high-throughput expression profiling data. For datasets with
 more than 100 features (genes), the function can be more than 1,000 
 times faster than its R implementations (\code{wilcox.test} in 
