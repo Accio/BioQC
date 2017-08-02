@@ -16,6 +16,8 @@ SignedIndexList(object, ...)
 \item{object}{A list of atleast one list of atleast one list or Vector called 
 either `pos` or `neg`}
 
+\item{...}{additional arguments, currently none are used}
+
 \item{keepNA}{Logical, whether NA indices should be kept or not. Default: 
 FALSE (removed)}
 
