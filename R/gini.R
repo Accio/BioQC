@@ -20,6 +20,9 @@
 #'gini(testValues)
 gini <- function(x)  {
     storage.mode(x) <- "double"
+    hasNeg <- any(x<0)
+    if(!is.na(hasNeg) & hasNeg)
+      stop("Gini index is only applicable to non-negative values!")
     isVec <- !is.matrix(x)
     if(isVec) {
         x <- x[!is.na(x)]
