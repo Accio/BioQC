@@ -20,61 +20,46 @@
 \title{Wilcoxon-Mann-Whitney rank sum test for high-throughput expression
 profiling data}
 \usage{
-wmwTest(x, indexList, valType = c("p.greater", "p.less", "p.two.sided", "U",
-  "abs.log10p.greater", "log10p.less", "abs.log10p.two.sided", "Q"),
+wmwTest(x, indexList, col = "GeneSymbol", valType = c("p.greater", "p.less",
+  "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
+  "abs.log10p.two.sided", "Q"), simplify = TRUE)
+
+\S4method{wmwTest}{matrix,IndexList}(x, indexList, valType, simplify = TRUE)
+
+\S4method{wmwTest}{numeric,IndexList}(x, indexList, valType, simplify = TRUE)
+
+\S4method{wmwTest}{matrix,GmtList}(x, indexList, valType, simplify = TRUE)
+
+\S4method{wmwTest}{eSet,GmtList}(x, indexList, col = "GeneSymbol",
+  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
+  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+
+\S4method{wmwTest}{eSet,numeric}(x, indexList, col = "GeneSymbol",
+  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
+  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+
+\S4method{wmwTest}{eSet,logical}(x, indexList, col = "GeneSymbol",
+  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
+  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+
+\S4method{wmwTest}{eSet,list}(x, indexList, col = "GeneSymbol",
+  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
+  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+
+\S4method{wmwTest}{ANY,numeric}(x, indexList, valType, simplify = TRUE)
+
+\S4method{wmwTest}{ANY,logical}(x, indexList, valType, simplify = TRUE)
+
+\S4method{wmwTest}{ANY,list}(x, indexList, valType, simplify = TRUE)
+
+\S4method{wmwTest}{matrix,SignedIndexList}(x, indexList, valType,
   simplify = TRUE)
 
-\S4method{wmwTest}{matrix,IndexList}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
+\S4method{wmwTest}{numeric,SignedIndexList}(x, indexList, valType,
+  simplify = TRUE)
 
-\S4method{wmwTest}{numeric,IndexList}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{matrix,GmtList}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{eSet,GmtList}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{eSet,numeric}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{eSet,logical}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{eSet,list}(x, indexList, valType = c("p.greater", "p.less",
-  "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{ANY,numeric}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{ANY,logical}(x, indexList, valType = c("p.greater",
-  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{ANY,list}(x, indexList, valType = c("p.greater", "p.less",
-  "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
-  "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{matrix,SignedIndexList}(x, indexList,
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{numeric,SignedIndexList}(x, indexList,
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
-
-\S4method{wmwTest}{eSet,SignedIndexList}(x, indexList,
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+\S4method{wmwTest}{eSet,SignedIndexList}(x, indexList, valType,
+  simplify = TRUE)
 }
 \arguments{
 \item{x}{A numeric matrix. All other data types (e.g. numeric vectors
@@ -85,6 +70,8 @@ signature genes. Can be of length zero. Other data types (e.g. a list
 of numeric or logical vectors, or a numeric or logical vector) are
 coerced into such a list. See \code{details} below for a special case
 using GMT files.}
+
+\item{col}{a string sometimes used with a \code{eSet}}
 
 \item{valType}{The value type to be returned, allowed values
 include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and 
