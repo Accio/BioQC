@@ -23,7 +23,10 @@ matchGenes.default <- function(gmtList,geneSymbols) {
 #' Match genes in a list-like object to a vector of genesymbols
 #'
 #' @param list A GmtList, list, character or SignedGenesets object
-#' @param object Gene symbols to be matched; they can come from a column in an eSet object, for example
+#' @param object Gene symbols to be matched; they can come from a column in an 
+#' eSet object, for example
+#' @param ... additional arguments like col
+#' @param col A string used with an \code{eSet}, currently defaults to "GeneSymbol"
 #' @name matchGenes
 NULL
 
@@ -69,10 +72,7 @@ setMethod("matchGenes", c("character", "eSet"), function(list, object) {
 ##----------------------------------------##
 ## matchGenes for SignedGenesets
 ##----------------------------------------##
-#' Match genes in a SignedGenesets to a vector of genesymbols
-#'
-#' @param signedGenesets A SignedGenesets object
-#' @param geneSymbols Gene symbols to be matched; they can come from a column in an eSet object, for example
+
 
 matchGenes.signedDefault <- function(signedGenesets, geneSymbols) {
     if(!is(signedGenesets, "SignedGenesets"))

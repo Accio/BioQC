@@ -108,6 +108,7 @@ SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=
 NULL
 #'@param object A list of atleast one list of atleast one list or Vector called 
 #'either `pos` or `neg`
+#'@param ... additional arguments, currently none are used
 #'@param keepNA Logical, whether NA indices should be kept or not. Default: 
 #'FALSE (removed)
 #'@param keepDup Logical, whether duplicated indices should be kept or not. 
