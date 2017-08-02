@@ -10,9 +10,9 @@
 \usage{
 `offset<-`(object, value)
 
-\S4method{`offset<-`}{IndexList,numeric}(object, value)
+\S4method{offset}{IndexList,numeric}(object) <- value
 
-\S4method{`offset<-`}{SignedIndexList,numeric}(object, value)
+\S4method{offset}{SignedIndexList,numeric}(object) <- value
 }
 \arguments{
 \item{object}{An \code{IndexList} or a \code{SignedIndexList} object}
@@ -26,5 +26,6 @@ Set the offset of an \code{IndexList} or a \code{SignedIndexList} object
 \examples{
 myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 offset(myIndexList)
-offset(`offset<-`(myIndexList, 3))
+offset(myIndexList) <- 3
+offset(myIndexList)
 }
