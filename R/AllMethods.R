@@ -2,30 +2,28 @@
 ## standard generics
 ##----------------------------------------##
 setGeneric("offset", function(object) standardGeneric("offset"))
+#'@rdname offset-set
+#'@usage `offset<-`(object, value)
 setGeneric("offset<-", function(object, value) standardGeneric("offset<-"))
-setGeneric("IndexList", function(object, ...) standardGeneric("IndexList"))
+
+#' @rdname IndexList
+setGeneric("IndexList", function(object, ..., keepNA = FALSE, keepDup = FALSE, offset =1L) standardGeneric("IndexList"))
+
+#'@rdname SignedIndexList
 setGeneric("SignedIndexList", function(object, ...) standardGeneric("SignedIndexList"))
+
+#'@rdname matchGenes
 setGeneric("matchGenes", function(list, object, ...) standardGeneric("matchGenes"))
-setGeneric("wmwTest", function(object, indexList, ...) standardGeneric("wmwTest"))
+
+#'@rdname wmwTest
+setGeneric("wmwTest", function(x, indexList, col = "GeneSymbol", valType = c("p.greater", "p.less", "p.two.sided","U","abs.log10p.greater","log10p.less","abs.log10p.two.sided","Q"), simplify = TRUE) standardGeneric("wmwTest"))
 
 
 ##--------------------##
 ## IndexList
 ##--------------------##
-#' Convert a list to an IndexList object
-#' 
-#' @param list A list of unique integer indices or NULL, or logical vectors of same lengths. NA is discarded. 
-#' @param keepNA Logical, whether NA indices should be kept or not. Default: FALSE (removed)
-#' @param keepDup Logical, whether duplicated indices should be kept or not. Default: FALSE (removed)
-#' @param offset Integer, the starting index. Default: 1 (as in the convention of R)
-#' 
-#' @examples
-#' testList <- list(GS_A=c(1,2,3,4,3),
-#'                  GS_B=c(2,3,4,5),
-#'                  GS_C=NULL,
-#'                  GS_D=c(1,3,5,NA),
-#'                  GS_E=c(2,4))
-#' testIndexList <- IndexList(testList)
+
+NULL
 
 parseIndex <- function(x, keepNA=FALSE, keepDup=FALSE) {
     if(is.null(x))
@@ -46,30 +44,36 @@ IndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
     return(res)
 }
 
-
-#' Convert several numeric vectors into an index list
-#'
-#' @param object A integer (numeric) vector
-#' @param ... Other integer (numeric) vector(s)
-#' @param offset offset; 1 if missing
-#'
+#' Convert a list to an IndexList object
+#' 
+#' @param object Either a list of unique integer indices, NULL and logical 
+#' vectors (of same lengths), or a numerical vector or a logical vector. NA is discarded.
+#' @param ...  If \code{object} isn't a list, additional vectors can go here.
+#' @param keepNA Logical, whether NA indices should be kept or not. Default: FALSE (removed)
+#' @param keepDup Logical, whether duplicated indices should be kept or not. Default: FALSE (removed)
+#' @param offset Integer, the starting index. Default: 1 (as in the convention of R)
+#' @return The function returns a list of vectors
 #' @examples
-#' IndexList(1:3, 4:5, 7:9)
-#' IndexList(1:3, 4:5, 7:9, offset=0)
+#' testList <- list(GS_A=c(1,2,3,4,3),
+#'                  GS_B=c(2,3,4,5),
+#'                  GS_C=NULL,
+#'                  GS_D=c(1,3,5,NA),
+#'                  GS_E=c(2,4))
+#' testIndexList <- IndexList(testList)
+#' @name IndexList
+NULL
+
+#' @rdname IndexList
 setMethod("IndexList", "numeric", function(object, ..., keepNA=FALSE, keepDup=FALSE, offset=1L) {
               olist <- list(...)
               list <- c(list(object), olist)
               IndexListFromList(list, keepNA=keepNA, keepDup=keepDup, offset=offset)
           })
 
-#' Convert several logical vectors into an index list
-#'
-#' @param object A logical vector
-#' @param ... Other logical vector(s) of the same length as \code{object}
-#' @param offset offset; 1 if missing
-#'
+
 #' @examples
 #' IndexList(c(FALSE, TRUE, TRUE), c(FALSE, FALSE, TRUE), c(TRUE, FALSE, FALSE), offset=0)
+#' @rdname IndexList
 setMethod("IndexList", "logical", function(object, ..., keepNA=FALSE, keepDup=FALSE, offset=1L) {
               olist <- list(...)
               list <- c(list(object), olist)
@@ -81,14 +85,10 @@ setMethod("IndexList", "logical", function(object, ..., keepNA=FALSE, keepDup=FA
               IndexListFromList(list, keepNA=keepNA, keepDup=keepDup, offset=offset)
           })
 
-#' Convert a list of numeric (integer) vectors into an index list
-#'
-#' @param object A list of numeric (integer) vectors
-#' @param offset offset; 1 if missing
-#'
 #' @examples
 #' IndexList(list(A=1:3, B=4:5, C=7:9))
 #' IndexList(list(A=1:3, B=4:5, C=7:9), offset=0)
+#' @rdname IndexList
 setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
               IndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
           })
@@ -103,7 +103,25 @@ SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=
     res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
     return(res)
 }
-
+#'Convert a list into a SignedIndexList
+#'@name SignedIndexList
+NULL
+#'@param object A list of atleast one list of atleast one list or Vector called 
+#'either `pos` or `neg`
+#'@param keepNA Logical, whether NA indices should be kept or not. Default: 
+#'FALSE (removed)
+#'@param keepDup Logical, whether duplicated indices should be kept or not. 
+#'Default: FALSE (removed) 
+#'@param offset offset; 1 if missing
+#'@return A SignedIndexList of lists (named like the second list-level of the 
+#'input) containing two vectors named `positive` and `negative`, which contain 
+#'the same Argumetns as the IndexList resulting of the `pos` and `neg` lists
+#'or vectors of the input.
+#'@examples
+#'myList <- list(a = list(pos = list(1, 2, 2, 4), neg = c(TRUE, FALSE, TRUE)), 
+#'b = list(NA), c = list(pos = c(c(2, 3), c(1, 3))))
+#'SignedIndexList(myList)
+#'@rdname SignedIndexList
 setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
      SignedIndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
 })
@@ -119,10 +137,25 @@ setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALS
 #' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 #' offset(myIndexList)
 setMethod("offset", "BaseIndexList", function(object) return(object@offset))
+
 modOffset <- function(x, diff) {
     if(is.null(x)) return(NULL)
     return(x-diff)
 }
+#' Set the offset of an \code{IndexList} or a \code{SignedIndexList} object
+#' 
+#' @param object An \code{IndexList} or a \code{SignedIndexList} object
+#' @param value The value, that the offset of \code{object} is set too. If it 
+#' isn't an integer, it's coerced into an integer.
+#' @examples 
+#' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
+#' offset(myIndexList)
+#' offset(`offset<-`(myIndexList, 3))
+#' @name offset-set
+NULL
+
+#' @rdname offset-set
+##' @usage \S4method{`offset<-`}{IndexList,numeric}(object, value)
 setMethod("offset<-", c("IndexList", "numeric"), function(object, value) {
               value <- as.integer(value)
               diff <- object@offset - value
@@ -131,6 +164,9 @@ setMethod("offset<-", c("IndexList", "numeric"), function(object, value) {
               object@.Data <- resList
               return(object)
           })
+
+#'@rdname offset-set
+#'@usage \S4method{`offset<-`}{SignedIndexList,numeric}(object, value)
 setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
     value <- as.integer(value)
     diff <- object@offset - value
