@@ -87,8 +87,8 @@ setClass("SignedGenesets", contains="list", validity=isValidSignedGenesets)
 #' offset of the indices. IndexList and SignedIndexList extend this class
 #'
 #' @slot offset An integer specifying the value of first element. Default 1
-#' @slot keepNA Logical, whether NA was kept during construction
-#' @slot keepDup Logical, whether duplicated values were kept during construction
+#' @slot keepNA Logical, whether NA is kept during construction
+#' @slot keepDup Logical, whether duplicated values are kept during construction
 
 setClass("BaseIndexList",
          representation=list("offset"="integer",
