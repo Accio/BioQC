@@ -14,8 +14,8 @@ offset of the indices. IndexList and SignedIndexList extend this class
 \describe{
 \item{\code{offset}}{An integer specifying the value of first element. Default 1}
 
-\item{\code{keepNA}}{Logical, whether NA was kept during construction}
+\item{\code{keepNA}}{Logical, whether NA is kept during construction}
 
-\item{\code{keepDup}}{Logical, whether duplicated values were kept during construction}
+\item{\code{keepDup}}{Logical, whether duplicated values are kept during construction}
 }}
 
