@@ -151,12 +151,12 @@ modOffset <- function(x, diff) {
 #' @examples 
 #' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 #' offset(myIndexList)
-#' offset(`offset<-`(myIndexList, 3))
+#' offset(myIndexList) <- 3
+#' offset(myIndexList)
 #' @name offset-set
 NULL
 
-#' @rdname offset-set
-##' @usage \S4method{`offset<-`}{IndexList,numeric}(object, value)
+#'@rdname offset-set
 setMethod("offset<-", c("IndexList", "numeric"), function(object, value) {
               value <- as.integer(value)
               diff <- object@offset - value
@@ -167,7 +167,6 @@ setMethod("offset<-", c("IndexList", "numeric"), function(object, value) {
           })
 
 #'@rdname offset-set
-#'@usage \S4method{`offset<-`}{SignedIndexList,numeric}(object, value)
 setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
     value <- as.integer(value)
     diff <- object@offset - value
