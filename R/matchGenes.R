@@ -23,10 +23,11 @@ matchGenes.default <- function(gmtList,geneSymbols) {
 #' Match genes in a list-like object to a vector of genesymbols
 #'
 #' @param list A GmtList, list, character or SignedGenesets object
-#' @param object Gene symbols to be matched; they can come from a column in an 
-#' eSet object, for example
-#' @param ... additional arguments like col
-#' @param col A string used with an \code{eSet}, currently defaults to "GeneSymbol"
+#' @param object Gene symbols to be matched; they can come from a vector of character strings, or 
+#' a column in the fData of an \code{eSet} object.
+#' @param ... additional arguments like \code{col}
+#' @param col Column name of \code{fData} in an \code{eSet} to specify where gene symbols are stored.
+#' The default value is set to "GeneSymbol"
 #' @name matchGenes
 NULL
 
