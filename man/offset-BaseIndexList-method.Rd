@@ -17,4 +17,3 @@ Get offset from an IndexList object
 myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 offset(myIndexList)
 }
-

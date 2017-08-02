@@ -11,18 +11,23 @@
 ##                   - make dist     calls R CMD build
 ##
 ################################################################################
-
 R=R
 PKG_ROOT_DIR=`pwd`
 
 PKG=BioQC
+
 PKG_VERSION=`awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' ${PKG}/DESCRIPTION`
 
 PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
 
 roxygenise:
 	@echo '====== roxygenize ======'	
-	@(cd ..; ${R} --vanilla -q -e "library(roxygen2);roxygenise(\"$(PKG)\")")
+	@(cd ..; ${R} --vanilla -q -e "library(devtools);document(\"$(PKG)\")")
+	@echo ' '
+
+doVignettes:
+	@echo "====== vignettes ======"
+	@(${R} --vanilla -q -e "library(devtools); devtools::build_vignettes()")
 	@echo ' '
 
 dist:	clean roxygenise
@@ -40,9 +45,9 @@ install: dist
 install-test: 
 	${R} CMD INSTALL ../${PKG} && ${R} -e "library(testthat); test_dir('./tests')"
 
-check:	dist
+check:
 	@echo '====== Checking Package ======'
-	@(cd ..; ${R} CMD check ${CHECKADD} ${PKG}_${PKG_VERSION}.tar.gz)
+	@(cd ..; ${R} --vanilla -q -e "library(devtools);check(\"$(PKG)\")")
 	@echo '====== Checking finished ======'
 	@echo ' '
 

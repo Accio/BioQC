@@ -10,11 +10,11 @@ readSignedGmt(filename, posPattern = "_UP$", negPattern = "_DN$",
 \arguments{
 \item{filename}{A gmt file}
 
-\item{posPattern:}{Pattern of positive gene sets}
+\item{posPattern}{Pattern of positive gene sets}
 
-\item{negPattern:}{Pattern of negative gene sets}
+\item{negPattern}{Pattern of negative gene sets}
 
-\item{nomatch:}{options to deal with gene sets that match to neither posPattern nor negPattern patterns}
+\item{nomatch}{options to deal with gene sets that match to neither posPattern nor negPattern patterns}
 }
 \description{
 Read signed GMT files
@@ -29,4 +29,3 @@ testSignedGenesets.neg <- readSignedGmt(testGmtFile, nomatch="neg")
 \seealso{
 \code{\link{gmtlist2signedGenesets}} for parameters \code{posPattern}, \code{negPattern}, and \code{nomatch}
 }
-

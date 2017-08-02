@@ -1,10 +1,17 @@
 ---
 title: "BioQC: Detect tissue heterogeneity in gene expression data"
+author: "Jitao David Zhang, Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, and Laura Badi"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{BioQC: Detect tissue heterogeneity in gene expression data}
+  %\usepackage[utf8]{inputenc}
 output:
+  rmarkdown::html_vignette:
+    self_contained: no
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE 
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}

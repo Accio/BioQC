@@ -20,4 +20,3 @@ simplifyMatrix(testMatrix)
 simplifyMatrix(testMatrix[1L,,drop=FALSE])
 simplifyMatrix(testMatrix[,1L,drop=FALSE])
 }
-

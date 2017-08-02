@@ -7,9 +7,9 @@
 as.gmtlist(list, description = NULL)
 }
 \arguments{
-\item{list:}{A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes}
+\item{list}{A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes}
 
-\item{description:}{description; will be expanded to the same length of the list}
+\item{description}{description; will be expanded to the same length of the list}
 }
 \description{
 Convert a list of gene symbols into a gmtlist
@@ -20,4 +20,3 @@ testVec <- list(GeneSet1=c("AKT1", "AKT2"),
                GeneSet3=NULL)
 testVecGmtlist <- as.gmtlist(testVec)
 }
-

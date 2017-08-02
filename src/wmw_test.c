@@ -134,7 +134,7 @@ void wmw_test_list(const double *valPtr, int n,
  *
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
-SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
+extern SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
   const int type=INTEGER(rtype)[0];
   const int m=length(indlist);
   const int n=NROW(matrix);
@@ -230,7 +230,7 @@ void signed_wmw_test_list(const double *valPtr, int n,
  *
  * This implementation uses normal approximation, which works reasonably well if sample size is large (say N>=20)
  */
-SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
+extern SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
   const int type=INTEGER(rtype)[0];
   const int m=length(signedIndList);
   const int n=NROW(matrix);

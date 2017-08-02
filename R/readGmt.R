@@ -1,7 +1,7 @@
 #' Convert a list of gene symbols into a gmtlist
 #'
-#' @param list: A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes
-#' @param description: description; will be expanded to the same length of the list
+#' @param list A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes
+#' @param description description; will be expanded to the same length of the list
 #'
 #' @examples
 #' testVec <- list(GeneSet1=c("AKT1", "AKT2"),
@@ -101,9 +101,9 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
 #' Read signed GMT files
 #'
 #' @param filename A gmt file
-#' @param posPattern: Pattern of positive gene sets
-#' @param negPattern: Pattern of negative gene sets
-#' @param nomatch: options to deal with gene sets that match to neither posPattern nor negPattern patterns
+#' @param posPattern Pattern of positive gene sets
+#' @param negPattern Pattern of negative gene sets
+#' @param nomatch options to deal with gene sets that match to neither posPattern nor negPattern patterns
 #'
 #' @seealso \code{\link{gmtlist2signedGenesets}} for parameters \code{posPattern}, \code{negPattern}, and \code{nomatch}
 #' @examples

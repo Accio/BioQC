@@ -1,5 +1,4 @@
-#include "bioqc.h"
-
+#include <Rinternals.h>
 /* sortAscending and stat_gini procedures are copied from BIOS library */
 
 static void sortAscending (double x[], int num) {
@@ -52,7 +51,7 @@ double stat_gini(double x[], int num) {
   return(stat_gini_sorted(x, num));
 }
 
-SEXP gini_numeric(SEXP value, SEXP len) {
+extern SEXP gini_numeric(SEXP value, SEXP len) {
   /**
      Calculate Gini index.<br>
      Implementation follows R code of package ineq (function Gini(x) )<br>
@@ -63,7 +62,6 @@ SEXP gini_numeric(SEXP value, SEXP len) {
   */ 
   double *ptr = REAL(value);
   int ptrLen = INTEGER(len)[0];
-  int i,k;
   SEXP res;
   
   PROTECT(res = allocVector(REALSXP, 1));
@@ -73,7 +71,7 @@ SEXP gini_numeric(SEXP value, SEXP len) {
   return(res);
 }
 
-SEXP gini_matrix(SEXP value,
+extern SEXP gini_matrix(SEXP value,
 		 SEXP nrowR,
 		 SEXP ncolR) {
   double *pmat = REAL(value);

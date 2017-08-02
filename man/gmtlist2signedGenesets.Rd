@@ -34,4 +34,3 @@ testOutputList.ignore <- gmtlist2signedGenesets(testInputList, nomatch="ignore")
 testOutputList.pos <- gmtlist2signedGenesets(testInputList, nomatch="pos")
 testOutputList.neg <- gmtlist2signedGenesets(testInputList, nomatch="neg")
 }
-
