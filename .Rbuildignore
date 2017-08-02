@@ -4,3 +4,4 @@
 ^\.travis\.yml$
 ^Makefile$
 ^coverage\.txt$
+^coverage\.r$
