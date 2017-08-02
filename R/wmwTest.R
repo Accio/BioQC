@@ -160,26 +160,26 @@ setMethod("wmwTest", c("matrix", "GmtList"),
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{GmtList}
 setMethod("wmwTest", c("eSet", "GmtList"),
-          function(x, indexList,
+          function(x, indexList, col="GeneSymbol",
                    valType, simplify = TRUE) {
-              indexList <- matchGenes(indexList, x)
+              indexList <- matchGenes(indexList, x, col = col)
               wmwTest.default(exprs(x), indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{numeric}
 setMethod("wmwTest", c("eSet", "numeric"),
-          function(x, indexList,
+          function(x, indexList, col="GeneSymbol",
                    valType, simplify = TRUE) {
               wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{logical}
 setMethod("wmwTest", c("eSet", "logical"),
-          function(x, indexList,
+          function(x, indexList, col="GeneSymbol",
                    valType, simplify = TRUE) {
               wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{list}
 setMethod("wmwTest", c("eSet", "list"),
-          function(x, indexList,
+          function(x, indexList, col="GeneSymbol",
                    valType, simplify = TRUE) {
               indexList <- IndexList(indexList)
               wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
@@ -233,6 +233,8 @@ setMethod("wmwTest", c("ANY", "list"),
 #'include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and 
 #'\code{abs.log10p.less} (one-sided tests),\code{p.two.sided}, and \code{U} 
 #'statistic, and their log10 transformation variants. See details below.
+#'
+#'@param col a string sometimes used with a \code{eSet}
 #'
 #'@param simplify Logical. If not, the returning value is in matrix
 #'format; if set to \code{TRUE}, the results are simplified into
