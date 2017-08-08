@@ -1,10 +1,15 @@
 ---
 title: Using BioQC with signed genesets
+author: "Jitao David Zhang and Gregor Sturm"
+date: "2017-07-27"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Using BioQC with signed genesets}
+  %\usepackage[utf8]{inputenc}
 output: 
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
-  html_document: default
 ---
 
 Introduction {#introduction}
@@ -258,27 +263,31 @@ R session info {#r-session-info}
 sessionInfo()
 ~~~~
 
-    ## R version 3.3.1 (2016-06-21)
-    ## Platform: x86_64-pc-linux-gnu (64-bit)
-    ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
+    ## R version 3.4.0 (2017-04-21)
+    ## Platform: i686-pc-linux-gnu (32-bit)
+    ## Running under: Linux Mint 18
+    ## 
+    ## Matrix products: default
+    ## BLAS: /usr/lib/libblas/libblas.so.3.6.0
+    ## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
     ## 
     ## locale:
-    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+    ##  [1] LC_CTYPE=de_CH.UTF-8       LC_NUMERIC=C              
+    ##  [3] LC_TIME=de_CH.UTF-8        LC_COLLATE=de_CH.UTF-8    
+    ##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=de_CH.UTF-8   
+    ##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
     ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+    ## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
     ## [1] parallel  methods   stats     graphics  grDevices utils     datasets 
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] BioQC_1.02.1        Biobase_2.32.0      BiocGenerics_0.18.0
-    ## [4] Rcpp_0.12.8         knitr_1.13         
+    ## [1] BioQC_1.5.1         Biobase_2.34.0      BiocGenerics_0.20.0
+    ## [4] Rcpp_0.12.12        knitr_1.16.6       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] magrittr_1.5    formatR_1.4     tools_3.3.1     htmltools_0.3.5
-    ##  [5] yaml_2.1.13     stringi_1.1.1   rmarkdown_1.0   stringr_1.0.0  
-    ##  [9] digest_0.6.9    evaluate_0.9
+    ##  [1] digest_0.6.12   rprojroot_1.2   backports_1.1.0 magrittr_1.5   
+    ##  [5] evaluate_0.10.1 stringi_1.1.5   rmarkdown_1.6   tools_3.4.0    
+    ##  [9] stringr_1.2.0   yaml_2.1.14     compiler_3.4.0  htmltools_0.3.6
