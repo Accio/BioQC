@@ -63,7 +63,6 @@ SEXP gini_numeric(SEXP value, SEXP len) {
   */ 
   double *ptr = REAL(value);
   int ptrLen = INTEGER(len)[0];
-  int i,k;
   SEXP res;
   
   PROTECT(res = allocVector(REALSXP, 1));
