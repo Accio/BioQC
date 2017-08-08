@@ -52,7 +52,7 @@ double stat_gini(double x[], int num) {
   return(stat_gini_sorted(x, num));
 }
 
-SEXP gini_numeric(SEXP value, SEXP len) {
+extern SEXP gini_numeric(SEXP value, SEXP len) {
   /**
      Calculate Gini index.<br>
      Implementation follows R code of package ineq (function Gini(x) )<br>
@@ -72,7 +72,7 @@ SEXP gini_numeric(SEXP value, SEXP len) {
   return(res);
 }
 
-SEXP gini_matrix(SEXP value,
+extern SEXP gini_matrix(SEXP value,
 		 SEXP nrowR,
 		 SEXP ncolR) {
   double *pmat = REAL(value);
