@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/Accio/BioQC.svg?branch=master)](https://travis-ci.org/Accio/BioQC)
+[![codecov](https://codecov.io/gh/Accio/BioQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Accio/BioQC)
+
 
 # BioQC: Detect tissue heterogeneity in gene expression data
 
