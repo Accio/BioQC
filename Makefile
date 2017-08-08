@@ -22,7 +22,7 @@ PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
 
 roxygenise:
 	@echo '====== roxygenize ======'	
-	@(cd ..; ${R} --vanilla -q -e "library(roxygen2);roxygenise(\"$(PKG)\")")
+	@(cd ..; ${R} --vanilla -q -e "library(devtools);document(\"$(PKG)\")")
 	@echo ' '
 
 dist:	clean roxygenise
