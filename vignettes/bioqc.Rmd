@@ -7,11 +7,11 @@ vignette: >
   %\VignetteIndexEntry{BioQC: Detect tissue heterogeneity in gene expression data}
   %\usepackage[utf8]{inputenc}
 output:
+  rmarkdown::html_vignette:
+    self_contained: no
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE 
-  html_document:
-    toc: true
 ---
 
 ```{r setup, include=FALSE}
