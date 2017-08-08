@@ -191,30 +191,7 @@ setMethod("wmwTest", c("ANY", "list"),
               indexList <- IndexList(indexList)
               wmwTest(object, indexList, valType=valType, simplify=simplify)
           })
-##
-##wmwTest <- function(x, ind.list,
-##                    alternative=c("greater", "less", "two.sided", "U",
-##                      "abs.log10.greater","log10.less","abs.log10.two.sided","Q"), simplify=TRUE) {
-##
-##    matrixObj <- formatMatrix(x)
-##    matrix <- matrixObj$matrix
-##    
-##    indObj <- formatInd(ind.list, x, nrow(matrix))
-##    indC <- indObj$indC
-##    
-##    typeInt <- type2int(match.arg(alternative))
-##
-##    res <- .Call("wmw_test", matrix, indC, typeInt)
-##    
-##    rownames(res) <- names(ind.list)
-##    colnames(res) <- colnames(matrix)
-##    
-##    if(simplify) {
-##        res <- simplifyMatrix(res)
-##    }
-##  
-##  return(res)
-##}
+
 
 ##----------------------------------------##
 ## wmwTestSignedGenesets
