@@ -25,6 +25,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
+    lattice,
     latticeExtra,
     rbenchmark,
     gplots,
