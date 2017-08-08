@@ -3,7 +3,9 @@
 \docType{class}
 \name{SignedGenesets-class}
 \alias{SignedGenesets-class}
-\title{An S4 class to hold signed genesets, each item in the list is in in turn a list containing following items: name, pos, and neg.}
+\title{An S4 class to hold signed genesets, each item in the list is in in turn a 
+list containing following items: name, pos, and neg.}
 \description{
-An S4 class to hold signed genesets, each item in the list is in in turn a list containing following items: name, pos, and neg.
+An S4 class to hold signed genesets, each item in the list is in in turn a 
+list containing following items: name, pos, and neg.
 }

@@ -3,17 +3,19 @@
 \docType{class}
 \name{BaseIndexList-class}
 \alias{BaseIndexList-class}
-\title{An S4 class to hold a list of indices, with the possibility to specify the offset of the indices. IndexList and SignedIndexList extend this class}
+\title{An S4 class to hold a list of indices, with the possibility to specify the 
+offset of the indices. IndexList and SignedIndexList extend this class}
 \description{
-An S4 class to hold a list of indices, with the possibility to specify the offset of the indices. IndexList and SignedIndexList extend this class
+An S4 class to hold a list of indices, with the possibility to specify the 
+offset of the indices. IndexList and SignedIndexList extend this class
 }
 \section{Slots}{
 
 \describe{
 \item{\code{offset}}{An integer specifying the value of first element. Default 1}
 
-\item{\code{keepNA}}{Logical, whether NA was kept during construction}
+\item{\code{keepNA}}{Logical, whether NA is kept during construction}
 
-\item{\code{keepDup}}{Logical, whether duplicated values were kept during construction}
+\item{\code{keepDup}}{Logical, whether duplicated values are kept during construction}
 }}
 

@@ -75,17 +75,20 @@ isValidSignedIndexList <- function(object) {
 
 ## Class definitions
 
-#' An S4 class to hold geneset in the GMT file in a list, each item in the list is in in turn a list containing following items: name, desc, and genes.
+#' An S4 class to hold geneset in the GMT file in a list, each item in the list 
+#' is in in turn a list containing following items: name, desc, and genes.
 setClass("GmtList", contains="list", validity=isValidGmtList)
 
-#' An S4 class to hold signed genesets, each item in the list is in in turn a list containing following items: name, pos, and neg.
+#' An S4 class to hold signed genesets, each item in the list is in in turn a 
+#' list containing following items: name, pos, and neg.
 setClass("SignedGenesets", contains="list", validity=isValidSignedGenesets)
 
-#' An S4 class to hold a list of indices, with the possibility to specify the offset of the indices. IndexList and SignedIndexList extend this class
+#' An S4 class to hold a list of indices, with the possibility to specify the 
+#' offset of the indices. IndexList and SignedIndexList extend this class
 #'
 #' @slot offset An integer specifying the value of first element. Default 1
-#' @slot keepNA Logical, whether NA was kept during construction
-#' @slot keepDup Logical, whether duplicated values were kept during construction
+#' @slot keepNA Logical, whether NA is kept during construction
+#' @slot keepDup Logical, whether duplicated values are kept during construction
 
 setClass("BaseIndexList",
          representation=list("offset"="integer",
@@ -104,10 +107,15 @@ setClass("BaseIndexList",
 #' An S4 class to hold a list of integers as indices, with the possibility to specify the offset of the indices
 #'
 #' @slot offset An integer specifying the value of first element. Default 1
-#' @slot keepNA Logical, whether NA was kept during construction
-#' @slot keepDup Logical, whether duplicated values were kept during construction
-
+#' @slot keepNA Logical, whether NA is kept during construction
+#' @slot keepDup Logical, whether duplicated values are kept during construction
+#' @name IndexList-class
 setClass("IndexList", contains="BaseIndexList", validity=isValidIndexList)
+
+#'An S4 class to hold a list of signed integers as indices, with the possibility to specify the offset of the indices
+#' @slot offset An integer specifying the value of first element. Default 1
+#' @slot keepNA Logical, whether NA is kept during construction
+#' @slot keepDup Logical, whether duplicated values are kept during construction
 setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedIndexList)
 
 ##----------------------------------------##
