@@ -1,10 +1,17 @@
 ---
 title: "BioQC Algorithm: Speeding up the Wilcoxon-Mann-Whitney Test"
+author: "Gregor Sturm and Jitao David Zhang"
+package: BioQC
 output: 
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
-  html_document: default
+date: "2017-07-27"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{BioQC Alogrithm: Speeding up the Wilcoxon-Mann-Whitney Test}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
 ---
 
 Supplementary Information for "Detect issue heterogenity in gene
@@ -35,12 +42,12 @@ We improved the computational efficiency of the Wilcoxon-Mann-Whitney
 test in comparison to the native R implementation based on three
 modifications:
 
-1.  The approximative WMW-statistic (Zar, J. H. (1999). Biostatistical
-    analysis. Pearson Education India. *pp.* 174-177) is used. The
-    differences to the exact version are negligible for high-throughput
-    gene expression data.
-2.  The core algorithm is implemented in C instead of R as programming
-    language.
+1.  The approximative WMW-statistic (Zar, J. H. (1999).
+    Biostatistical analysis. Pearson Education India. *pp.* 174-177)
+    is used. The differences to the exact version are negligible for
+    high-throughput gene expression data.
+2.  The core algorithm is implemented in C instead of R as
+    programming language.
 3.  BioQC avoids futile expensive sorting operations.
 
 While (1) and (2) are straightforward, we elaborate (3) in the
@@ -50,7 +57,7 @@ Let *W*<sub>*a*, *b*</sub> be the approximative WMW test of two gene
 vectors *a*, *b*, where *a* is the gene set of interest, typically
 containing less than a few hundreds of genes, and *b* is the set of all
 genes outside the gene set (*background genes*) typically containing
- \> 10000 genes. In the context of BioQC, the gene sets are referred to
+&gt;10000 genes. In the context of BioQC, the gene sets are referred to
 as *tissue signatures*.
 
 Given an *m* × *n* input matrix of gene expression data with *m* genes
@@ -85,7 +92,7 @@ To demonstrate BioQC's superior performance, we apply both BioQC and the
 native R `wilcox.test` to random expression matrices and measure the
 runtime.
 
-We setup random expression matrices of 20534 human protein-coding genes
+We setup random expression matrices of 20514 human protein-coding genes
 of 1, 5, 10, 50, or 100 samples. Genes are *i*.*i*.*d* distributed
 following 𝒩(0, 1). The native R and the *BioQC* implementations of the
 Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
@@ -127,17 +134,21 @@ R Session Info {#r-session-info}
 sessionInfo()
 ~~~~
 
-    ## R version 3.3.1 (2016-06-21)
-    ## Platform: x86_64-pc-linux-gnu (64-bit)
-    ## Running under: Red Hat Enterprise Linux Server release 6.3 (Santiago)
+    ## R version 3.4.0 (2017-04-21)
+    ## Platform: i686-pc-linux-gnu (32-bit)
+    ## Running under: Linux Mint 18
+    ## 
+    ## Matrix products: default
+    ## BLAS: /usr/lib/libblas/libblas.so.3.6.0
+    ## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
     ## 
     ## locale:
-    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+    ##  [1] LC_CTYPE=de_CH.UTF-8       LC_NUMERIC=C              
+    ##  [3] LC_TIME=de_CH.UTF-8        LC_COLLATE=de_CH.UTF-8    
+    ##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=de_CH.UTF-8   
+    ##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
     ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+    ## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
     ## [1] stats4    parallel  methods   stats     graphics  grDevices utils    
@@ -145,17 +156,21 @@ sessionInfo()
     ## 
     ## other attached packages:
     ##  [1] rbenchmark_1.0.0     gplots_3.0.1         gridExtra_2.2.1     
-    ##  [4] latticeExtra_0.6-28  RColorBrewer_1.1-2   lattice_0.20-33     
-    ##  [7] hgu133plus2.db_3.2.3 org.Hs.eg.db_3.3.0   AnnotationDbi_1.34.4
-    ## [10] IRanges_2.6.1        S4Vectors_0.10.2     BioQC_1.02.1        
-    ## [13] Biobase_2.32.0       BiocGenerics_0.18.0  Rcpp_0.12.8         
-    ## [16] testthat_1.0.2       knitr_1.13          
+    ##  [4] latticeExtra_0.6-28  RColorBrewer_1.1-2   lattice_0.20-35     
+    ##  [7] hgu133plus2.db_3.2.3 org.Hs.eg.db_3.4.0   AnnotationDbi_1.36.2
+    ## [10] IRanges_2.8.2        S4Vectors_0.12.2     BioQC_1.5.1         
+    ## [13] Biobase_2.34.0       BiocGenerics_0.20.0  Rcpp_0.12.12        
+    ## [16] testthat_1.0.2       knitr_1.16.6        
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] formatR_1.4        bitops_1.0-6       tools_3.3.1       
-    ##  [4] digest_0.6.9       RSQLite_1.0.0      evaluate_0.9      
-    ##  [7] gtable_0.2.0       DBI_0.5-1          yaml_2.1.13       
-    ## [10] stringr_1.0.0      gtools_3.5.0       caTools_1.17.1    
-    ## [13] grid_3.3.1         R6_2.1.2           rmarkdown_1.0     
-    ## [16] gdata_2.17.0       magrittr_1.5       htmltools_0.3.5   
-    ## [19] KernSmooth_2.23-15 stringi_1.1.1      crayon_1.3.2
+    ##  [1] bit_1.1-12         digest_0.6.12      htmltools_0.3.6   
+    ##  [4] R6_2.2.2           rprojroot_1.2      grid_3.4.0        
+    ##  [7] bitops_1.0-6       stringr_1.2.0      gdata_2.18.0      
+    ## [10] RSQLite_2.0        highr_0.6          compiler_3.4.0    
+    ## [13] tibble_1.3.3       pkgconfig_2.0.1    DBI_0.7           
+    ## [16] KernSmooth_2.23-15 bit64_0.9-7        stringi_1.1.5     
+    ## [19] magrittr_1.5       caTools_1.17.1     gtable_0.2.0      
+    ## [22] rmarkdown_1.6      evaluate_0.10.1    blob_1.1.0        
+    ## [25] rlang_0.1.1.9000   yaml_2.1.14        tools_3.4.0       
+    ## [28] gtools_3.5.0       crayon_1.3.2       backports_1.1.0   
+    ## [31] memoise_1.1.0
