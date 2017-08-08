@@ -10,6 +10,8 @@ output:
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
+  html_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}

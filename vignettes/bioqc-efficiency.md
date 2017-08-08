@@ -6,6 +6,8 @@ output:
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
+  html_document:
+    toc: true
 date: "2017-07-27"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
