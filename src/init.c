@@ -1,6 +1,6 @@
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h>
-#include "bioqc.h"
+#include "init.h"
 
 static const R_CallMethodDef callMethods[] = {
   CALLMETHOD_DEF("gini_matrix", 3),
