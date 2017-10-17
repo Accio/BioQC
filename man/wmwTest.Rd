@@ -157,18 +157,7 @@ implementation can be >1000 times faster than the R
 implementation. And it is possible to further accelerate by
 parallel calling the function with \code{mclapply} in the \code{multicore} package.
 }
-\references{
-Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional categories in microarray data. _Annals of Applied Statistics_ 2, 286-315.
-
-Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test
-accounting for inter-gene correlation. _Nucleic Acids Research_ 40(17):e133
-
-Zar, JH (1999). _Biostatistical Analysis 4th Edition_. Prentice-Hall International, Upper Saddle River, New Jersey.
-}
-\seealso{
-code{wilcox.test} in the \code{stats} package, and \code{rankSumTestWithCorrelation} in
-the \code{limma} package.
-#'@examples 
+\examples{
 ## R-native data structures
 set.seed(1887)
 rd <- rnorm(1000)
@@ -223,6 +212,18 @@ eset<-new("ExpressionSet",
          featureData=new("AnnotatedDataFrame",data.frame(GeneSymbol=gss)))
 esetWmwRes <- wmwTest(eset ,gmt_list, valType="p.greater")
 summary(esetWmwRes)
+}
+\references{
+Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional categories in microarray data. _Annals of Applied Statistics_ 2, 286-315.
+
+Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test
+accounting for inter-gene correlation. _Nucleic Acids Research_ 40(17):e133
+
+Zar, JH (1999). _Biostatistical Analysis 4th Edition_. Prentice-Hall International, Upper Saddle River, New Jersey.
+}
+\seealso{
+code{wilcox.test} in the \code{stats} package, and \code{rankSumTestWithCorrelation} in
+the \code{limma} package.
 }
 \author{
 Jitao David Zhang <jitao_david.zhang@roche.com>
