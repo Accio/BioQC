@@ -4,8 +4,8 @@
 \alias{gmtlist2signedGenesets}
 \title{Convert gmtlist into a list of signed genesets}
 \usage{
-gmtlist2signedGenesets(gmtlist, posPattern = "_UP$", negPattern = "_DN$",
-  nomatch = c("ignore", "pos", "neg"))
+gmtlist2signedGenesets(gmtlist, posPattern = "_UP$",
+  negPattern = "_DN$", nomatch = c("ignore", "pos", "neg"))
 }
 \arguments{
 \item{gmtlist}{A gmtlist object, probably read-in by \code{readGmt}}

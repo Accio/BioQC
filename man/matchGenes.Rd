@@ -3,7 +3,6 @@
 \docType{methods}
 \name{matchGenes}
 \alias{matchGenes}
-\alias{matchGenes}
 \alias{matchGenes,GmtList,character-method}
 \alias{matchGenes,GmtList,matrix-method}
 \alias{matchGenes,GmtList,eSet-method}
@@ -33,7 +32,8 @@ matchGenes(list, object, ...)
 
 \S4method{matchGenes}{SignedGenesets,matrix}(list, object)
 
-\S4method{matchGenes}{SignedGenesets,eSet}(list, object, col = "GeneSymbol")
+\S4method{matchGenes}{SignedGenesets,eSet}(list, object,
+  col = "GeneSymbol")
 }
 \arguments{
 \item{list}{A GmtList, list, character or SignedGenesets object}

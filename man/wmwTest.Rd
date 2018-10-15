@@ -13,38 +13,44 @@
 \alias{wmwTest,ANY,numeric-method}
 \alias{wmwTest,ANY,logical-method}
 \alias{wmwTest,ANY,list-method}
-\alias{wmwTest}
 \alias{wmwTest,matrix,SignedIndexList-method}
 \alias{wmwTest,numeric,SignedIndexList-method}
 \alias{wmwTest,eSet,SignedIndexList-method}
 \title{Wilcoxon-Mann-Whitney rank sum test for high-throughput expression
 profiling data}
 \usage{
-wmwTest(x, indexList, col = "GeneSymbol", valType = c("p.greater", "p.less",
-  "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
+wmwTest(x, indexList, col = "GeneSymbol", valType = c("p.greater",
+  "p.less", "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
   "abs.log10p.two.sided", "Q"), simplify = TRUE)
 
-\S4method{wmwTest}{matrix,IndexList}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{matrix,IndexList}(x, indexList, valType,
+  simplify = TRUE)
 
-\S4method{wmwTest}{numeric,IndexList}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{numeric,IndexList}(x, indexList, valType,
+  simplify = TRUE)
 
-\S4method{wmwTest}{matrix,GmtList}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{matrix,GmtList}(x, indexList, valType,
+  simplify = TRUE)
 
 \S4method{wmwTest}{eSet,GmtList}(x, indexList, col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+  valType = c("p.greater", "p.less", "p.two.sided", "U",
+  "abs.log10p.greater", "log10p.less", "abs.log10p.two.sided", "Q"),
+  simplify = TRUE)
 
 \S4method{wmwTest}{eSet,numeric}(x, indexList, col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+  valType = c("p.greater", "p.less", "p.two.sided", "U",
+  "abs.log10p.greater", "log10p.less", "abs.log10p.two.sided", "Q"),
+  simplify = TRUE)
 
 \S4method{wmwTest}{eSet,logical}(x, indexList, col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+  valType = c("p.greater", "p.less", "p.two.sided", "U",
+  "abs.log10p.greater", "log10p.less", "abs.log10p.two.sided", "Q"),
+  simplify = TRUE)
 
 \S4method{wmwTest}{eSet,list}(x, indexList, col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-  "log10p.less", "abs.log10p.two.sided", "Q"), simplify = TRUE)
+  valType = c("p.greater", "p.less", "p.two.sided", "U",
+  "abs.log10p.greater", "log10p.less", "abs.log10p.two.sided", "Q"),
+  simplify = TRUE)
 
 \S4method{wmwTest}{ANY,numeric}(x, indexList, valType, simplify = TRUE)
 

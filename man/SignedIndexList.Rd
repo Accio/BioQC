@@ -3,14 +3,13 @@
 \docType{methods}
 \name{SignedIndexList}
 \alias{SignedIndexList}
-\alias{SignedIndexList}
 \alias{SignedIndexList,list-method}
 \title{Convert a list into a SignedIndexList}
 \usage{
 SignedIndexList(object, ...)
 
-\S4method{SignedIndexList}{list}(object, keepNA = FALSE, keepDup = FALSE,
-  offset = 1L)
+\S4method{SignedIndexList}{list}(object, keepNA = FALSE,
+  keepDup = FALSE, offset = 1L)
 }
 \arguments{
 \item{object}{A list of atleast one list of atleast one list or Vector called 
