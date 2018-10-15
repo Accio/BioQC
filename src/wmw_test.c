@@ -4,7 +4,7 @@
 #include <math.h>
 
 #ifndef __APPLE__
-  #include "omp.h"
+#include "omp.h"
 #endif
 
 #include "stat_rank.h"
@@ -15,13 +15,13 @@
 #define ABSLOG(x) fabs(log10( (x) ))
 
 typedef enum testtype {greater=0,
-		       less=1,
-		       twoSided=2,
-		       U=3,
-		       abslog10greater=4,
-		       log10less=5,
-		       abslog10twoSided=6,
-		       Q=7} TestType;
+                       less=1,
+                       twoSided=2,
+                       U=3,
+                       abslog10greater=4,
+                       log10less=5,
+                       abslog10twoSided=6,
+                       Q=7} TestType;
 
 /*
  * void pnorm_both(double x, double *cum, double *ccum, int i_tail, int log_p)
@@ -46,78 +46,81 @@ double wmw_test_stat(double rankSum, int nInds, int nTotal, double tieCoef, Test
     sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
     
     if(type == greater || type == abslog10greater) { /* greater */
-      zval = (uStat+0.5-mu)/sqrt(sigma2); // z lower tail
+zval = (uStat+0.5-mu)/sqrt(sigma2); // z lower tail
       pnorm_both(zval, &pgt, &plt, 0, 0);
       res = type==greater ? pgt : ABSLOG(pgt);
     } else if (type == less || type == log10less) { /* less */
-      zval = (uStat-0.5-mu)/sqrt(sigma2); // z higher tail
+zval = (uStat-0.5-mu)/sqrt(sigma2); // z higher tail
       pnorm_both(zval, &pgt, &plt, 1, 0);
       res = type==less ? plt : log10(plt);
     } else if (type == twoSided || type == abslog10twoSided || type == Q) { /* two sided*/
-      zval = (uStat-mu-(uStat>mu ? 0.5 : -0.5))/sqrt(sigma2);
+zval = (uStat-mu-(uStat>mu ? 0.5 : -0.5))/sqrt(sigma2);
       pnorm_both(zval, &pgt, &plt, 2, 0);
       res = mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
       if(type == abslog10twoSided) {
-	res = ABSLOG(res);
+        res = ABSLOG(res);
       } else if (type == Q) {
-	res = pgt<=plt ? ABSLOG(res) : -ABSLOG(res);
+        res = pgt<=plt ? ABSLOG(res) : -ABSLOG(res);
       }
     } else {
       error("Unrecognized type %d. Should not happen\n",
-	    type);
+            type);
     }
   }
   return(res);
 }
 /*
-double wmw_test_core(const DRankList valList,
-		     const int *inds, int nInds,
-		     int nTotal, TestType type) {
-    int i;
-    double indRankSum; // sum of index rank
-    double res;
-
-    indRankSum = 0.0;
-    for(i = 0;i<nInds;++i)
-        indRankSum += valList->list[inds[i]]->rank;
-    
-    res = wmw_test_stat(indRankSum, nInds, nTotal,
-                        tieCoef(valList), type);
-    return(res);
-}
-*/
+ double wmw_test_core(const DRankList valList,
+ const int *inds, int nInds,
+ int nTotal, TestType type) {
+ int i;
+ double indRankSum; // sum of index rank
+ double res;
+ 
+ indRankSum = 0.0;
+ for(i = 0;i<nInds;++i)
+ indRankSum += valList->list[inds[i]]->rank;
+ 
+ res = wmw_test_stat(indRankSum, nInds, nTotal,
+ tieCoef(valList), type);
+ return(res);
+ }
+ */
 void wmw_test_list(const double *valPtr, int n,
                    SEXP indlist,
                    double *resPtr, TestType type) {
-    DRankList list;
-    int i, j;
-    int nInd;
-    int* ip;
-
-    double tie;
-    double indRankSum;
-
-    list = createDRankList(valPtr, n);
-    prepareDRankList(list);
-    
-    tie = tieCoef(list);
-    
+  DRankList list;
+  int i, j;
+  int nInd;
+  int* ip;
+  
+  double tie;
+  double indRankSum;
+  
+  list = createDRankList(valPtr, n);
+  prepareDRankList(list);
+  
+  tie = tieCoef(list);
+  
 #pragma omp parallel for
-    for(i=0;i<length(indlist);++i) {
-        ip=INTEGER(VECTOR_ELT(indlist,i));
-        nInd=length(VECTOR_ELT(indlist,i));
-
-	indRankSum = 0.0;
-	for(j=0; j<nInd; ++j)
-	  indRankSum += list->list[ip[j]]->rank;
-
-	resPtr[i] = wmw_test_stat(indRankSum,
-				  nInd,
-				  n,
-				  tie,
-				  type);
+  for(i=0;i<length(indlist);++i) {
+    ip=INTEGER(VECTOR_ELT(indlist,i));
+    nInd=length(VECTOR_ELT(indlist,i));
+    
+    indRankSum = 0.0;
+    for(j=0; j<nInd; ++j) {
+      if(!(ip[j]>=0 && ip[j]<=n-1))
+        error("Index out of range: gene set %d, gene %d\n", i+1, j+1);
+      indRankSum += list->list[ip[j]]->rank;
     }
-    destroyDRankList(list);
+    
+    resPtr[i] = wmw_test_stat(indRankSum,
+                              nInd,
+                              n,
+                              tie,
+                              type);
+  }
+  destroyDRankList(list);
 }
 
 
@@ -152,8 +155,8 @@ extern SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
 #pragma omp parallel for
   for(i=0; i<NCOL(matrix);++i) {
     wmw_test_list(matColPtr, n,
-		  indlist,
-		  resPtr, type);
+                  indlist,
+                  resPtr, type);
     resPtr+=m;
     matColPtr+=n;
   }
@@ -166,8 +169,8 @@ extern SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
 // signed tests
 // ----------------------------------------
 void signed_wmw_test_list(const double *valPtr, int n,
-			  SEXP signedIndList,
-			  double *resPtr, TestType type) {
+                          SEXP signedIndList,
+                          double *resPtr, TestType type) {
   DRankList list;
   int i, j;
   int nPos, nNeg;
@@ -189,30 +192,36 @@ void signed_wmw_test_list(const double *valPtr, int n,
     negInd = VECTOR_ELT(pairInd, 1);
     
     indRankSum = 0.0;
-
+    
     if(posInd != NULL_USER_OBJECT) {
       ipPos = INTEGER(posInd);
       nPos = length(posInd);
-      for(j=0; j<nPos; ++j)
-	indRankSum += list->list[ipPos[j]]->rank;
+      for(j=0; j<nPos; ++j) {
+        if(!(ipPos[j]>=0 && ipPos[j]<=n-1))
+          error("Index out of range: gene set %d, gene %d\n", i+1, j+1);
+        indRankSum += list->list[ipPos[j]]->rank;
+      }
     } else {
       nPos = 0;
     }
-
+    
     if(negInd != NULL_USER_OBJECT) {
       ipNeg = INTEGER(negInd);
       nNeg = length(negInd);
-      for(j=0; j<nNeg; ++j)
-	indRankSum += (n - list->list[ipNeg[j]]->rank + 1);
+      for(j=0; j<nNeg; ++j) {
+        if(!(ipNeg[j]>=0 && ipNeg[j]<=n-1))
+          error("Index out of range: gene set %d, gene %d\n", i+1, j+1);
+        indRankSum += (n - list->list[ipNeg[j]]->rank + 1);
+      }
     } else {
       nNeg = 0;
     }
     
     resPtr[i]=wmw_test_stat(indRankSum,
-			    nPos+nNeg,
-			    n,
-			    tie,
-			    type);
+                            nPos+nNeg,
+                            n,
+                            tie,
+                            type);
   }
   destroyDRankList(list);
 }
@@ -248,8 +257,8 @@ extern SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
 #pragma omp parallel for
   for(i=0; i<NCOL(matrix);++i) {
     signed_wmw_test_list(matColPtr, n,
-			 signedIndList,
-			 resPtr, type);
+                         signedIndList,
+                         resPtr, type);
     resPtr+=m;
     matColPtr+=n;
   }
