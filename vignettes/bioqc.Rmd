@@ -128,6 +128,10 @@ ind <- c(1:10)
 
 It is therefore recommended to report any filtering prior to the BioQC analysis to make the results reproducible.
 
+Acknowledgement
+----------------
+We would like to thank Iakov Davydov for suggestions to improve the package.
+
 R Session Info
 ----------------
 ```{r session_info}
