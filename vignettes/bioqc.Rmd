@@ -14,7 +14,7 @@ output:
     preserve_yaml: TRUE 
 ---
 
-```{r setup, warning=FALSE, message=FALSE, results="hide"}
+```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
 ```

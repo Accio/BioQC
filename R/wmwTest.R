@@ -283,8 +283,7 @@ setMethod("wmwTest", c("ANY", "list"),
 #'
 #'@seealso code{wilcox.test} in the \code{stats} package, and \code{rankSumTestWithCorrelation} in
 #'the \code{limma} package.
-#'
-#'@examples 
+#'#'@examples 
 #'## R-native data structures
 #'set.seed(1887)
 #'rd <- rnorm(1000)
