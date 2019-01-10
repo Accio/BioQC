@@ -13,6 +13,7 @@
 \alias{matchGenes,SignedGenesets,character-method}
 \alias{matchGenes,SignedGenesets,matrix-method}
 \alias{matchGenes,SignedGenesets,eSet-method}
+\alias{matchGenes,SignedGenesets,DGEList-method}
 \title{Match genes in a list-like object to a vector of genesymbols}
 \usage{
 matchGenes(list, object, ...)
@@ -36,6 +37,9 @@ matchGenes(list, object, ...)
 \S4method{matchGenes}{SignedGenesets,matrix}(list, object)
 
 \S4method{matchGenes}{SignedGenesets,eSet}(list, object,
+  col = "GeneSymbol")
+
+\S4method{matchGenes}{SignedGenesets,DGEList}(list, object,
   col = "GeneSymbol")
 }
 \arguments{
@@ -79,17 +83,17 @@ matchGenes(testGeneSets, testEset, col=NULL)
 
  ## test GmtList, DGEList
  if(requireNamespace("edgeR")) {
-    mat <- matrix(rnbinom(10000, mu=5, size=2), ncol=4)
+    mat <- matrix(rnbinom(100, mu=5, size=2), ncol=10)
     rownames(mat) <- sprintf("gene\%d", 1:nrow(mat))
-    y <- edgeR::DGEList(counts=mat, group=rep(1:2, each=2))
+    y <- edgeR::DGEList(counts=mat, group=rep(1:2, each=5))
 
     ## if genes are not set, row names of the count matrix will be used for lookup
-    myGeneSet <- GmtList(list(gs1=rownames(mat)[1:3], gs2=rownames(mat)[5:10]))
+    myGeneSet <- GmtList(list(gs1=rownames(mat)[1:2], gs2=rownames(mat)[9:10], gs3="gene100"))
     matchGenes(myGeneSet, y)
 
     ## alternatively, use 'col' parameter to specify the column in 'genes'
     y2 <- edgeR::DGEList(counts=mat,
-      group=rep(1:2, each=2),
+      group=rep(1:2, each=5),
       genes=data.frame(GeneIdentifier=rownames(mat), row.names=rownames(mat)))
     matchGenes(myGeneSet, y2, col="GeneIdentifier")
  }
