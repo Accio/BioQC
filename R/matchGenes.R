@@ -23,10 +23,10 @@ matchGenes.default <- function(gmtList,geneSymbols) {
 #' Match genes in a list-like object to a vector of genesymbols
 #'
 #' @param list A GmtList, list, character or SignedGenesets object
-#' @param object Gene symbols to be matched; they can come from a vector of character strings, or 
+#' @param object Gene symbols to be matched; they can come from a vector of character strings, or
 #' a column in the fData of an \code{eSet} object.
 #' @param ... additional arguments like \code{col}
-#' @param col Column name of \code{fData} in an \code{eSet} to specify where gene symbols are stored.
+#' @param col Column name of \code{fData} in an \code{eSet} object, or \code{genes} in an \code{DGEList} object, to specify where gene symbols are stored.
 #' The default value is set to "GeneSymbol"
 #' @name matchGenes
 NULL
@@ -69,6 +69,39 @@ setMethod("matchGenes", c("character", "eSet"), function(list, object) {
               matchGenes(tempList, object)
           })
 
+#'@rdname matchGenes
+#'@examples
+#' if(requireNamespace("edgeR")) {
+#'    mat <- matrix(rnbinom(10000, mu=5, size=2), ncol=4)
+#'    rownames(mat) <- sprintf("gene%d", 1:nrow(mat))
+#'    y <- edgeR::DGEList(counts=mat, group=rep(1:2, each=2))
+#'
+#'    ## if genes are not set, row names of the count matrix will be used for lookup
+#'    myGeneSet <- GmtList(list(gs1=rownames(mat)[1:3], gs2=rownames(mat)[5:10]))
+#'    matchGenes(myGeneSet, y)
+#'
+#'    ## alternatively, use 'col' parameter to specify the column in 'genes'
+#'    y2 <- edgeR::DGEList(counts=mat,
+#'      group=rep(1:2, each=2),
+#'      genes=data.frame(GeneIdentifier=rownames(mat), row.names=rownames(mat)))
+#'    matchGenes(myGeneSet, y2, col="GeneIdentifier")
+#' }
+setMethod("matchGenes", c("GmtList", "DGEList"), function(list, object, col="GeneSymbol") {
+  if(is.null(object$genes)) {
+    col <- NULL
+  } else {
+    if (!is.null(col) && !col %in% colnames(object$genes)) {
+      stop("'col' not found in the column names of object$genes")
+    }
+  }
+  
+  if (is.null(col)) {
+    symbols <- rownames(object$counts)
+  } else {
+    symbols <- object$genes[, col]
+  }
+  matchGenes.default(list, as.character(symbols))
+})
 
 ##----------------------------------------##
 ## matchGenes for SignedGenesets
