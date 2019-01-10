@@ -31,7 +31,8 @@ Suggests:
     gplots,
     gridExtra,
     hgu133plus2.db,
-    ineq
+    ineq,
+    edgeR
 VignetteBuilder: knitr
 biocViews: GeneExpression,QualityControl,StatisticalMethod
 License: GPL (>=3)
