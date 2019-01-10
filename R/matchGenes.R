@@ -1,3 +1,29 @@
+##----------------------------------------##
+## Helper functions
+##----------------------------------------##
+getSymbols <- function(exprsMatrixRowNames, featureAnno, col="GeneSymbol") {
+   if(is.null(featureAnno)) {
+     col <- NULL
+   } else {
+     if (!is.null(col) && !col %in% colnames(featureAnno)) {
+       stop("'col' not found in the column names of feature annotation")
+     }
+   }
+  
+  if (is.null(col)) {
+    symbols <- exprsMatrixRowNames
+  } else {
+    symbols <- featureAnno[, col]
+  }
+  symbols <- as.character(symbols)
+  return(symbols)
+}
+eSetSymbols <- function(object, col="GeneSymbol") {
+  getSymbols(featureNames(object), fData(object), col=col)
+}
+DGEListSymbols <- function(object, col="GeneSymbol") {
+  getSymbols(rownames(object$counts), object$genes, col=col)
+}
 
 ##----------------------------------------##
 ## matchGenes for GmtList
@@ -56,17 +82,17 @@ matchGenes.default <- function(gmtList,geneSymbols) {
 #' 
 #'  ## test GmtList, DGEList
 #'  if(requireNamespace("edgeR")) {
-#'     mat <- matrix(rnbinom(10000, mu=5, size=2), ncol=4)
+#'     mat <- matrix(rnbinom(100, mu=5, size=2), ncol=10)
 #'     rownames(mat) <- sprintf("gene%d", 1:nrow(mat))
-#'     y <- edgeR::DGEList(counts=mat, group=rep(1:2, each=2))
+#'     y <- edgeR::DGEList(counts=mat, group=rep(1:2, each=5))
 #'
 #'     ## if genes are not set, row names of the count matrix will be used for lookup
-#'     myGeneSet <- GmtList(list(gs1=rownames(mat)[1:3], gs2=rownames(mat)[5:10]))
+#'     myGeneSet <- GmtList(list(gs1=rownames(mat)[1:2], gs2=rownames(mat)[9:10], gs3="gene100"))
 #'     matchGenes(myGeneSet, y)
 #'
 #'     ## alternatively, use 'col' parameter to specify the column in 'genes'
 #'     y2 <- edgeR::DGEList(counts=mat,
-#'       group=rep(1:2, each=2),
+#'       group=rep(1:2, each=5),
 #'       genes=data.frame(GeneIdentifier=rownames(mat), row.names=rownames(mat)))
 #'     matchGenes(myGeneSet, y2, col="GeneIdentifier")
 #'  }
@@ -97,13 +123,7 @@ setMethod("matchGenes", c("GmtList", "matrix"), function(list, object) {
 
 #'@rdname matchGenes
 setMethod("matchGenes", c("GmtList", "eSet"), function(list, object, col="GeneSymbol") {
-              if(!is.null(col) && !col %in% colnames(fData(object)))
-                  stop("When used to map genes in GmtList directly to rows in an eSet, col must be either NULL (mapped to feature names) or a column in the fData(eset)")
-              if(is.null(col)) {
-                  symbols <- featureNames(object)
-              } else {
-                  symbols <- fData(object)[,col]
-              }
+              symbols <- eSetSymbols(object, col=col)
               matchGenes.default(list, as.character(symbols))
           })
 
@@ -125,27 +145,13 @@ setMethod("matchGenes", c("character", "eSet"), function(list, object) {
 
 #'@rdname matchGenes
 setMethod("matchGenes", c("GmtList", "DGEList"), function(list, object, col="GeneSymbol") {
-  if(is.null(object$genes)) {
-    col <- NULL
-  } else {
-    if (!is.null(col) && !col %in% colnames(object$genes)) {
-      stop("'col' not found in the column names of object$genes")
-    }
-  }
-  
-  if (is.null(col)) {
-    symbols <- rownames(object$counts)
-  } else {
-    symbols <- object$genes[, col]
-  }
-  matchGenes.default(list, as.character(symbols))
+  symbols <- DGEListSymbols(object, col=col)
+  matchGenes.default(list, symbols)
 })
 
 ##----------------------------------------##
 ## matchGenes for SignedGenesets
 ##----------------------------------------##
-
-
 matchGenes.signedDefault <- function(signedGenesets, geneSymbols) {
     if(!is(signedGenesets, "SignedGenesets"))
         stop(paste("signedGenesets be must of class SignedGenesets; now it is", class(signedGenesets)))
@@ -171,14 +177,16 @@ setMethod("matchGenes", c("SignedGenesets", "matrix"), function(list, object) {
               symbols <- rownames(object)
               matchGenes.signedDefault(list, as.character(symbols))
           })
+
 #'@rdname matchGenes
 setMethod("matchGenes", c("SignedGenesets", "eSet"), function(list, object, col="GeneSymbol") {
-              if(!is.null(col) && !col %in% colnames(fData(object)))
-                  stop("When used to map genes in GmtList directly to rows in an eSet, col must be either NULL (mapped to feature names) or a column in the fData(eset)")
-              if(is.null(col)) {
-                  symbols <- featureNames(object)
-              } else {
-                  symbols <- fData(object)[,col]
-              }
-              matchGenes.signedDefault(list, as.character(symbols))
-          })
+  symbols <- eSetSymbols(object, col=col)
+  matchGenes.signedDefault(list, symbols)
+})
+
+#'@rdname matchGenes
+setMethod("matchGenes", c("SignedGenesets", "DGEList"), function(list, object, col="GeneSymbol") {
+  symbols <- DGEListSymbols(object, col=col)
+  matchGenes.default(list, symbols)
+})
+
