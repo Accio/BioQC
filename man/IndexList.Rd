@@ -3,10 +3,6 @@
 \docType{methods}
 \name{IndexList}
 \alias{IndexList}
-<<<<<<< HEAD
-=======
-\alias{IndexList}
->>>>>>> db884caed21e4f2384482a3834c89b269eaa7cc6
 \alias{IndexList,numeric-method}
 \alias{IndexList,logical-method}
 \alias{IndexList,list-method}
@@ -14,19 +10,11 @@
 \usage{
 IndexList(object, ..., keepNA = FALSE, keepDup = FALSE, offset = 1L)
 
-<<<<<<< HEAD
 \S4method{IndexList}{numeric}(object, ..., keepNA = FALSE,
   keepDup = FALSE, offset = 1L)
 
 \S4method{IndexList}{logical}(object, ..., keepNA = FALSE,
   keepDup = FALSE, offset = 1L)
-=======
-\S4method{IndexList}{numeric}(object, ..., keepNA = FALSE, keepDup = FALSE,
-  offset = 1L)
-
-\S4method{IndexList}{logical}(object, ..., keepNA = FALSE, keepDup = FALSE,
-  offset = 1L)
->>>>>>> db884caed21e4f2384482a3834c89b269eaa7cc6
 
 \S4method{IndexList}{list}(object, keepNA = FALSE, keepDup = FALSE,
   offset = 1L)
