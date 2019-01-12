@@ -30,6 +30,12 @@ doVignettes:
 	@(${R} --vanilla -q -e "library(devtools); devtools::build_vignettes()")
 	@echo ' '
 
+build: clean
+	@echo '===== Building ====='
+	@(cd ..; ${R} CMD build $(PKG))
+	@echo '===== End building ====='
+	@echo ' '
+
 dist:	clean roxygenise
 	@echo '====== Building Distribution ======'
 	@(cd ..; ${R} CMD build ${DISTADD} $(PKG) )

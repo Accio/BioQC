@@ -3,7 +3,6 @@
 \docType{methods}
 \name{IndexList}
 \alias{IndexList}
-\alias{IndexList}
 \alias{IndexList,numeric-method}
 \alias{IndexList,logical-method}
 \alias{IndexList,list-method}
@@ -11,11 +10,11 @@
 \usage{
 IndexList(object, ..., keepNA = FALSE, keepDup = FALSE, offset = 1L)
 
-\S4method{IndexList}{numeric}(object, ..., keepNA = FALSE, keepDup = FALSE,
-  offset = 1L)
+\S4method{IndexList}{numeric}(object, ..., keepNA = FALSE,
+  keepDup = FALSE, offset = 1L)
 
-\S4method{IndexList}{logical}(object, ..., keepNA = FALSE, keepDup = FALSE,
-  offset = 1L)
+\S4method{IndexList}{logical}(object, ..., keepNA = FALSE,
+  keepDup = FALSE, offset = 1L)
 
 \S4method{IndexList}{list}(object, keepNA = FALSE, keepDup = FALSE,
   offset = 1L)

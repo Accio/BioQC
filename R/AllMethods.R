@@ -23,8 +23,6 @@ setGeneric("wmwTest", function(x, indexList, col = "GeneSymbol", valType = c("p.
 ## IndexList
 ##--------------------##
 
-NULL
-
 parseIndex <- function(x, keepNA=FALSE, keepDup=FALSE) {
     if(is.null(x))
         return(x)
@@ -176,6 +174,39 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
     object@.Data <- resList
     return(object)
 })
+
+##--------------------##
+## subsetting
+##--------------------##
+#' Subsetting GmtList object into another GmtList object
+#' @param x A GmtList object
+#' @param i Index to subset
+#' @param drop In case only one element remains, should a list representing the single geneset returned? Default: FALSE
+#' 
+#' @examples 
+#' myGmtList <- GmtList(list(gs1=letters[1:3], gs2=letters[3:4], gs3=letters[4:5]))
+#' myGmtList[1:2]
+#' myGmtList[1] ## default behaviour: not dropping
+#' myGmtList[1,drop=TRUE] ## force dropping
+`[.GmtList` <- function(x, i, drop=FALSE) {
+  res <- new("GmtList", .Data=x@.Data[i])
+  if(length(res)==1 && drop)
+    res <- res@.Data[[1]]
+  return(res)
+}
+
+#' Subsetting GmtList object to fetch one gene-set
+#' @param x A GmtList object
+#' @param i The index to subset
+#' @examples 
+#' myGmtList <- GmtList(list(gs1=letters[1:3], gs2=letters[3:4], gs3=letters[4:5]))
+#' myGmtList[[1]]
+`[[.GmtList` <- function(x, i) {
+  res <- x@.Data[[i]]
+  return(res)
+}
+
+
 ##--------------------##
 ## show for GmtList
 ##--------------------##

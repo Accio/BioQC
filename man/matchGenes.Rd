@@ -3,16 +3,17 @@
 \docType{methods}
 \name{matchGenes}
 \alias{matchGenes}
-\alias{matchGenes}
 \alias{matchGenes,GmtList,character-method}
 \alias{matchGenes,GmtList,matrix-method}
 \alias{matchGenes,GmtList,eSet-method}
 \alias{matchGenes,character,character-method}
 \alias{matchGenes,character,matrix-method}
 \alias{matchGenes,character,eSet-method}
+\alias{matchGenes,GmtList,DGEList-method}
 \alias{matchGenes,SignedGenesets,character-method}
 \alias{matchGenes,SignedGenesets,matrix-method}
 \alias{matchGenes,SignedGenesets,eSet-method}
+\alias{matchGenes,SignedGenesets,DGEList-method}
 \title{Match genes in a list-like object to a vector of genesymbols}
 \usage{
 matchGenes(list, object, ...)
@@ -29,23 +30,80 @@ matchGenes(list, object, ...)
 
 \S4method{matchGenes}{character,eSet}(list, object)
 
+\S4method{matchGenes}{GmtList,DGEList}(list, object, col = "GeneSymbol")
+
 \S4method{matchGenes}{SignedGenesets,character}(list, object)
 
 \S4method{matchGenes}{SignedGenesets,matrix}(list, object)
 
-\S4method{matchGenes}{SignedGenesets,eSet}(list, object, col = "GeneSymbol")
+\S4method{matchGenes}{SignedGenesets,eSet}(list, object,
+  col = "GeneSymbol")
+
+\S4method{matchGenes}{SignedGenesets,DGEList}(list, object,
+  col = "GeneSymbol")
 }
 \arguments{
 \item{list}{A GmtList, list, character or SignedGenesets object}
 
-\item{object}{Gene symbols to be matched; they can come from a vector of character strings, or 
+\item{object}{Gene symbols to be matched; they can come from a vector of character strings, or
 a column in the fData of an \code{eSet} object.}
 
 \item{...}{additional arguments like \code{col}}
 
-\item{col}{Column name of \code{fData} in an \code{eSet} to specify where gene symbols are stored.
+\item{col}{Column name of \code{fData} in an \code{eSet} object, or \code{genes} in an \code{DGEList} object, to specify where gene symbols are stored.
 The default value is set to "GeneSymbol"}
 }
 \description{
 Match genes in a list-like object to a vector of genesymbols
+}
+\examples{
+## test GmtList, character
+testGenes <- sprintf("gene\%d", 1:10)
+testGeneSets <- GmtList(list(gs1=c("gene1", "gene2"), gs2=c("gene9", "gene10"), gs3=c("gene100")))
+matchGenes(testGeneSets, testGenes)
+
+## test GmtList, matrix
+testGenes <- sprintf("gene\%d", 1:10)
+testGeneSets <- GmtList(list(gs1=c("gene1", "gene2"), gs2=c("gene9", "gene10"), gs3=c("gene100")))
+testGeneExprs <- matrix(rnorm(100), nrow=10, dimnames=list(testGenes, sprintf("sample\%d", 1:10)))
+matchGenes(testGeneSets, testGeneExprs)
+
+## test GmtList, eSet
+testGenes <- sprintf("gene\%d", 1:10)
+testGeneSets <- GmtList(list(gs1=c("gene1", "gene2"), gs2=c("gene9", "gene10"), gs3=c("gene100")))
+testGeneExprs <- matrix(rnorm(100), nrow=10, dimnames=list(testGenes, sprintf("sample\%d", 1:10)))
+testFeat <- data.frame(GeneSymbol=rownames(testGeneExprs), row.names=testGenes)
+testPheno <- data.frame(SampleId=colnames(testGeneExprs), row.names=colnames(testGeneExprs))
+testEset <- ExpressionSet(assayData=testGeneExprs,
+    featureData=AnnotatedDataFrame(testFeat),
+    phenoData=AnnotatedDataFrame(testPheno))
+matchGenes(testGeneSets, testGeneExprs)
+## force using row names
+matchGenes(testGeneSets, testEset, col=NULL)
+
+ ## test GmtList, DGEList
+ if(requireNamespace("edgeR")) {
+    mat <- matrix(rnbinom(100, mu=5, size=2), ncol=10)
+    rownames(mat) <- sprintf("gene\%d", 1:nrow(mat))
+    y <- edgeR::DGEList(counts=mat, group=rep(1:2, each=5))
+
+    ## if genes are not set, row names of the count matrix will be used for lookup
+    myGeneSet <- GmtList(list(gs1=rownames(mat)[1:2], gs2=rownames(mat)[9:10], gs3="gene100"))
+    matchGenes(myGeneSet, y)
+
+    ## alternatively, use 'col' parameter to specify the column in 'genes'
+    y2 <- edgeR::DGEList(counts=mat,
+      group=rep(1:2, each=5),
+      genes=data.frame(GeneIdentifier=rownames(mat), row.names=rownames(mat)))
+    matchGenes(myGeneSet, y2, col="GeneIdentifier")
+ }
+
+## test character, character
+matchGenes(c("gene1", "gene2"), testGenes)
+
+## test character, matrix
+matchGenes(c("gene1", "gene2"), testGeneExprs)
+
+## test character, eset
+matchGenes(c("gene1", "gene2"), testEset)
 }

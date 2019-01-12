@@ -109,7 +109,28 @@ system.time(Rres <- apply(exprs, 2, function(x)
 
 With 22000 genes, five samples, and five gene sets, the *BioQC* implementation is about 20x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the *BioQC* signature list), the *BioQC* implementation can be about 1000x faster than the R implementation.
 
+Technical notes
+----------------
 
+### Background matters
+
+Even using the same set of signatures, the *p*-value of enrichment may vary depending on the background. A toy example is shown below: assuming that in a gene expression profile with values of 20000 genes, there are half of them lower expressed than the other half, mimicking the commonly observed patterns that some genes are almost not or very low expressed; depending on whether including these lowly expressed genes or not, the *p*-value reported by the Wilcoxon's test varies.
+
+```{r backgroundMatters}
+bgVec <- rnorm(20000)
+bgVec[1:10000] <- bgVec[1:10000] + 2
+bgVec[1:10] <- bgVec[1:10] + 1
+ind <- c(1:10)
+
+(pAllGenes <- wmwTest(bgVec, ind))
+(pHighExpGenes <- wmwTest(bgVec[1:10000], ind))
+```
+
+It is therefore recommended to report any filtering prior to the BioQC analysis to make the results reproducible.
+
+Acknowledgement
+----------------
+We would like to thank Iakov Davydov for suggestions to improve the package.
 
 R Session Info
 ----------------
