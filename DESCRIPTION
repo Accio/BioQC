@@ -34,6 +34,6 @@ Suggests:
     ineq,
     edgeR
 VignetteBuilder: knitr
-biocViews: GeneExpression,QualityControl,StatisticalMethod
+biocViews: GeneExpression,QualityControl,StatisticalMethod, GeneSetEnrichment
 License: GPL (>=3)
 RoxygenNote: 6.1.1
