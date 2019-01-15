@@ -9,6 +9,7 @@
 \alias{matchGenes,character,character-method}
 \alias{matchGenes,character,matrix-method}
 \alias{matchGenes,character,eSet-method}
+\alias{matchGenes,character,DGEList-method}
 \alias{matchGenes,GmtList,DGEList-method}
 \alias{matchGenes,SignedGenesets,character-method}
 \alias{matchGenes,SignedGenesets,matrix-method}
@@ -29,6 +30,9 @@ matchGenes(list, object, ...)
 \S4method{matchGenes}{character,matrix}(list, object)
 
 \S4method{matchGenes}{character,eSet}(list, object)
+
+\S4method{matchGenes}{character,DGEList}(list, object,
+  col = "GeneSymbol")
 
 \S4method{matchGenes}{GmtList,DGEList}(list, object, col = "GeneSymbol")
 
@@ -52,6 +56,9 @@ a column in the fData of an \code{eSet} object.}
 
 \item{col}{Column name of \code{fData} in an \code{eSet} object, or \code{genes} in an \code{DGEList} object, to specify where gene symbols are stored.
 The default value is set to "GeneSymbol"}
+}
+\value{
+An \code{IndexList} object, which is essentially a list of the same length as input (length of \code{1} in case characters are used as input), with matching indices.
 }
 \description{
 Match genes in a list-like object to a vector of genesymbols
@@ -91,6 +98,7 @@ matchGenes(testGeneSets, testEset, col=NULL)
     myGeneSet <- GmtList(list(gs1=rownames(mat)[1:2], gs2=rownames(mat)[9:10], gs3="gene100"))
     matchGenes(myGeneSet, y)
 
+    matchGenes(c("gene1", "gene2"), y)
     ## alternatively, use 'col' parameter to specify the column in 'genes'
     y2 <- edgeR::DGEList(counts=mat,
       group=rep(1:2, each=5),

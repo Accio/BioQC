@@ -54,6 +54,9 @@ matchGenes.default <- function(gmtList,geneSymbols) {
 #' @param ... additional arguments like \code{col}
 #' @param col Column name of \code{fData} in an \code{eSet} object, or \code{genes} in an \code{DGEList} object, to specify where gene symbols are stored.
 #' The default value is set to "GeneSymbol"
+#' 
+#' @return An \code{IndexList} object, which is essentially a list of the same length as input (length of \code{1} in case characters are used as input), with matching indices.
+#' 
 #' @name matchGenes
 #' @examples
 #' ## test GmtList, character
@@ -90,6 +93,7 @@ matchGenes.default <- function(gmtList,geneSymbols) {
 #'     myGeneSet <- GmtList(list(gs1=rownames(mat)[1:2], gs2=rownames(mat)[9:10], gs3="gene100"))
 #'     matchGenes(myGeneSet, y)
 #'
+#'     matchGenes(c("gene1", "gene2"), y)
 #'     ## alternatively, use 'col' parameter to specify the column in 'genes'
 #'     y2 <- edgeR::DGEList(counts=mat,
 #'       group=rep(1:2, each=5),
@@ -142,6 +146,12 @@ setMethod("matchGenes", c("character", "eSet"), function(list, object) {
               tempList <- GmtList(list(TempGeneSet=list))
               matchGenes(tempList, object)
           })
+
+#'@rdname matchGenes
+setMethod("matchGenes", c("character", "DGEList"), function(list, object, col="GeneSymbol") {
+    tempList <- GmtList(list(TempGeneSet=list))
+    matchGenes(tempList, object)
+})
 
 #'@rdname matchGenes
 setMethod("matchGenes", c("GmtList", "DGEList"), function(list, object, col="GeneSymbol") {
