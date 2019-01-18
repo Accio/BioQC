@@ -189,9 +189,12 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 #' myGmtList[1] ## default behaviour: not dropping
 #' myGmtList[1,drop=TRUE] ## force dropping
 `[.GmtList` <- function(x, i, drop=FALSE) {
+  if(is.character(i))
+    i <- match(i, names(x))
   res <- new("GmtList", .Data=x@.Data[i])
   if(length(res)==1 && drop)
     res <- res@.Data[[1]]
+  names(res) <- names(x)[i]
   return(res)
 }
 
