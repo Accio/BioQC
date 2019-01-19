@@ -205,6 +205,8 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 #' myGmtList <- GmtList(list(gs1=letters[1:3], gs2=letters[3:4], gs3=letters[4:5]))
 #' myGmtList[[1]]
 `[[.GmtList` <- function(x, i) {
+  if(is.character(i))
+    i <- match(i, names(x))
   res <- x@.Data[[i]]
   return(res)
 }
