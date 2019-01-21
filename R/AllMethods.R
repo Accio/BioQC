@@ -108,18 +108,17 @@ SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=
 #'Convert a list into a SignedIndexList
 #'@name SignedIndexList
 NULL
-#'@param object A list of atleast one list of atleast one list or Vector called 
-#'either `pos` or `neg`
-#'@param ... additional arguments, currently none are used
+#'@param object A list of lists, each with two elements named `pos` or `neg`, can be logical vectors or integer indices
+#'@param ... additional arguments, currently ignored
 #'@param keepNA Logical, whether NA indices should be kept or not. Default: 
 #'FALSE (removed)
 #'@param keepDup Logical, whether duplicated indices should be kept or not. 
 #'Default: FALSE (removed) 
 #'@param offset offset; 1 if missing
-#'@return A SignedIndexList of lists (named like the second list-level of the 
-#'input) containing two vectors named `positive` and `negative`, which contain 
-#'the same Argumetns as the IndexList resulting of the `pos` and `neg` lists
-#'or vectors of the input.
+#'@return A SignedIndexList, a list of lists, containing two vectors named `positive` and `negative`, 
+#' which contain the indices of genes that are either positively or negatively associated with a certain
+#' phenotype
+#' 
 #'@examples
 #'myList <- list(a = list(pos = list(1, 2, 2, 4), neg = c(TRUE, FALSE, TRUE)), 
 #'b = list(NA), c = list(pos = c(c(2, 3), c(1, 3))))
