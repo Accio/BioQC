@@ -95,12 +95,16 @@ setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, off
 ## SignedIndexList
 ##----------------------------------------##
 SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
-    outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
-                                               neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
-    ## note that .Data must be the first data slot in the new command
-    res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
-    return(res)
+  if(length(inlist)==2 && all(c("pos", "neg") %in% names(inlist))) {
+    inlist <- list(inlist)
+  }
+  outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
+                                             neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
+  ## note that .Data must be the first data slot in the new command
+  res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
+  return(res)
 }
+
 #'Convert a list into a SignedIndexList
 #'@name SignedIndexList
 NULL
@@ -120,6 +124,9 @@ NULL
 #'myList <- list(a = list(pos = list(1, 2, 2, 4), neg = c(TRUE, FALSE, TRUE)), 
 #'b = list(NA), c = list(pos = c(c(2, 3), c(1, 3))))
 #'SignedIndexList(myList)
+#'
+#'## a special case of input is a single list with two elements, \code{pos} and \code{neg}
+#'SignedIndexList(myList[[1]])
 #'@rdname SignedIndexList
 setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
      SignedIndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
