@@ -12,10 +12,9 @@ SignedIndexList(object, ...)
   keepDup = FALSE, offset = 1L)
 }
 \arguments{
-\item{object}{A list of atleast one list of atleast one list or Vector called 
-either `pos` or `neg`}
+\item{object}{A list of lists, each with two elements named `pos` or `neg`, can be logical vectors or integer indices}
 
-\item{...}{additional arguments, currently none are used}
+\item{...}{additional arguments, currently ignored}
 
 \item{keepNA}{Logical, whether NA indices should be kept or not. Default: 
 FALSE (removed)}
@@ -26,10 +25,9 @@ Default: FALSE (removed)}
 \item{offset}{offset; 1 if missing}
 }
 \value{
-A SignedIndexList of lists (named like the second list-level of the 
-input) containing two vectors named `positive` and `negative`, which contain 
-the same Argumetns as the IndexList resulting of the `pos` and `neg` lists
-or vectors of the input.
+A SignedIndexList, a list of lists, containing two vectors named `positive` and `negative`, 
+which contain the indices of genes that are either positively or negatively associated with a certain
+phenotype
 }
 \description{
 Convert a list into a SignedIndexList
@@ -38,4 +36,7 @@ Convert a list into a SignedIndexList
 myList <- list(a = list(pos = list(1, 2, 2, 4), neg = c(TRUE, FALSE, TRUE)), 
 b = list(NA), c = list(pos = c(c(2, 3), c(1, 3))))
 SignedIndexList(myList)
+
+## a special case of input is a single list with two elements, \\code{pos} and \\code{neg}
+SignedIndexList(myList[[1]])
 }
