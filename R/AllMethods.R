@@ -200,7 +200,7 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
   res <- new("GmtList", .Data=x@.Data[i])
   if(length(res)==1 && drop)
     res <- res@.Data[[1]]
-  names(res) <- names(x)[i]
+  names(res@.Data) <- names(x)[i]
   return(res)
 }
 
