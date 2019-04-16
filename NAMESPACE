@@ -6,7 +6,8 @@ importFrom("methods", "is", "new")
 importFrom("stats", "pt", "wilcox.test")
 
 exportClass(GmtList, SignedGenesets, IndexList, SignedIndexList)
-export(GmtList, SignedGenesets, IndexList, SignedIndexList, as.gmtlist)
+export(GmtList, SignedGenesets, IndexList, SignedIndexList, as.gmtlist,
+      "[.GmtList", "[[.GmtList")
 export(matchGenes)
 
 export(offset, "offset<-")

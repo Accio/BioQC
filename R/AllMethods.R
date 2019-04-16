@@ -95,31 +95,37 @@ setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, off
 ## SignedIndexList
 ##----------------------------------------##
 SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
-    outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
-                                               neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
-    ## note that .Data must be the first data slot in the new command
-    res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
-    return(res)
+  if(length(inlist)==2 && all(c("pos", "neg") %in% names(inlist))) {
+    inlist <- list(inlist)
+  }
+  outlist <- lapply(inlist, function(x) list(pos=parseIndex(x$pos, keepNA=keepNA, keepDup=keepDup),
+                                             neg=parseIndex(x$neg, keepNA=keepNA, keepDup=keepDup)))
+  ## note that .Data must be the first data slot in the new command
+  res <- new("SignedIndexList", .Data=outlist, keepNA=keepNA, keepDup=keepDup, offset=as.integer(offset))
+  return(res)
 }
+
 #'Convert a list into a SignedIndexList
 #'@name SignedIndexList
 NULL
-#'@param object A list of atleast one list of atleast one list or Vector called 
-#'either `pos` or `neg`
-#'@param ... additional arguments, currently none are used
+#'@param object A list of lists, each with two elements named `pos` or `neg`, can be logical vectors or integer indices
+#'@param ... additional arguments, currently ignored
 #'@param keepNA Logical, whether NA indices should be kept or not. Default: 
 #'FALSE (removed)
 #'@param keepDup Logical, whether duplicated indices should be kept or not. 
 #'Default: FALSE (removed) 
 #'@param offset offset; 1 if missing
-#'@return A SignedIndexList of lists (named like the second list-level of the 
-#'input) containing two vectors named `positive` and `negative`, which contain 
-#'the same Argumetns as the IndexList resulting of the `pos` and `neg` lists
-#'or vectors of the input.
+#'@return A SignedIndexList, a list of lists, containing two vectors named `positive` and `negative`, 
+#' which contain the indices of genes that are either positively or negatively associated with a certain
+#' phenotype
+#' 
 #'@examples
 #'myList <- list(a = list(pos = list(1, 2, 2, 4), neg = c(TRUE, FALSE, TRUE)), 
 #'b = list(NA), c = list(pos = c(c(2, 3), c(1, 3))))
 #'SignedIndexList(myList)
+#'
+#'## a special case of input is a single list with two elements, \code{pos} and \code{neg}
+#'SignedIndexList(myList[[1]])
 #'@rdname SignedIndexList
 setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
      SignedIndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
@@ -189,9 +195,12 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 #' myGmtList[1] ## default behaviour: not dropping
 #' myGmtList[1,drop=TRUE] ## force dropping
 `[.GmtList` <- function(x, i, drop=FALSE) {
+  if(is.character(i))
+    i <- match(i, names(x))
   res <- new("GmtList", .Data=x@.Data[i])
   if(length(res)==1 && drop)
     res <- res@.Data[[1]]
+  names(res) <- names(x)[i]
   return(res)
 }
 
@@ -202,6 +211,8 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 #' myGmtList <- GmtList(list(gs1=letters[1:3], gs2=letters[3:4], gs3=letters[4:5]))
 #' myGmtList[[1]]
 `[[.GmtList` <- function(x, i) {
+  if(is.character(i))
+    i <- match(i, names(x))
   res <- x@.Data[[i]]
   return(res)
 }
