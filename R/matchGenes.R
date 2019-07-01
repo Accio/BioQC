@@ -112,11 +112,13 @@ matchGenes.default <- function(gmtList,geneSymbols) {
 NULL
 
 #'@rdname matchGenes
+#'@aliases matchGenes,GmtList,character-method
 setMethod("matchGenes", c("GmtList", "character"), function(list, object) {
               matchGenes.default(list, object)
           })
 
 #'@rdname matchGenes
+#'@aliases matchGenes,GmtList,matrix-method
 setMethod("matchGenes", c("GmtList", "matrix"), function(list, object) {
               if(is.null(rownames(object)))
                   stop("When used to map genes in GmtList directly to rows in matrix, the matrix's row names must be gene symbols")
@@ -126,34 +128,40 @@ setMethod("matchGenes", c("GmtList", "matrix"), function(list, object) {
 
 
 #'@rdname matchGenes
+#'@aliases matchGenes,GmtList,eSet-method
 setMethod("matchGenes", c("GmtList", "eSet"), function(list, object, col="GeneSymbol") {
               symbols <- eSetSymbols(object, col=col)
               matchGenes.default(list, as.character(symbols))
           })
 
 #'@rdname matchGenes
+#'@aliases matchGenes,character,character-method
 setMethod("matchGenes", c("character", "character"), function(list, object) {
               tempList <- GmtList(list(TempGeneSet=list))
               matchGenes.default(tempList, object)
           })
 #'@rdname matchGenes
+#'@aliases matchGenes,character,matrix-method
 setMethod("matchGenes", c("character", "matrix"), function(list, object) {
               tempList <- GmtList(list(TempGeneSet=list))
               matchGenes(tempList, object)
           })
 #'@rdname matchGenes
+#'@aliases matchGenes,character,eSet-method
 setMethod("matchGenes", c("character", "eSet"), function(list, object) {
               tempList <- GmtList(list(TempGeneSet=list))
               matchGenes(tempList, object)
           })
 
 #'@rdname matchGenes
+#'@aliases matchGenes,character,DGEList-method
 setMethod("matchGenes", c("character", "DGEList"), function(list, object, col="GeneSymbol") {
     tempList <- GmtList(list(TempGeneSet=list))
     matchGenes(tempList, object)
 })
 
 #'@rdname matchGenes
+#'@aliases matchGenes,GmtList,DGEList-method
 setMethod("matchGenes", c("GmtList", "DGEList"), function(list, object, col="GeneSymbol") {
   symbols <- DGEListSymbols(object, col=col)
   matchGenes.default(list, symbols)
@@ -176,11 +184,15 @@ matchGenes.signedDefault <- function(signedGenesets, geneSymbols) {
     res <- SignedIndexList(resList)
     return(res)
 }
+
 #'@rdname matchGenes
+#'@aliases matchGenes,SignedGenesets,character-method
 setMethod("matchGenes", c("SignedGenesets", "character"), function(list, object) {
               matchGenes.signedDefault(list, object)
           })
+
 #'@rdname matchGenes
+#'@aliases matchGenes,SignedGenesets,matrix-method
 setMethod("matchGenes", c("SignedGenesets", "matrix"), function(list, object) {
               if(is.null(rownames(object)))
                   stop("When used to map genes in GmtList directly to rows in matrix, the matrix's row names must be gene symbols")
@@ -189,12 +201,14 @@ setMethod("matchGenes", c("SignedGenesets", "matrix"), function(list, object) {
           })
 
 #'@rdname matchGenes
+#'@aliases matchGenes,SignedGenesets,eSet-method
 setMethod("matchGenes", c("SignedGenesets", "eSet"), function(list, object, col="GeneSymbol") {
   symbols <- eSetSymbols(object, col=col)
   matchGenes.signedDefault(list, symbols)
 })
 
 #'@rdname matchGenes
+#'@aliases matchGenes,SignedGenesets,DGEList-method
 setMethod("matchGenes", c("SignedGenesets", "DGEList"), function(list, object, col="GeneSymbol") {
   symbols <- DGEListSymbols(object, col=col)
   matchGenes.default(list, symbols)

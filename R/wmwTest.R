@@ -60,6 +60,7 @@ rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df =
 #' wmwTestInR(testNums, testSub, valType="p.two.sided")
 #' wmwTestInR(testNums, testSub, valType="p.less")
 #' wmwTestInR(testNums, testSub, valType="W")
+#' @export
 wmwTestInR <- function(x, sub, valType=c("p.greater", "p.less", "p.two.sided",  "W")) {
     if(is.numeric(sub)) {
         tmp <- rep(FALSE, length(x))
@@ -101,9 +102,6 @@ type2int <- function(type) {
 ##----------------------------------------##
 ## wmwTest
 ##----------------------------------------##
-
-
-
 wmwTest.default <- function(matrix,
                             indexList,
                             valType=c("p.greater", "p.less", "p.two.sided", "U",

@@ -4,18 +4,23 @@
 setGeneric("offset", function(object) standardGeneric("offset"))
 #'@rdname offset-set
 #'@usage `offset<-`(object, value)
+#'@exportMethod offset
 setGeneric("offset<-", function(object, value) standardGeneric("offset<-"))
 
 #' @rdname IndexList
+#' @exportMethod IndexList
 setGeneric("IndexList", function(object, ..., keepNA = FALSE, keepDup = FALSE, offset =1L) standardGeneric("IndexList"))
 
 #'@rdname SignedIndexList
+#'@exportMethod SignedIndexList
 setGeneric("SignedIndexList", function(object, ...) standardGeneric("SignedIndexList"))
 
 #'@rdname matchGenes
+#'@exportMethod matchGenes
 setGeneric("matchGenes", function(list, object, ...) standardGeneric("matchGenes"))
 
 #'@rdname wmwTest
+#'@exportMethod wmwTest
 setGeneric("wmwTest", function(x, indexList, col = "GeneSymbol", valType = c("p.greater", "p.less", "p.two.sided","U","abs.log10p.greater","log10p.less","abs.log10p.two.sided","Q"), simplify = TRUE) standardGeneric("wmwTest"))
 
 
@@ -59,6 +64,7 @@ IndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
 #'                  GS_E=c(2,4))
 #' testIndexList <- IndexList(testList)
 #' @name IndexList
+#' @exportMethod IndexList
 NULL
 
 #' @rdname IndexList
@@ -127,6 +133,7 @@ NULL
 #'## a special case of input is a single list with two elements, \code{pos} and \code{neg}
 #'SignedIndexList(myList[[1]])
 #'@rdname SignedIndexList
+#'@export SignedIndexList
 setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, offset=1L) {
      SignedIndexListFromList(object, keepNA=keepNA, keepDup=keepDup, offset=offset)
 })
@@ -217,6 +224,102 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
   return(res)
 }
 
+##-------------------------------##
+## convenience funcs for GmtList
+##-------------------------------##
+#' @export gsGenes
+gsGenes <- function(x) UseMethod("gsGenes")
+#' @export gsGeneCount
+gsGeneCount <- function(x) UseMethod("gsGeneCount")
+#' @export gsSize
+gsSize <- function(x) gsGeneCount(x)
+#' @export gsName
+gsName <- function(x) UseMethod("gsName")
+#' @export gsDesc
+gsDesc <- function(x) UseMethod("gsDesc")
+#' @export hasCategory
+hasCategory <- function(x) UseMethod("hasCategory")
+#' @export gsCategory
+gsCategory <- function(x) UseMethod("gsCategory")
+#' @export setCategory
+setCategory <- function(x, ...) UseMethod("setCategory")
+#' @export filterBySize
+filterBySizie <- function(x, ...) UseMethod("filterBySize")
+
+#' @export
+gsName.GmtList <- function(x) sapply(x, function(xx) xx$name)
+#' @export
+gsDesc.GmtList <- function(x) sapply(x, function(xx) xx$desc)
+#' @export
+gsGenes.GmtList <- function(x) sapply(x, function(xx) xx$genes)
+#' @export
+hasCategory.GmtList <- function(x) all(sapply(x, function(xx) !is.null(xx$category)))
+#' @export
+gsCategory.GmtList <- function(x) sapply(x, function(xx) xx$category)
+#' @export
+gsGeneCount.GmtList <- function(x) {
+  res <- sapply(x, function(x) length(unique(x$genes)))
+  return(res)
+}
+#' @export
+filterBySize.GmtList <- function(x, min, max) {
+  sizes <- gsSize(x)
+  isKept <- rep.int(TRUE, length(sizes))
+  if(!missing(min))
+    isKept[sizes<min] <- FALSE
+  if(!missing(max))
+    isKept[sizes>max] <- FALSE
+  res <- x[isKept]
+  return(res)
+}
+
+#' Set the category field in each gene-set within a GmtList
+#' 
+#' @param x A \code{GmtList} object encoding a list of gene-sets
+#' @param category It can be either a function that applies to a \code{gene-set list} element of the object (for instance \code{function(x) x$desc} to extract description), or a vector of the same length of \code{x}, or in the special case \code{NULL}, which will erase the field category.
+#' 
+#' Note that using vectors as \code{category} leads to poor performance when the input object has many gene-sets.
+#' 
+#' @examples 
+#' myGmtList <- GmtList(list(list(name="GeneSet1", desc="Category1", genes=LETTERS[1:3]),
+#'   list(name="GeneSet2", desc="Category1", genes=rep(LETTERS[4:6],2)),
+#'   list(name="GeneSet1", desc="Category1", genes=LETTERS[4:6]),
+#'   list(name="GeneSet3", desc="Category2", genes=LETTERS[1:5])))
+#' hasCategory(myGmtList)
+#' myGmtList2 <- setCategory(myGmtList, category=function(x) x$desc)
+#' gsCategory(myGmtList2)
+#' ## the function can provide flexible ways to encode the gene-set category
+#' myGmtList3 <- setCategory(myGmtList, category=function(x) gsub("Category", "C", x$desc))
+#' gsCategory(myGmtList3)
+#' ## using vectors
+#' myGmtList4 <- setCategory(myGmtList, category=c("C1", "C1", "C1", "C2"))
+#' gsCategory(myGmtList4)
+#' myGmtList2null <- setCategory(myGmtList2, category=NULL)
+#' hasCategory(myGmtList2null)
+#' @export
+setCategory.GmtList <- function(x, category=function(x) x$desc) {
+  if(is.function(category)) {
+    res <- GmtList(lapply(x, function(gs) {
+      gs$category <- do.call(category, list(gs))
+      return(gs)
+    }))
+  } else if (is.null(category)) {
+    res <- GmtList(lapply(x, function(gs) {
+      gs$category <- NULL
+      return(gs)
+    }))
+  } else {
+    stopifnot(length(category) == length(x) &&
+                (is.character(category) || is.factor(category) || 
+                   is.numeric(category) || is.logical(category)))
+    res <- GmtList(lapply(seq(along=x), function(i) {
+      gs <- x[[i]]
+      gs$category <- category[i]
+      return(gs)
+    }))
+  }
+  return(res)
+}
 
 ##--------------------##
 ## show for GmtList
@@ -232,6 +335,12 @@ showGeneSet <- function(geneset, nGene=3, indent=2) {
             paste(geneset$genes[1:pmin(nGene, geneLen)],collapse=","),
             ifelse(geneLen>nGene, ",...", ""))
 }
+
+#' Show method for GmtList
+#' 
+#' @param object An object of the class \code{GmtList}
+#' 
+#' @export
 setMethod("show", "GmtList", function(object) {
               str <- sprintf("A gene-set list in gmt format with %d genesets", length(object))
               indent <- 2
@@ -279,6 +388,11 @@ showSignedGeneset <- function(geneset, nGene=3, indent=2) {
     return(res)
 }
 
+#' Show method for SignedGenesets
+#' 
+#' @param object An object of the class \code{SignedGenesets}
+#' 
+#' @export
 setMethod("show", "SignedGenesets", function(object) {
               str <- sprintf("A list of %d signed gene-sets", length(object))
               indent <- 2
@@ -315,6 +429,12 @@ showIndices <- function(indices, name, nInd=3, indent=2) {
             paste(indices[1:pmin(len, nInd)],collapse=","),
             ifelse(len>nInd, ",...", ""))
 }
+
+#' Show method for IndexList
+#' 
+#' @param object An object of the class \code{IndexList}
+#' 
+#' @export
 setMethod("show", "IndexList", function(object) {
               str <- sprintf("A list of %d indices with offset=%d", length(object), object@offset)
               opts <- sprintf("Options: NA removed: %s; duplicates removed: %s", !object@keepNA, !object@keepDup)
@@ -340,6 +460,12 @@ showSignedIndices <- function(indices, name, nInd=3, indent=2) {
     indices$name <- name
     showSignedGeneset(indices, nGene=nInd, indent=indent)
 }
+
+#' Show method for SignedIndexList
+#' 
+#' @param object An object of the class \code{SignedIndexList}
+#' 
+#' @export
 setMethod("show", "SignedIndexList", function(object) {
               str <- sprintf("A list of %d signed indices with offset=%d", length(object), object@offset)
               opts <- sprintf("Options: NA removed: %s; duplicates removed: %s", !object@keepNA, !object@keepDup)
@@ -347,11 +473,14 @@ setMethod("show", "SignedIndexList", function(object) {
               if(length(object)>6) {
                   heads <- object[1:3]
                   tails <- object[(length(object)-2):length(object)]
-                  shows <- c(sapply(seq(along=heads), function(i) showSignedIndices(heads[[i]], names(heads)[i], indent=indent)),
+                  shows <- c(sapply(seq(along=heads), 
+                                    function(i) showSignedIndices(heads[[i]], names(heads)[i], indent=indent)),
                              paste(paste(rep(" ", indent), collapse=""), "...", sep=""),
-                             sapply(seq(along=tails), function(i) showSignedIndices(tails[[i]], names(tails)[i], indent=indent)))
+                             sapply(seq(along=tails), function(i) 
+                               showSignedIndices(tails[[i]], names(tails)[i], indent=indent)))
               } else {
-                  shows <- sapply(seq(along=object), function(i) showSignedIndices(object[[i]], names(object)[i], indent=indent))
+                  shows <- sapply(seq(along=object), function(i) 
+                    showSignedIndices(object[[i]], names(object)[i], indent=indent))
               }
               concStr <- paste(c(str, opts, shows, ""), collapse="\n")
               cat(concStr)

@@ -1,3 +1,29 @@
+#' Absolute base-10 logarithm of p-values
+#' 
+#' @param x Numeric vector or matrix
+#' 
+#' The function returns the absolute values of base-10 logarithm of p-values.
+#' 
+#' @details 
+#' The logarithm transformation of p-values is commonly used to visualize
+#' results from statistical tests. Although it may cause misunderstanding
+#' and therefore its use is disapproved by some experts, it helps to
+#' visualize and interpret results of statistical tests intuitively.
+#' 
+#' The function transforms p-values with base-10 logarithm, and returns its
+#' absolute value. The choice of base 10 is driven by the simplicity of
+#' interpreting the results.
+#' 
+#' @return Numeric vector or matrix.
+#' @author Jitao David Zhang <jitao_david.zhang@roche.com>
+#' @examples 
+#' testp <- runif(1000, 0, 1)
+#' testp.al <- absLog10p(testp)
+#' 
+#' print(head(testp))
+#' print(head(testp.al))
+#' 
+#' @export
 absLog10p <- function(x) abs(log10(x))
 
 filterPmat <- function(x, threshold) {
@@ -18,6 +44,7 @@ filterPmat <- function(x, threshold) {
 #' simplifyMatrix(testMatrix)
 #' simplifyMatrix(testMatrix[1L,,drop=FALSE])
 #' simplifyMatrix(testMatrix[,1L,drop=FALSE])
+#' @export
 simplifyMatrix <- function(matrix) {
     if(nrow(matrix)==1L & ncol(matrix)==1L)  {
         matrix <- matrix[1L,1L]

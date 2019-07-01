@@ -77,10 +77,12 @@ isValidSignedIndexList <- function(object) {
 
 #' An S4 class to hold geneset in the GMT file in a list, each item in the list 
 #' is in in turn a list containing following items: name, desc, and genes.
+#' @exportClass GmtList
 setClass("GmtList", contains="list", validity=isValidGmtList)
 
 #' An S4 class to hold signed genesets, each item in the list is in in turn a 
 #' list containing following items: name, pos, and neg.
+#' @exportClass SignedGenesets
 setClass("SignedGenesets", contains="list", validity=isValidSignedGenesets)
 
 #' An S4 class to hold a list of indices, with the possibility to specify the 
@@ -97,25 +99,20 @@ setClass("BaseIndexList",
          prototype=prototype(offset=1L, keepNA=FALSE, keepDup=FALSE),
          contains="list", validity=isValidBaseIndexList)
 
-##setClass("IndexList",
-##         representation=list("offset"="integer",
-##             "keepNA"="logical",
-##             "keepDup"="logical"),
-##         prototype=prototype(offset=1L, keepNA=FALSE, keepDup=FALSE),
-##         contains="BaseIndexList", validity=isValidIndexList)
-
 #' An S4 class to hold a list of integers as indices, with the possibility to specify the offset of the indices
 #'
 #' @slot offset An integer specifying the value of first element. Default 1
 #' @slot keepNA Logical, whether NA is kept during construction
 #' @slot keepDup Logical, whether duplicated values are kept during construction
 #' @name IndexList-class
+#' @exportClass IndexList
 setClass("IndexList", contains="BaseIndexList", validity=isValidIndexList)
 
 #'An S4 class to hold a list of signed integers as indices, with the possibility to specify the offset of the indices
 #' @slot offset An integer specifying the value of first element. Default 1
 #' @slot keepNA Logical, whether NA is kept during construction
 #' @slot keepDup Logical, whether duplicated values are kept during construction
+#' @exportClass SignedIndexList
 setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedIndexList)
 
 ##----------------------------------------##
@@ -138,6 +135,8 @@ setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedInde
 #' # as wrapper of as.gmtlist
 #' testGeneList <- list(GS_A=LETTERS[1:3], GS_B=LETTERS[1:5], GS_C=NULL)
 #' testGeneGmt <- GmtList(testGeneList)
+#' 
+#' @export
 GmtList <- function(list) {
     isGeneSymbols <- all(sapply(list, function(x) is.null(x) || is.character(x)))
     if(isGeneSymbols) {
@@ -158,6 +157,8 @@ GmtList <- function(list) {
 #'                  list(name="GS_C", pos=LETTERS[1:5], neg=NULL),
 #'                  list(name="GS_D", pos=NULL, neg=NULL))
 #' testSigndGS <- SignedGenesets(testList)
+#' 
+#' @export
 SignedGenesets <- function(list) {
     res <- new("SignedGenesets", .Data=list)
     return(res)

@@ -18,6 +18,7 @@
 #'@examples 
 #'testValues <- runif(100)
 #'gini(testValues)
+#'@export
 gini <- function(x)  {
     storage.mode(x) <- "double"
     hasNeg <- any(x<0)
