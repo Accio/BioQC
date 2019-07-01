@@ -27,6 +27,28 @@
 #' @export
 absLog10p <- function(x) abs(log10(x))
 
+#' Filter rows of p-value matrix under the significance threshold
+#' 
+#' @param x A matrix of p-values. It must be raw p-values and should not be transformed (e.g. logarithmic).
+#' @param threshold A numeric value, the minimal p-value used to filter
+#' rows. If missing, given the values of \code{NA}, \code{NULL} or
+#' number \code{0}, no filtering will be done and the input matrix will
+#' be returned.
+#' 
+#' @return   Matrix of p-values. If no line is left, a empty matrix of the same dimension as input will be returned.
+#' @author Jitao David Zhang <jitao_david.zhang@roche.com>
+#' 
+#' @examples 
+#' set.seed(1235)
+#' testMatrix <- matrix(runif(100,0,1), nrow=10)
+#' 
+#' ## filtering
+#' (testMatrix.filter <- filterPmat(testMatrix, threshold=0.05))
+#' ## more strict filtering
+#' (testMatrix.strictfilter <- filterPmat(testMatrix, threshold=0.01))
+#' ## no filtering
+#' (testMatrix.nofilter <- filterPmat(testMatrix))
+#' @export 
 filterPmat <- function(x, threshold) {
   if(missing(threshold) || is.null(threshold) || is.na(threshold) || threshold==0)
     return(x)
