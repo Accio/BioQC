@@ -78,7 +78,6 @@ readGmt <- function(filename, uniqGenes=FALSE) {
 #' Make names of gene-sets unique by category, and member genes of gene-sets unique
 #' 
 #' @param gmtList A \code{GmtList} object, probably from \code{\link[BioQC]{readGmt}}. The object must have categories defined by \code{setCategory}.
-#' @param category Either a function that can be applied to \code{GmtList} to extract category, or a vector of the same length as \code{GmtList}, specifying the category, or NULL (or a list of NULLs). Default value: \code{gsDesc}, namely the \code{desc} field of the list elements of \code{GmtList} is used as category.
 #' 
 #' The function make sure that
 #' \itemize{
@@ -99,12 +98,12 @@ readGmt <- function(filename, uniqGenes=FALSE) {
 #'   list(name="GeneSet3", desc="Category2", genes=LETTERS[1:5])))
 #'  
 #' print(myGmtList)
+#' myGmtList <- setCategory(myGmtList, category=function(x) x$desc)
 #' myUniqGmtList <- uniqGenesetsByCategory(myGmtList)
 #' print(myUniqGmtList)
 #' 
 #' @export
-uniqGenesetsByCategory <- function(gmtList,
-                                   category=gsDesc) {
+uniqGenesetsByCategory <- function(gmtList) {
   stopifnot(is(gmtList, "GmtList"))
   if(!hasCategory(gmtList)) {
     stop(paste0("Gene-set category is not defined. ",
