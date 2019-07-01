@@ -18,6 +18,7 @@ testList <- list(list(name="GS_A", pos=NULL, neg=LETTERS[1:3]),
                  list(name="GS_C", pos=LETTERS[1:5], neg=NULL),
                  list(name="GS_D", pos=NULL, neg=NULL))
 testSigndGS <- SignedGenesets(testList)
+
 }
 \seealso{
 \code{GmtList}

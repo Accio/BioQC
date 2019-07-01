@@ -23,6 +23,7 @@ testGmt <- GmtList(testList)
 # as wrapper of as.gmtlist
 testGeneList <- list(GS_A=LETTERS[1:3], GS_B=LETTERS[1:5], GS_C=NULL)
 testGeneGmt <- GmtList(testGeneList)
+
 }
 \seealso{
 If a list of gene symbols need to be converted into a GmtList, use 'as.gmtlist' instead

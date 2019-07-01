@@ -24,7 +24,6 @@ testGmtFile <- system.file("extdata/test.gmt", package="BioQC")
 testSignedGenesets.ignore <- readSignedGmt(testGmtFile, nomatch="ignore")
 testSignedGenesets.pos <- readSignedGmt(testGmtFile, nomatch="pos")
 testSignedGenesets.neg <- readSignedGmt(testGmtFile, nomatch="neg")
-
 }
 \seealso{
 \code{\link{gmtlist2signedGenesets}} for parameters \code{posPattern}, \code{negPattern}, and \code{nomatch}
