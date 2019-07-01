@@ -1,3 +1,6 @@
+#' @useDynLib BioQC, .registration=TRUE, .fixes="C_"
+#' @importFrom Rcpp sourceCpp
+
 ## FOR REFERENCE rankSumTestWithCorrelation function from the limma package (version 3.18.13)
 
 ## authors: Gordon Smyth and Di Wu, following Zar, JD (1999) Biostatistical Analysis 4th Edition
