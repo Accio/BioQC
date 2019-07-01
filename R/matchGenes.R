@@ -18,9 +18,13 @@ getSymbols <- function(exprsMatrixRowNames, featureAnno, col="GeneSymbol") {
   symbols <- as.character(symbols)
   return(symbols)
 }
+
+#' @importFrom Biobase fData featureNames
 eSetSymbols <- function(object, col="GeneSymbol") {
   getSymbols(featureNames(object), fData(object), col=col)
 }
+
+#' @importClassesFrom edgeR DGEList
 DGEListSymbols <- function(object, col="GeneSymbol") {
   getSymbols(rownames(object$counts), object$genes, col=col)
 }
@@ -35,6 +39,7 @@ matchGeneExclNA <- function(inputGene, allGene) {
     return(res)
 }
 
+#' @importFrom methods is
 matchGenes.default <- function(gmtList,geneSymbols) {
     if(!is(gmtList, "GmtList"))
         stop(paste("gmtlist be must of class GmtList; now it is", class(gmtList)))
@@ -170,6 +175,7 @@ setMethod("matchGenes", c("GmtList", "DGEList"), function(list, object, col="Gen
 ##----------------------------------------##
 ## matchGenes for SignedGenesets
 ##----------------------------------------##
+#' @importFrom methods is
 matchGenes.signedDefault <- function(signedGenesets, geneSymbols) {
     if(!is(signedGenesets, "SignedGenesets"))
         stop(paste("signedGenesets be must of class SignedGenesets; now it is", class(signedGenesets)))

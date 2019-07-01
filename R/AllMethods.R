@@ -40,6 +40,8 @@ parseIndex <- function(x, keepNA=FALSE, keepDup=FALSE) {
         x <- unique(x)
     return(x)
 }
+
+#' @importFrom methods new
 IndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
     outlist <- lapply(inlist, parseIndex, keepNA=keepNA, keepDup=keepDup)
     ## note that .Data must be the first data slot in the new command
@@ -100,6 +102,7 @@ setMethod("IndexList", "list", function(object, keepNA=FALSE, keepDup=FALSE, off
 ##----------------------------------------##
 ## SignedIndexList
 ##----------------------------------------##
+#' @importFrom methods new
 SignedIndexListFromList <- function(inlist, keepNA=FALSE, keepDup=FALSE, offset=1L) {
   if(length(inlist)==2 && all(c("pos", "neg") %in% names(inlist))) {
     inlist <- list(inlist)
@@ -196,6 +199,8 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 #' @param i Index to subset
 #' @param drop In case only one element remains, should a list representing the single geneset returned? Default: FALSE
 #' 
+#' @importFrom methods new
+#' 
 #' @examples 
 #' myGmtList <- GmtList(list(gs1=letters[1:3], gs2=letters[3:4], gs3=letters[4:5]))
 #' myGmtList[1:2]
@@ -244,7 +249,7 @@ gsCategory <- function(x) UseMethod("gsCategory")
 #' @export setCategory
 setCategory <- function(x, ...) UseMethod("setCategory")
 #' @export filterBySize
-filterBySizie <- function(x, ...) UseMethod("filterBySize")
+filterBySize <- function(x, ...) UseMethod("filterBySize")
 
 #' @export
 gsName.GmtList <- function(x) sapply(x, function(xx) xx$name)

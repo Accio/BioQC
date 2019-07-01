@@ -3,6 +3,7 @@
 ## authors: Gordon Smyth and Di Wu, following Zar, JD (1999) Biostatistical Analysis 4th Edition
 ## used under GPL(>=2) license. The function has been slihtly modified to allow reporting results
 
+#' @importFrom stats pt
 rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df = Inf) {
     n <- length(statistics)
     r <- rank(statistics)
@@ -53,6 +54,8 @@ rankSumTestWithCorrelation <- function (index, statistics, correlation = 0, df =
 #' @param sub A logical vector or integer vector to subset \code{x}. Numbers in \code{sub} are compared with numbers out of \code{sub}
 #' @param valType Type of retured-value. Supported values: p.greater, p.less, p.two.sided, and W statistic (note it is different from the U statistic)
 #' 
+#' @importFrom stats wilcox.test
+#' 
 #' @examples
 #' testNums <- 1:10
 #' testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
@@ -102,6 +105,7 @@ type2int <- function(type) {
 ##----------------------------------------##
 ## wmwTest
 ##----------------------------------------##
+#' @importFrom methods is
 wmwTest.default <- function(matrix,
                             indexList,
                             valType=c("p.greater", "p.less", "p.two.sided", "U",
@@ -268,6 +272,10 @@ setMethod("wmwTest", c("ANY", "list"),
 #'
 #'Zar, JH (1999). _Biostatistical Analysis 4th Edition_. Prentice-Hall International, Upper Saddle River, New Jersey.
 #'
+#' @import Rcpp
+#' @importFrom Biobase fData exprs
+#' @importClassesFrom Biobase eSet
+#' 
 #'@author Jitao David Zhang <jitao_david.zhang@roche.com>
 #'
 #'@note The function has been optimized for expression profiling data. It
@@ -340,6 +348,8 @@ setMethod("wmwTest", c("ANY", "list"),
 #'summary(esetWmwRes)
 #'@name wmwTest
 NULL
+
+#' @importFrom methods is
 wmwTestSignedGenesets.default <- function(matrix,
                                           signedIndexList,
                                           valType=c("p.greater", "p.less", "p.two.sided", "U",

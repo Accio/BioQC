@@ -136,6 +136,7 @@ setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedInde
 #' testGeneList <- list(GS_A=LETTERS[1:3], GS_B=LETTERS[1:5], GS_C=NULL)
 #' testGeneGmt <- GmtList(testGeneList)
 #' 
+#' @importFrom methods new
 #' @export
 GmtList <- function(list) {
     isGeneSymbols <- all(sapply(list, function(x) is.null(x) || is.character(x)))
@@ -151,6 +152,7 @@ GmtList <- function(list) {
 #'
 #' @seealso \code{GmtList}
 #' 
+#' @importFrom methods new
 #' @examples
 #' testList <- list(list(name="GS_A", pos=NULL, neg=LETTERS[1:3]),
 #'                  list(name="GS_B", pos=LETTERS[1:5], neg=LETTERS[7:9]),

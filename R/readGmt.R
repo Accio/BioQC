@@ -90,6 +90,8 @@ readGmt <- function(filename, uniqGenes=FALSE) {
 #' 
 #' @return A \code{GmtList} object, with unique gene-sets and unique gene lists. If not already present, a new item \code{category} is appended to each \code{list} element in the \code{GmtList} object, recording the category used to make gene-sets unique. The order of the returned \code{GmtList} object is given by the unique gene-set name of the input object.
 #' 
+#' @importFrom methods is
+#' 
 #' @examples 
 #' myGmtList <- GmtList(list(list(name="GeneSet1", desc="Category1", genes=LETTERS[1:3]),
 #'   list(name="GeneSet2", desc="Category1", genes=rep(LETTERS[4:6],2)),

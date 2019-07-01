@@ -16,6 +16,7 @@
 #' 
 #' @return Numeric vector or matrix.
 #' @author Jitao David Zhang <jitao_david.zhang@roche.com>
+#' @importFrom utils head
 #' @examples 
 #' testp <- runif(1000, 0, 1)
 #' testp.al <- absLog10p(testp)
