@@ -1,48 +1,159 @@
 #' Convert a list of gene symbols into a gmtlist
 #'
 #' @param list A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes
-#' @param description description; will be expanded to the same length of the list
-#'
+#' @param description Character, description of gene-sets. The value will be expanded to the same length of the list.
+#' @param uniqGenes Logical, whether redundant genes should be made unique?
+#' 
 #' @examples
 #' testVec <- list(GeneSet1=c("AKT1", "AKT2"),
 #'                GeneSet2=c("MAPK1", "MAPK3"),
 #'                GeneSet3=NULL)
 #' testVecGmtlist <- as.gmtlist(testVec)
-as.gmtlist <- function(list, description=NULL) {
-    if(is.null(names(list)))
-        stop('The input list must have non-null names')
-    names <- names(list)
-    if(!is.null(description)) {
-        descs <- rep_len(description, length.out=length(list))
-    }
-    res <- lapply(seq(along=list),
-                  function(i) {
-                      if(!is.null(description)) {
-                          desc <- descs[i]
-                      } else {
-                          desc <- NULL
-                      }
-                      list(name=names[i],
-                           desc=desc,
-                           genes=list[[i]])
-                  })
-    names(res) <- names
-    return(GmtList(res))
+#' 
+#' @export
+as.gmtlist <- function(list, description=NULL,
+                       uniqGenes=FALSE) {
+  if(is.null(names(list)))
+    stop('The input list must have non-null names')
+  names <- names(list)
+  if(!is.null(description)) {
+    descs <- rep_len(description, length.out=length(list))
+  }
+  res <- lapply(seq(along=list),
+                function(i) {
+                  if(!is.null(description)) {
+                    desc <- descs[i]
+                  } else {
+                    desc <- NULL
+                  }
+                  genes <- list[[i]]
+                  if(uniqGenes) {
+                    genes <- unique(genes)
+                  }
+                  list(name=names[i],
+                       desc=desc,
+                       genes=genes)
+                })
+  names(res) <- names
+  return(GmtList(res))
 }
 
-readGmt <- function(filename) {
+#' Read in gene-sets from a GMT file
+#' 
+#' @param filename Character, GMT file name
+#' @param uniqGenes Logical, whether duplicated genes should be removed
+#' 
+#' @return A \code{GmtList} object, which is a S3-class wrapper of a list. Each 
+#' element in the object is a list of (at least) three items: 
+#' \itemize{
+#'   \item gene-set name (field \code{name}), character string
+#'   \item gene-set description (field \code{desc}), character string
+#'   \item genes (field \code{genes}), a vector of character strings
+#' }
+#' 
+#' @examples 
+#' gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
+#' gmt_list <- readGmt(gmt_file)
+#' gmt_uniqGenes_list <- readGmt(gmt_file, uniqGenes=TRUE)
+#' 
+#' @export
+readGmt <- function(filename, uniqGenes=FALSE) {
   stopifnot(file.exists(filename))
   lines <- readLines(filename)
   splitLines <- strsplit(lines, "\t")
   isValid <- sapply(splitLines, function(x) length(x)>=3)
   validLines <- splitLines[isValid]
   res <- lapply(validLines, function(x)  {
-                    list(name=x[1], desc=x[2], genes=x[3:length(x)])
-                })
+    genes <- x[3:length(x)]
+    if(uniqGenes) {
+      genes <- unique(genes)
+    }
+    list(name=x[1], desc=x[2], genes=genes)
+  })
   names(res) <- sapply(res, function(x) x$name)
-  ## res <- .Call("read_gmt", filename, PACKAGE="BioQC")
   return(GmtList(res))
 }
+
+
+#' Make names of gene-sets unique by category, and member genes of gene-sets unique
+#' 
+#' @param gmtList A \code{GmtList} object, probably from \code{\link[BioQC]{readGmt}}. The object must have categories defined by \code{setCategory}.
+#' @param category Either a function that can be applied to \code{GmtList} to extract category, or a vector of the same length as \code{GmtList}, specifying the category, or NULL (or a list of NULLs). Default value: \code{gsDesc}, namely the \code{desc} field of the list elements of \code{GmtList} is used as category.
+#' 
+#' The function make sure that
+#' \itemize{
+#'   \item names of gene-sets within each category are unique, by merging gene-sets with duplicated names
+#'   \item genes within each gene-set are unique, by removing duplicated genes
+#' }
+#' 
+#' Gene-sets with duplicated names and different \code{desc} are merged, \code{desc} are made unique, and in case of multiple values, concatenated (with \code{|} as the collapse character).
+#' 
+#' @return A \code{GmtList} object, with unique gene-sets and unique gene lists. If not already present, a new item \code{category} is appended to each \code{list} element in the \code{GmtList} object, recording the category used to make gene-sets unique. The order of the returned \code{GmtList} object is given by the unique gene-set name of the input object.
+#' 
+#' @examples 
+#' myGmtList <- GmtList(list(list(name="GeneSet1", desc="Category1", genes=LETTERS[1:3]),
+#'   list(name="GeneSet2", desc="Category1", genes=rep(LETTERS[4:6],2)),
+#'   list(name="GeneSet1", desc="Category1", genes=LETTERS[4:6]),
+#'   list(name="GeneSet3", desc="Category2", genes=LETTERS[1:5])))
+#'  
+#' print(myGmtList)
+#' myUniqGmtList <- uniqGenesetsByCategory(myGmtList)
+#' print(myUniqGmtList)
+#' 
+#' @export
+uniqGenesetsByCategory <- function(gmtList,
+                                   category=gsDesc) {
+  stopifnot(is(gmtList, "GmtList"))
+  if(!hasCategory(gmtList)) {
+    stop(paste0("Gene-set category is not defined. ",
+                "Please run 'setCategory' or 'setDescAsCategory' first to define category."))
+  }
+  
+  inputCategory <- gsCategory(gmtList)
+  cg <- factor(inputCategory)
+  
+  inputNames <- gsName(gmtList)
+  inputDescs <- gsDesc(gmtList)
+  geneList <- gsGenes(gmtList)
+  gsSize <- sapply(geneList, length)
+  cgFac <- rep(cg, gsSize)
+  tbl <- data.frame(category=cgFac,
+                    name=rep(gsName(gmtList), gsSize),
+                    genes=as.character(unlist(geneList)),
+                    stringsAsFactors = FALSE)
+  nameFactor <- factor(tbl$name)
+  tbl$nameFac <- as.integer(nameFactor)
+  tbl$cgFac <- as.integer(cgFac)
+  tbl <- unique(tbl) ## unique combination of category, name, genes
+  splitGenes <- with(tbl,
+                     split(genes,
+                           list(cgFac, nameFac), 
+                           drop=TRUE))
+  resList <- lapply(seq(along=splitGenes),
+                    function(i) {
+                      genes <- splitGenes[[i]]
+                      intName <- names(splitGenes)[i]
+                      intNameSplit <- strsplit(intName, "\\.")[[1]]
+                      cgLevel <- as.integer(intNameSplit[1])
+                      nameLevel <- as.integer(intNameSplit[2])
+                      resCategory <- levels(cg)[cgLevel]
+                      resName <- levels(nameFactor)[nameLevel]
+                      matchingDesc <- inputDescs[inputNames==resName &
+                                                   inputCategory==resCategory]
+                      resDesc <- paste(unique(matchingDesc),
+                                       collapse="|")
+                      res <- list(name=resName, 
+                                  desc=resDesc, 
+                                  genes=genes,
+                                  category=resCategory)
+                      return(res)
+                    })
+  names(resList) <- sapply(resList, function(x) x$name)
+  oResList <- resList[unique(inputNames)]
+  res <- GmtList(oResList)
+  return(res)
+}
+
 
 #' Convert gmtlist into a list of signed genesets
 #'
@@ -63,6 +174,7 @@ readGmt <- function(filename) {
 #' testOutputList.ignore <- gmtlist2signedGenesets(testInputList, nomatch="ignore")
 #' testOutputList.pos <- gmtlist2signedGenesets(testInputList, nomatch="pos")
 #' testOutputList.neg <- gmtlist2signedGenesets(testInputList, nomatch="neg")
+#' @export
 gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$",
                                    nomatch=c("ignore", "pos", "neg")) {
     nomatch <- match.arg(nomatch)
@@ -111,7 +223,7 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
 #' testSignedGenesets.ignore <- readSignedGmt(testGmtFile, nomatch="ignore")
 #' testSignedGenesets.pos <- readSignedGmt(testGmtFile, nomatch="pos")
 #' testSignedGenesets.neg <- readSignedGmt(testGmtFile, nomatch="neg")
-#' 
+#' @export
 readSignedGmt <- function(filename, posPattern="_UP$", negPattern="_DN$",
                           nomatch=c("ignore", "pos", "neg")) {
     gmt <- readGmt(filename)
