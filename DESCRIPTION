@@ -11,11 +11,13 @@ Description: BioQC performs quality control of high-throughput expression data
     expression data. The core algorithm is a Wilcoxon-Mann-Whitney test that is
     optimised for high performance.
 Depends:
-    utils,
+    Biobase
+Imports:
+    edgeR,
     Rcpp,
-    Biobase,
     methods,
-    stats
+    stats,
+    utils
 Collate:
     AllClasses.R
     AllMethods.R
@@ -35,8 +37,8 @@ Suggests:
     gplots,
     gridExtra,
     hgu133plus2.db,
-    ineq,
-    edgeR
+    ineq
+LinkingTo: Rcpp
 VignetteBuilder: knitr
 biocViews: GeneExpression,QualityControl,StatisticalMethod, GeneSetEnrichment
 License: GPL (>=3)
