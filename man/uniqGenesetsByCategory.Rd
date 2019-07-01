@@ -4,12 +4,10 @@
 \alias{uniqGenesetsByCategory}
 \title{Make names of gene-sets unique by category, and member genes of gene-sets unique}
 \usage{
-uniqGenesetsByCategory(gmtList, category = gsDesc)
+uniqGenesetsByCategory(gmtList)
 }
 \arguments{
-\item{gmtList}{A \code{GmtList} object, probably from \code{\link[BioQC]{readGmt}}. The object must have categories defined by \code{setCategory}.}
-
-\item{category}{Either a function that can be applied to \code{GmtList} to extract category, or a vector of the same length as \code{GmtList}, specifying the category, or NULL (or a list of NULLs). Default value: \code{gsDesc}, namely the \code{desc} field of the list elements of \code{GmtList} is used as category.
+\item{gmtList}{A \code{GmtList} object, probably from \code{\link[BioQC]{readGmt}}. The object must have categories defined by \code{setCategory}.
 
 The function make sure that
 \itemize{
@@ -32,6 +30,7 @@ myGmtList <- GmtList(list(list(name="GeneSet1", desc="Category1", genes=LETTERS[
   list(name="GeneSet3", desc="Category2", genes=LETTERS[1:5])))
  
 print(myGmtList)
+myGmtList <- setCategory(myGmtList, category=function(x) x$desc)
 myUniqGmtList <- uniqGenesetsByCategory(myGmtList)
 print(myUniqGmtList)
 
