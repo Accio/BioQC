@@ -1,10 +1,14 @@
 ##----------------------------------------##
 ## standard generics
 ##----------------------------------------##
+#' @rdname offset
+#' @usage offset(object)
+#' @exportMethod offset
 setGeneric("offset", function(object) standardGeneric("offset"))
+
 #'@rdname offset-set
 #'@usage `offset<-`(object, value)
-#'@exportMethod offset
+#'@exportMethod offset<-
 setGeneric("offset<-", function(object, value) standardGeneric("offset<-"))
 
 #' @rdname IndexList
@@ -151,6 +155,7 @@ setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALS
 #' @examples
 #' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 #' offset(myIndexList)
+#' @export 
 setMethod("offset", "BaseIndexList", function(object) return(object@offset))
 
 modOffset <- function(x, diff) {
