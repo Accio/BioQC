@@ -1,3 +1,8 @@
+Version 1.13.1 (Jul 02, 2019)
+  + Functions to manipulate GmtList objects are considerably expanded
+  + All documents and namespaces are now managed by roxygen2
+  + readGmt by default read unique genes from GMT files
+
 Version 0.99.4 (Dec 23, 2015)
   + wmw_test (C function) is refactored
 
