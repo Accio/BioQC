@@ -53,7 +53,7 @@ install-test:
 
 check:
 	@echo '====== Checking Package ======'
-	@(cd ..; ${R} --vanilla -q -e "library(devtools);check(\"$(PKG)\")")
+	@(cd ..; ${R} --vanilla -q -e "devtools::check(\"$(PKG)\")")
 	@echo '====== Checking finished ======'
 	@echo ' '
 
