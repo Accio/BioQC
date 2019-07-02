@@ -4,7 +4,7 @@
 \alias{setCategory}
 \title{Set the category field in each gene-set within a GmtList}
 \usage{
-setCategory(x, category = function(x) x$desc)
+setCategory(x, category)
 }
 \arguments{
 \item{x}{A \code{GmtList} object encoding a list of gene-sets}

@@ -155,6 +155,7 @@ setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALS
 #' @examples
 #' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 #' offset(myIndexList)
+#' @name offset
 #' @export 
 setMethod("offset", "BaseIndexList", function(object) return(object@offset))
 
@@ -162,6 +163,7 @@ modOffset <- function(x, diff) {
     if(is.null(x)) return(NULL)
     return(x-diff)
 }
+
 #' Set the offset of an \code{IndexList} or a \code{SignedIndexList} object
 #' 
 #' @param object An \code{IndexList} or a \code{SignedIndexList} object
@@ -341,7 +343,10 @@ filterBySize <- function(x, min, max) function(x, min, max) {
 #' myGmtList2null <- setCategory(myGmtList2, category=NULL)
 #' hasCategory(myGmtList2null)
 #' @export
-setCategory <- function(x, category=function(x) x$desc) {
+setCategory <- function(x, category) {
+  if(missing(category)) {
+    stop("'category' must be given. It can be a function applied to each geneset-, NULL, or a vector.")
+  }
   if(is.function(category)) {
     res <- GmtList(lapply(x, function(gs) {
       gs$category <- do.call(category, list(gs))
@@ -365,6 +370,28 @@ setCategory <- function(x, category=function(x) x$desc) {
   return(res)
 }
 
+#' Set the category field in each gene-set within a GmtList
+#' @rdname setGsCategory
+#' 
+#' @param x A \code{GmtList} object
+#' @param value Category, a function, \code{NULL}, or a vector. See \code{setGsCategory}
+#' 
+#' @seealso \code{\link{setGsCategory}}
+#' @export
+`gsCategory<-` <- function(x, value) {
+  return(setCategory(x, category=value))
+}
+
+#' Set gene-set description as category
+#' 
+#' @param x A \code{GmtList} object
+#' 
+#' This function wrapps \code{setCategory} to set gene-set description as category
+#' @seealso \code{\link{setCategory}}
+#' @export
+setDescAsCategory <- function(x) {
+  return(setCategory(x, category = function(xx) xx$desc))
+}
 ##--------------------##
 ## show for GmtList
 ##--------------------##
