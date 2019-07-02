@@ -237,42 +237,76 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 ##-------------------------------##
 ## convenience funcs for GmtList
 ##-------------------------------##
-#' @export gsGenes
-gsGenes <- function(x) UseMethod("gsGenes")
-#' @export gsGeneCount
-gsGeneCount <- function(x) UseMethod("gsGeneCount")
-#' @export gsSize
-gsSize <- function(x) gsGeneCount(x)
+#' Gene-set names
+#' 
+#' @param x A \code{GmtList} object
+#' @return Names as a vector of character strings of the same length as \code{x}
 #' @export gsName
-gsName <- function(x) UseMethod("gsName")
-#' @export gsDesc
-gsDesc <- function(x) UseMethod("gsDesc")
-#' @export hasCategory
-hasCategory <- function(x) UseMethod("hasCategory")
-#' @export gsCategory
-gsCategory <- function(x) UseMethod("gsCategory")
-#' @export setCategory
-setCategory <- function(x, ...) UseMethod("setCategory")
-#' @export filterBySize
-filterBySize <- function(x, ...) UseMethod("filterBySize")
+gsName <- function(x) sapply(x, function(xx) xx$name)
 
-#' @export
-gsName.GmtList <- function(x) sapply(x, function(xx) xx$name)
-#' @export
-gsDesc.GmtList <- function(x) sapply(x, function(xx) xx$desc)
-#' @export
-gsGenes.GmtList <- function(x) sapply(x, function(xx) xx$genes)
-#' @export
-hasCategory.GmtList <- function(x) all(sapply(x, function(xx) !is.null(xx$category)))
-#' @export
-gsCategory.GmtList <- function(x) sapply(x, function(xx) xx$category)
-#' @export
-gsGeneCount.GmtList <- function(x) {
-  res <- sapply(x, function(x) length(unique(x$genes)))
+
+#' Gene-set descriptions
+#' 
+#' @param x A \code{GmtList} object
+#' @return Descriptions as a vector of character strings of the same length as \code{x}
+#' @export gsDesc
+gsDesc <-  function(x) sapply(x, function(xx) xx$desc)
+
+
+#' Gene-set member genes
+#' 
+#' @param x A \code{GmtList} object
+#' @return A list of genes as character strings of the same length as \code{x}
+#' @export gsGenes
+gsGenes <- function(x) sapply(x, function(xx) xx$genes)
+
+
+#' Gene-set gene counts
+#' 
+#' @param x A \code{GmtList} or similar object
+#' @param uniqGenes Logical, whether only unique genes are counted
+#' 
+#' @return Gene counts (aka gene-set sizes) as a vector of integer of the same length as \code{x}
+#' @export gsGeneCount
+gsGeneCount <- function(x, uniqGenes=FALSE) {
+  res <- sapply(x, function(x) {
+    genes <- x$genes
+    if(uniqGenes)
+      genes <- unique(genes)
+    return(length(genes))
+  })
   return(res)
 }
-#' @export
-filterBySize.GmtList <- function(x, min, max) {
+
+#' gsSize is the synonym of gsGeneCount
+#' @rdname gsGeneCount
+#' @export gsSize
+gsSize <- function(x, uniqGenes=FALSE) gsGeneCount(x, uniqGenes=uniqGenes)
+
+
+#' Whether category is set
+#' 
+#' @param x A \code{GmtList} object
+#' @return Logical, whether all gene-sets have the field \code{category} set
+#' @export hasCategory
+hasCategory <- function(x) all(sapply(x, function(xx) !is.null(xx$category)))
+
+#' Gene-set categories
+#' 
+#' @param x A \code{GmtList} object
+#' @return Categories as a vector of character strings of the same length as \code{x}
+#' @export gsCategory
+gsCategory <- function(x) sapply(x, function(xx) xx$category)
+
+#' Filter a GmtList by size
+#' 
+#' @param x A \code{GmtList} object
+#' @param min Numeric, gene-sets with fewer genes than \code{min} will be removed
+#' @param max Numeric, gene-sets with more genes than \code{max} will be removed
+#' 
+#' @return A \code{GmtList} object with sizes (count of genes) between \code{min} and \code{max} (inclusive).
+#' @export filterBySize
+filterBySize <- function(x, min, max) function(x, min, max) {
   sizes <- gsSize(x)
   isKept <- rep.int(TRUE, length(sizes))
   if(!missing(min))
@@ -307,7 +341,7 @@ filterBySize.GmtList <- function(x, min, max) {
 #' myGmtList2null <- setCategory(myGmtList2, category=NULL)
 #' hasCategory(myGmtList2null)
 #' @export
-setCategory.GmtList <- function(x, category=function(x) x$desc) {
+setCategory <- function(x, category=function(x) x$desc) {
   if(is.function(category)) {
     res <- GmtList(lapply(x, function(gs) {
       gs$category <- do.call(category, list(gs))
