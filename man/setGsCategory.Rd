@@ -2,18 +2,15 @@
 % Please edit documentation in R/AllMethods.R
 \name{gsCategory<-}
 \alias{gsCategory<-}
-\title{Set the category field in each gene-set within a GmtList}
+\title{gsCategory<- is the synonym of setGsCategory}
 \usage{
 gsCategory(x) <- value
 }
 \arguments{
 \item{x}{A \code{GmtList} object}
 
-\item{value}{Category, a function, \code{NULL}, or a vector. See \code{setGsCategory}}
+\item{value}{\code{category} in \code{setGsCategory}. It can be either a function that applies to a \code{gene-set list} element of the object (for instance \code{function(x) x$desc} to extract description), or a vector of the same length of \code{x}, or in the special case \code{NULL}, which will erase the field category.}
 }
 \description{
-Set the category field in each gene-set within a GmtList
-}
-\seealso{
-\code{\link{setGsCategory}}
+gsCategory<- is the synonym of setGsCategory
 }

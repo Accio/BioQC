@@ -156,6 +156,7 @@ setMethod("SignedIndexList", "list", function(object, keepNA=FALSE, keepDup=FALS
 #' myIndexList <- IndexList(list(1:5, 2:7, 3:8), offset=1L)
 #' offset(myIndexList)
 #' @name offset
+#' @aliases offset,BaseIndexList-method
 #' @export 
 setMethod("offset", "BaseIndexList", function(object) return(object@offset))
 
@@ -370,14 +371,11 @@ setCategory <- function(x, category) {
   return(res)
 }
 
-#' Set the category field in each gene-set within a GmtList
+#' gsCategory<- is the synonym of setGsCategory
 #' @rdname setGsCategory
-#' 
 #' @param x A \code{GmtList} object
-#' @param value Category, a function, \code{NULL}, or a vector. See \code{setGsCategory}
-#' 
-#' @seealso \code{\link{setGsCategory}}
-#' @export
+#' @param value \code{category} in \code{setGsCategory}. It can be either a function that applies to a \code{gene-set list} element of the object (for instance \code{function(x) x$desc} to extract description), or a vector of the same length of \code{x}, or in the special case \code{NULL}, which will erase the field category.
+#' @export gsCategory<-
 `gsCategory<-` <- function(x, value) {
   return(setCategory(x, category=value))
 }

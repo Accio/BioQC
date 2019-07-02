@@ -3,6 +3,7 @@
 \docType{methods}
 \name{offset}
 \alias{offset}
+\alias{offset,BaseIndexList-method}
 \title{Get offset from an IndexList object}
 \usage{
 offset(object)
