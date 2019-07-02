@@ -1,7 +1,7 @@
 Package: BioQC
 Type: Package
 Title: Detect tissue heterogeneity in expression profiles with gene sets
-Version: 1.13.0
+Version: 1.13.1
 Date: 2019-07-02
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>, Laura Badi, Gregor
     Sturm, Roland Ambs
@@ -37,9 +37,11 @@ Suggests:
     gplots,
     gridExtra,
     hgu133plus2.db,
-    ineq
+    ineq,
+    covr
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 biocViews: GeneExpression,QualityControl,StatisticalMethod, GeneSetEnrichment
 License: GPL (>=3)
+Encoding: UTF-8
 RoxygenNote: 6.1.0
