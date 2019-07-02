@@ -4,7 +4,7 @@
 \alias{readGmt}
 \title{Read in gene-sets from a GMT file}
 \usage{
-readGmt(filename, uniqGenes = FALSE)
+readGmt(filename, uniqGenes = TRUE)
 }
 \arguments{
 \item{filename}{Character, GMT file name}

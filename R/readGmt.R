@@ -12,7 +12,7 @@
 #' 
 #' @export
 as.gmtlist <- function(list, description=NULL,
-                       uniqGenes=FALSE) {
+                       uniqGenes=TRUE) {
   if(is.null(names(list)))
     stop('The input list must have non-null names')
   names <- names(list)
@@ -57,7 +57,7 @@ as.gmtlist <- function(list, description=NULL,
 #' gmt_uniqGenes_list <- readGmt(gmt_file, uniqGenes=TRUE)
 #' 
 #' @export
-readGmt <- function(filename, uniqGenes=FALSE) {
+readGmt <- function(filename, uniqGenes=TRUE) {
   stopifnot(file.exists(filename))
   lines <- readLines(filename)
   splitLines <- strsplit(lines, "\t")

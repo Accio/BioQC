@@ -5,9 +5,9 @@
 \alias{gsSize}
 \title{Gene-set gene counts}
 \usage{
-gsGeneCount(x, uniqGenes = FALSE)
+gsGeneCount(x, uniqGenes = TRUE)
 
-gsSize(x, uniqGenes = FALSE)
+gsSize(x, uniqGenes = TRUE)
 }
 \arguments{
 \item{x}{A \code{GmtList} or similar object}

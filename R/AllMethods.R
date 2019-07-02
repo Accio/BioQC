@@ -268,7 +268,7 @@ gsGenes <- function(x) sapply(x, function(xx) xx$genes)
 #' 
 #' @return Gene counts (aka gene-set sizes) as a vector of integer of the same length as \code{x}
 #' @export gsGeneCount
-gsGeneCount <- function(x, uniqGenes=FALSE) {
+gsGeneCount <- function(x, uniqGenes=TRUE) {
   res <- sapply(x, function(x) {
     genes <- x$genes
     if(uniqGenes)
@@ -281,7 +281,7 @@ gsGeneCount <- function(x, uniqGenes=FALSE) {
 #' gsSize is the synonym of gsGeneCount
 #' @rdname gsGeneCount
 #' @export gsSize
-gsSize <- function(x, uniqGenes=FALSE) gsGeneCount(x, uniqGenes=uniqGenes)
+gsSize <- function(x, uniqGenes=TRUE) gsGeneCount(x, uniqGenes=uniqGenes)
 
 
 #' Whether category is set
