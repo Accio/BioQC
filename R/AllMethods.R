@@ -260,7 +260,7 @@ gsDesc <-  function(x) sapply(x, function(xx) xx$desc)
 #' @param x A \code{GmtList} object
 #' @return A list of genes as character strings of the same length as \code{x}
 #' @export gsGenes
-gsGenes <- function(x) sapply(x, function(xx) xx$genes)
+gsGenes <- function(x) lapply(x, function(xx) xx$genes)
 
 
 #' Gene-set gene counts
@@ -286,19 +286,19 @@ gsGeneCount <- function(x, uniqGenes=TRUE) {
 gsSize <- function(x, uniqGenes=TRUE) gsGeneCount(x, uniqGenes=uniqGenes)
 
 
-#' Whether category is set
+#' Whether namespace is set
 #' 
 #' @param x A \code{GmtList} object
-#' @return Logical, whether all gene-sets have the field \code{category} set
-#' @export hasCategory
-hasCategory <- function(x) all(sapply(x, function(xx) !is.null(xx$category)))
+#' @return Logical, whether all gene-sets have the field \code{namespace} set
+#' @export hasNamespace
+hasNamespace <- function(x) all(sapply(x, function(xx) !is.null(xx$namespace)))
 
-#' Gene-set categories
+#' Gene-set namespaces
 #' 
 #' @param x A \code{GmtList} object
-#' @return Categories as a vector of character strings of the same length as \code{x}
-#' @export gsCategory
-gsCategory <- function(x) sapply(x, function(xx) xx$category)
+#' @return Namespaces as a vector of character strings of the same length as \code{x}
+#' @export gsNamespace
+gsNamespace <- function(x) sapply(x, function(xx) xx$namespace)
 
 #' Filter a GmtList by size
 #' 
@@ -319,75 +319,75 @@ filterBySize <- function(x, min, max) function(x, min, max) {
   return(res)
 }
 
-#' Set the category field in each gene-set within a GmtList
+#' Set the namespace field in each gene-set within a GmtList
 #' 
 #' @param x A \code{GmtList} object encoding a list of gene-sets
-#' @param category It can be either a function that applies to a \code{gene-set list} element of the object (for instance \code{function(x) x$desc} to extract description), or a vector of the same length of \code{x}, or in the special case \code{NULL}, which will erase the field category.
+#' @param namespace It can be either a function that applies to a \code{gene-set list} element of the object (for instance \code{function(x) x$desc} to extract description), or a vector of the same length of \code{x}, or in the special case \code{NULL}, which will erase the field namespace.
 #' 
-#' Note that using vectors as \code{category} leads to poor performance when the input object has many gene-sets.
+#' Note that using vectors as \code{namespace} leads to poor performance when the input object has many gene-sets.
 #' 
 #' @examples 
-#' myGmtList <- GmtList(list(list(name="GeneSet1", desc="Category1", genes=LETTERS[1:3]),
-#'   list(name="GeneSet2", desc="Category1", genes=rep(LETTERS[4:6],2)),
-#'   list(name="GeneSet1", desc="Category1", genes=LETTERS[4:6]),
-#'   list(name="GeneSet3", desc="Category2", genes=LETTERS[1:5])))
-#' hasCategory(myGmtList)
-#' myGmtList2 <- setCategory(myGmtList, category=function(x) x$desc)
-#' gsCategory(myGmtList2)
-#' ## the function can provide flexible ways to encode the gene-set category
-#' myGmtList3 <- setCategory(myGmtList, category=function(x) gsub("Category", "C", x$desc))
-#' gsCategory(myGmtList3)
+#' myGmtList <- GmtList(list(list(name="GeneSet1", desc="Namespace1", genes=LETTERS[1:3]),
+#'   list(name="GeneSet2", desc="Namespace1", genes=rep(LETTERS[4:6],2)),
+#'   list(name="GeneSet1", desc="Namespace1", genes=LETTERS[4:6]),
+#'   list(name="GeneSet3", desc="Namespace2", genes=LETTERS[1:5])))
+#' hasNamespace(myGmtList)
+#' myGmtList2 <- setNamespace(myGmtList, namespace=function(x) x$desc)
+#' gsNamespace(myGmtList2)
+#' ## the function can provide flexible ways to encode the gene-set namespace
+#' myGmtList3 <- setNamespace(myGmtList, namespace=function(x) gsub("Namespace", "C", x$desc))
+#' gsNamespace(myGmtList3)
 #' ## using vectors
-#' myGmtList4 <- setCategory(myGmtList, category=c("C1", "C1", "C1", "C2"))
-#' gsCategory(myGmtList4)
-#' myGmtList2null <- setCategory(myGmtList2, category=NULL)
-#' hasCategory(myGmtList2null)
+#' myGmtList4 <- setNamespace(myGmtList, namespace=c("C1", "C1", "C1", "C2"))
+#' gsNamespace(myGmtList4)
+#' myGmtList2null <- setNamespace(myGmtList2, namespace=NULL)
+#' hasNamespace(myGmtList2null)
 #' @export
-setCategory <- function(x, category) {
-  if(missing(category)) {
-    stop("'category' must be given. It can be a function applied to each geneset-, NULL, or a vector.")
+setNamespace <- function(x, namespace) {
+  if(missing(namespace)) {
+    stop("'namespace' must be given. It can be a function applied to each geneset-, NULL, or a vector.")
   }
-  if(is.function(category)) {
+  if(is.function(namespace)) {
     res <- GmtList(lapply(x, function(gs) {
-      gs$category <- do.call(category, list(gs))
+      gs$namespace <- do.call(namespace, list(gs))
       return(gs)
     }))
-  } else if (is.null(category)) {
+  } else if (is.null(namespace)) {
     res <- GmtList(lapply(x, function(gs) {
-      gs$category <- NULL
+      gs$namespace <- NULL
       return(gs)
     }))
   } else {
-    stopifnot(length(category) == length(x) &&
-                (is.character(category) || is.factor(category) || 
-                   is.numeric(category) || is.logical(category)))
+    stopifnot(length(namespace) == length(x) &&
+                (is.character(namespace) || is.factor(namespace) || 
+                   is.numeric(namespace) || is.logical(namespace)))
     res <- GmtList(lapply(seq(along=x), function(i) {
       gs <- x[[i]]
-      gs$category <- category[i]
+      gs$namespace <- namespace[i]
       return(gs)
     }))
   }
   return(res)
 }
 
-#' gsCategory<- is the synonym of setGsCategory
-#' @rdname setGsCategory
+#' gsNamespace<- is the synonym of setGsNamespace
+#' @rdname setGsNamespace
 #' @param x A \code{GmtList} object
-#' @param value \code{category} in \code{setGsCategory}. It can be either a function that applies to a \code{gene-set list} element of the object (for instance \code{function(x) x$desc} to extract description), or a vector of the same length of \code{x}, or in the special case \code{NULL}, which will erase the field category.
-#' @export gsCategory<-
-`gsCategory<-` <- function(x, value) {
-  return(setCategory(x, category=value))
+#' @param value \code{namespace} in \code{setGsNamespace}. It can be either a function that applies to a \code{gene-set list} element of the object (for instance \code{function(x) x$desc} to extract description), or a vector of the same length of \code{x}, or in the special case \code{NULL}, which will erase the field namespace.
+#' @export gsNamespace<-
+`gsNamespace<-` <- function(x, value) {
+  return(setNamespace(x, namespace=value))
 }
 
-#' Set gene-set description as category
+#' Set gene-set description as namespace
 #' 
 #' @param x A \code{GmtList} object
 #' 
-#' This function wrapps \code{setCategory} to set gene-set description as category
-#' @seealso \code{\link{setCategory}}
+#' This function wrapps \code{setNamespace} to set gene-set description as namespace
+#' @seealso \code{\link{setNamespace}}
 #' @export
-setDescAsCategory <- function(x) {
-  return(setCategory(x, category = function(xx) xx$desc))
+setDescAsNamespace <- function(x) {
+  return(setNamespace(x, namespace = function(xx) xx$desc))
 }
 ##--------------------##
 ## show for GmtList
@@ -413,12 +413,12 @@ setMethod("show", "GmtList", function(object) {
   str <- sprintf("A gene-set list in GMT format with %d genesets\n", length(object))
 
   indent <- 2
-  if(hasCategory(object)) {
-    categories <- gsCategory(object)
-    catTbl <- table(categories)
+  if(hasNamespace(object)) {
+    namespaces <- gsNamespace(object)
+    catTbl <- table(namespaces)
     catHead <- sprintf("%s:\n",
                        ifelse(length(catTbl)>1,
-                              "Categories", "Category"))
+                              "Namespaces", "Namespace"))
     catDetailsStr <- sprintf("%s[%d] %s (n=%d)\n",
             paste(rep(" ", indent), collapse=""),
             seq(along=catTbl),

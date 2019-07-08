@@ -268,7 +268,7 @@ setMethod("wmwTest", c("ANY", "list"),
 #'
 #'@return A numeric matrix or vector containing the statistic.
 #'
-#'@references Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional categories in microarray data. _Annals of Applied Statistics_ 2, 286-315.
+#'@references Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional namespaces in microarray data. _Annals of Applied Statistics_ 2, 286-315.
 #'
 #'Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test
 #'accounting for inter-gene correlation. _Nucleic Acids Research_ 40(17):e133
