@@ -424,7 +424,9 @@ setMethod("show", "GmtList", function(object) {
             seq(along=catTbl),
             names(catTbl),
             unname(catTbl))
-    catStr <- paste(catHead, catDetailsStr,sep="")
+    catStr <- paste(catHead, 
+                    paste(catDetailsStr, collapse=""),
+                    sep="")
   } else {
     catStr <- ""
   }
