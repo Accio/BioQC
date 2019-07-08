@@ -5,7 +5,8 @@
 \title{Read signed GMT files}
 \usage{
 readSignedGmt(filename, posPattern = "_UP$", negPattern = "_DN$",
-  nomatch = c("ignore", "pos", "neg"))
+  nomatch = c("ignore", "pos", "neg"), uniqGenes = TRUE,
+  namespace = NULL)
 }
 \arguments{
 \item{filename}{A gmt file}
@@ -15,6 +16,10 @@ readSignedGmt(filename, posPattern = "_UP$", negPattern = "_DN$",
 \item{negPattern}{Pattern of negative gene sets}
 
 \item{nomatch}{options to deal with gene sets that match to neither posPattern nor negPattern patterns}
+
+\item{uniqGenes}{Logical, whether genes should be made unique}
+
+\item{namespace}{Character string or \code{NULL}, namespace of gene-sets}
 }
 \description{
 Read signed GMT files

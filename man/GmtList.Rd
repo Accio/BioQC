@@ -7,7 +7,7 @@
 GmtList(list)
 }
 \arguments{
-\item{list}{A list of genesets; each geneset is a list of at least three fields: 'name', 'desc', and 'genes'. 'name' and 'desc' contains one character string ('desc' can be NULL while 'name' cannot), and 'genes' can be either NULL or a character vector.
+\item{list}{A list of genesets; each geneset is a list of at least three fields: 'name', 'desc', and 'genes'. 'name' and 'desc' contains one character string ('desc' can be NULL while 'name' cannot), and 'genes' can be either NULL or a character vector. In addition, 'namespace' is accepted to represent the namespace.
 
 For convenience, the function also accepts a list of character vectors, each containing a geneset. In this case, the function works as a wrapper of \code{as.gmtlist}}
 }

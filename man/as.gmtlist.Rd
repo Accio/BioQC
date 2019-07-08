@@ -4,7 +4,8 @@
 \alias{as.gmtlist}
 \title{Convert a list of gene symbols into a gmtlist}
 \usage{
-as.gmtlist(list, description = NULL, uniqGenes = TRUE)
+as.gmtlist(list, description = NULL, uniqGenes = TRUE,
+  namespace = NULL)
 }
 \arguments{
 \item{list}{A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes}
@@ -12,6 +13,8 @@ as.gmtlist(list, description = NULL, uniqGenes = TRUE)
 \item{description}{Character, description of gene-sets. The value will be expanded to the same length of the list.}
 
 \item{uniqGenes}{Logical, whether redundant genes should be made unique?}
+
+\item{namespace}{Character or \code{NULL}, namespace of the gene-set}
 }
 \description{
 Convert a list of gene symbols into a gmtlist

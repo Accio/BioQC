@@ -4,20 +4,23 @@
 \alias{readGmt}
 \title{Read in gene-sets from a GMT file}
 \usage{
-readGmt(filename, uniqGenes = TRUE)
+readGmt(filename, uniqGenes = TRUE, namespace = NULL)
 }
 \arguments{
 \item{filename}{Character, GMT file name}
 
 \item{uniqGenes}{Logical, whether duplicated genes should be removed}
+
+\item{namespace}{Character, namespace of the gene-set. It can be used to specify namespace or sources of the gene-sets. By default it is set as \code{NULL}, so no namespace is used and all gene-sets are assumed to come from the same unspecified namespace. The option can be helpful when gene-sets from multiple namespaces are jointly used.}
 }
 \value{
-A \code{GmtList} object, which is a S3-class wrapper of a list. Each 
+A \code{GmtList} object, which is a S4-class wrapper of a list. Each 
 element in the object is a list of (at least) three items: 
 \itemize{
-  \item gene-set name (field \code{name}), character string
-  \item gene-set description (field \code{desc}), character string
-  \item genes (field \code{genes}), a vector of character strings
+  \item gene-set name (field \code{name}), character string, accessible with \code{\link{gsName}}
+  \item gene-set description (field \code{desc}), character string, accessible with \code{\link{gsDesc}}
+  \item genes (field \code{genes}), a vector of character strings, , accessible with \code{\link{gsGenes}}
+  \item namespace (field \code{namespace}), accessible with \code{\link{gsNamespace}}
 }
 }
 \description{
@@ -26,6 +29,7 @@ Read in gene-sets from a GMT file
 \examples{
 gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
 gmt_list <- readGmt(gmt_file)
-gmt_uniqGenes_list <- readGmt(gmt_file, uniqGenes=TRUE)
+gmt_nonUniqGenes_list <- readGmt(gmt_file, uniqGenes=FALSE)
+gmt_namespace_list <- readGmt(gmt_file, uniqGenes=FALSE, namespace="myNamespace")
 
 }
