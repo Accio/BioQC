@@ -31,7 +31,6 @@ setGeneric("wmwTest", function(x, indexList, col = "GeneSymbol", valType = c("p.
 ##--------------------##
 ## IndexList
 ##--------------------##
-
 parseIndex <- function(x, keepNA=FALSE, keepDup=FALSE) {
     if(is.null(x))
         return(x)
@@ -411,20 +410,38 @@ showGeneSet <- function(geneset, nGene=3, indent=2) {
 #' 
 #' @export
 setMethod("show", "GmtList", function(object) {
-              str <- sprintf("A gene-set list in gmt format with %d genesets", length(object))
-              indent <- 2
-              if(length(object)>6) {
-                  heads <- object[1:3]
-                  tails <- object[(length(object)-2):length(object)]
-                  shows <- c(sapply(heads, showGeneSet, indent=indent),
-                             paste(paste(rep(" ", indent), collapse=""), "...", sep=""),
-                             sapply(tails, showGeneSet, indent=indent))
-              } else {
-                  shows <- sapply(object, showGeneSet, indent=indent)
-              }
-              concStr <- paste(c(str, shows, ""), collapse="\n")
-              cat(concStr)
-          })
+  str <- sprintf("A gene-set list in GMT format with %d genesets\n", length(object))
+
+  indent <- 2
+  if(hasCategory(object)) {
+    categories <- gsCategory(object)
+    catTbl <- table(categories)
+    catHead <- sprintf("%s:\n",
+                       ifelse(length(catTbl)>1,
+                              "Categories", "Category"))
+    catDetailsStr <- sprintf("%s[%d] %s (n=%d)\n",
+            paste(rep(" ", indent), collapse=""),
+            seq(along=catTbl),
+            names(catTbl),
+            unname(catTbl))
+    catStr <- paste(catHead, catDetailsStr,sep="")
+  } else {
+    catStr <- ""
+  }
+  showHead <- "Gene-sets:\n"
+  if(length(object)>6) {
+    heads <- object[1:3]
+    tails <- object[(length(object)-2):length(object)]
+    shows <- c(sapply(heads, showGeneSet, indent=indent),
+               paste(paste(rep(" ", indent), collapse=""), "...", sep=""),
+               sapply(tails, showGeneSet, indent=indent))
+  } else {
+    shows <- sapply(object, showGeneSet, indent=indent)
+  }
+  concStr <- paste(c(str, catStr, showHead,
+                     paste(shows, collapse="\n"), "\n"), collapse="")
+  cat(concStr)
+})
 
 
 ##--------------------##
