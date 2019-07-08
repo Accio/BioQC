@@ -42,22 +42,25 @@ as.gmtlist <- function(list, description=NULL,
 #' 
 #' @param filename Character, GMT file name
 #' @param uniqGenes Logical, whether duplicated genes should be removed
+#' @param category Character, category of the gene-set. It can be used to specify namespace or sources of the gene-sets. 
 #' 
-#' @return A \code{GmtList} object, which is a S3-class wrapper of a list. Each 
+#' @return A \code{GmtList} object, which is a S4-class wrapper of a list. Each 
 #' element in the object is a list of (at least) three items: 
 #' \itemize{
-#'   \item gene-set name (field \code{name}), character string
-#'   \item gene-set description (field \code{desc}), character string
-#'   \item genes (field \code{genes}), a vector of character strings
+#'   \item gene-set name (field \code{name}), character string, accessible with \code{\link{gsName}}
+#'   \item gene-set description (field \code{desc}), character string, accessible with \code{\link{gsDesc}}
+#'   \item genes (field \code{genes}), a vector of character strings, , accessible with \code{\link{gsGenes}}
+#'   \item category (field \code{category}), accessible with \code{\link{gsCategory}}
 #' }
 #' 
 #' @examples 
 #' gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
 #' gmt_list <- readGmt(gmt_file)
-#' gmt_uniqGenes_list <- readGmt(gmt_file, uniqGenes=TRUE)
+#' gmt_nonUniqGenes_list <- readGmt(gmt_file, uniqGenes=FALSE)
+#' gmt_category_list <- readGmt(gmt_file, uniqGenes=FALSE, category="myCategory")
 #' 
 #' @export
-readGmt <- function(filename, uniqGenes=TRUE) {
+readGmt <- function(filename, uniqGenes=TRUE, category=NULL) {
   stopifnot(file.exists(filename))
   lines <- readLines(filename)
   splitLines <- strsplit(lines, "\t")
@@ -68,7 +71,7 @@ readGmt <- function(filename, uniqGenes=TRUE) {
     if(uniqGenes) {
       genes <- unique(genes)
     }
-    list(name=x[1], desc=x[2], genes=genes)
+    list(name=x[1], desc=x[2], genes=genes, category=category)
   })
   names(res) <- sapply(res, function(x) x$name)
   return(GmtList(res))
