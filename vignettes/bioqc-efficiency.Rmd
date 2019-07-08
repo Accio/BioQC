@@ -32,7 +32,7 @@ In this vignette, we explain the underlaying algorithmic details of our implemen
 ```{r lib, warning=FALSE, message=FALSE, results="hide", include=FALSE}
 library(testthat)
 library(BioQC)
-library(hgu133plus2.db) ## to simulate an microarray expression dataset
+library(org.Hs.eg.db) ## to simulate an microarray expression dataset
 library(lattice)
 library(latticeExtra)
 library(gridExtra)
@@ -44,7 +44,7 @@ pdf.options(family="ArialMT", useDingbats=FALSE)
 set.seed(1887)
 
 ## list human genes
-humanGenes <- unique(na.omit(unlist(as.list(hgu133plus2SYMBOL))))
+humanGenes <- keys(revmap(org.Hs.egSYMBOL))
 
 ## read tissue-specific gene signatures
 gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt",
@@ -85,7 +85,7 @@ Time benchmark
 
 To demonstrate BioQC's superior performance, we apply both BioQC and the native R `wilcox.test` to random expression matrices and measure the runtime. 
 
-We setup random expression matrices of `r length(humanGenes)` human protein-coding genes of 1, 5, 10, 50, or 100 samples. Genes are $i.i.d$ distributed following $\mathcal{N}(0,1)$. The native R and the *BioQC* implementations of the Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
+We setup random expression matrices of `r length(humanGenes)` human genes of 1, 5, 10, 50, or 100 samples. Genes are $i.i.d$ distributed following $\mathcal{N}(0,1)$. The native R and the *BioQC* implementations of the Wilcoxon-Mann-Whitney test are applied to the matrices respectively.
 
 
 ```{r time_benchmark, echo=FALSE}
