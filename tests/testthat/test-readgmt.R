@@ -11,7 +11,7 @@ expGmt <- list(list(name="GS_A", desc="TestGeneSet_A", genes=c("AKT1", "AKT2", "
                list(name="GS_D_UP", desc="TestGeneSet_D", genes=c("GATA2", "GATA4"), namespace=NULL),
                list(name="GS_D_DN", desc="TestGeneSet_D", genes=c("GATA1", "GATA3"), namespace=NULL),
                list(name="GS_E_DN", desc="TestGeneSet_E", genes=c("TSC1", "TSC2"), namespace=NULL))
-test_that("readGmt",{
+test_that("readGmt reads one GMT file without namespace",{
              expect_equivalent(expGmt, testGmt)
          })
 
@@ -25,9 +25,33 @@ expGmt <- list(list(name="GS_A", desc="TestGeneSet_A", genes=c("AKT1", "AKT2", "
                list(name="GS_D_UP", desc="TestGeneSet_D", genes=c("GATA2", "GATA4"), namespace="BioQC"),
                list(name="GS_D_DN", desc="TestGeneSet_D", genes=c("GATA1", "GATA3"), namespace="BioQC"),
                list(name="GS_E_DN", desc="TestGeneSet_E", genes=c("TSC1", "TSC2"), namespace="BioQC"))
-test_that("readGmt",{
+test_that("readGmt reads one GMT file with namespace",{
   expect_equivalent(expGmt, testGmt)
 })
+
+context("Read two gmt files into a GmtList object with namespaces")
+testFile <- system.file("extdata/test.gmt", package="BioQC")
+testGmtNamed <- readGmt(ns1=testFile, ns2=testFile)
+testGmtUnnamed <- readGmt(testFile, testFile, namespace=c("ns1", "ns2"))
+expGmtTwoNs <- list(list(name="GS_A", desc="TestGeneSet_A", genes=c("AKT1", "AKT2", "AKT3"), namespace="ns1"),
+               list(name="GS_B", desc="TestGeneSet_B", genes=c("MAPK1", "MAPK3", "MAPK8"), namespace="ns1"),
+               list(name="GS_C_UP", desc="TestGeneSet_C", genes=c("ERBB2", "ERBB3"), namespace="ns1"),
+               list(name="GS_C_DN", desc="TestGeneSet_C", genes=c("EGFR", "ERBB4"), namespace="ns1"),
+               list(name="GS_D_UP", desc="TestGeneSet_D", genes=c("GATA2", "GATA4"), namespace="ns1"),
+               list(name="GS_D_DN", desc="TestGeneSet_D", genes=c("GATA1", "GATA3"), namespace="ns1"),
+               list(name="GS_E_DN", desc="TestGeneSet_E", genes=c("TSC1", "TSC2"), namespace="ns1"),
+               list(name="GS_A", desc="TestGeneSet_A", genes=c("AKT1", "AKT2", "AKT3"), namespace="ns2"),
+               list(name="GS_B", desc="TestGeneSet_B", genes=c("MAPK1", "MAPK3", "MAPK8"), namespace="ns2"),
+               list(name="GS_C_UP", desc="TestGeneSet_C", genes=c("ERBB2", "ERBB3"), namespace="ns2"),
+               list(name="GS_C_DN", desc="TestGeneSet_C", genes=c("EGFR", "ERBB4"), namespace="ns2"),
+               list(name="GS_D_UP", desc="TestGeneSet_D", genes=c("GATA2", "GATA4"), namespace="ns2"),
+               list(name="GS_D_DN", desc="TestGeneSet_D", genes=c("GATA1", "GATA3"), namespace="ns2"),
+               list(name="GS_E_DN", desc="TestGeneSet_E", genes=c("TSC1", "TSC2"), namespace="ns2"))
+test_that("readGmt reads two GMT files with namespace",{
+  expect_equivalent(expGmtTwoNs, testGmtNamed)
+  expect_equivalent(expGmtTwoNs, testGmtUnnamed)
+})
+
 
 context("Read gmt file into a SignedGenesets object")
 testSignedGenesets <- readSignedGmt(testFile, nomatch="pos")
