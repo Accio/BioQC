@@ -53,6 +53,18 @@ test_that("readGmt reads two GMT files with namespace",{
 })
 
 
+## appendGmtList
+context("appendGmtList works as expected")
+testFile <- system.file("extdata/test.gmt", package="BioQC")
+testGmt1 <- readGmt(testFile, namespace="ns1")
+testGmt2 <- readGmt(testFile, namespace = "ns2")
+testGmt3 <- readGmt(testFile, namespace = "ns3")
+testGmtAppended <- appendGmtList(testGmt1, testGmt2, testGmt3)
+testGmtAppendedExp <- readGmt(ns1=testFile, ns2=testFile, ns3=testFile)
+test_that("appendGmtList works as expected for three GmtList objects",{
+  expect_equivalent(testGmtAppended, testGmtAppendedExp)
+})
+
 context("Read gmt file into a SignedGenesets object")
 testSignedGenesets <- readSignedGmt(testFile, nomatch="pos")
 expSignedGenesets <- list(list(name="GS_A", pos=c("AKT1", "AKT2", "AKT3"), neg=NULL, namespace=NULL),

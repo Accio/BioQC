@@ -4,14 +4,14 @@
 \alias{readGmt}
 \title{Read in gene-sets from a GMT file}
 \usage{
-readGmt(filename, uniqGenes = TRUE, namespace = NULL)
+readGmt(..., uniqGenes = TRUE, namespace = NULL)
 }
 \arguments{
-\item{filename}{Character, GMT file name}
+\item{...}{Named or unnamed characater string vector, giving file names of one or more GMT format files.}
 
 \item{uniqGenes}{Logical, whether duplicated genes should be removed}
 
-\item{namespace}{Character, namespace of the gene-set. It can be used to specify namespace or sources of the gene-sets. By default it is set as \code{NULL}, so no namespace is used and all gene-sets are assumed to come from the same unspecified namespace. The option can be helpful when gene-sets from multiple namespaces are jointly used.}
+\item{namespace}{Character, namespace of the gene-set. It can be used to specify namespace or sources of the gene-sets. If  \code{NULL} is given, so no namespace is used and all gene-sets are assumed to come from the same unspecified namespace. The option can be helpful when gene-sets from multiple namespaces are jointly used.}
 }
 \value{
 A \code{GmtList} object, which is a S4-class wrapper of a list. Each 
@@ -26,10 +26,19 @@ element in the object is a list of (at least) three items:
 \description{
 Read in gene-sets from a GMT file
 }
+\note{
+Currently, when \code{namespace} is set as \code{NULL}, no namespace is used. This may change in the future, since we may use file base name as the default namespace.
+}
 \examples{
 gmt_file <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt", package="BioQC")
 gmt_list <- readGmt(gmt_file)
 gmt_nonUniqGenes_list <- readGmt(gmt_file, uniqGenes=FALSE)
 gmt_namespace_list <- readGmt(gmt_file, uniqGenes=FALSE, namespace="myNamespace")
+
+## suppose we have two lists of gene-sets to read in
+test_gmt_file <- system.file("extdata/test.gmt", package="BioQC")
+gmt_twons_list <- readGmt(gmt_file, test_gmt_file, namespace=c("BioQC", "test"))
+## alternatively
+gmt_twons_list <- readGmt(BioQC=gmt_file, test=test_gmt_file)
 
 }
