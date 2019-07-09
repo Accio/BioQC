@@ -124,9 +124,9 @@ setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedInde
 #' Convert a list to a GmtList object
 #' @param list A list of genesets; each geneset is a list of at least three fields: 'name', 'desc', and 'genes'. 'name' and 'desc' contains one character string ('desc' can be NULL while 'name' cannot), and 'genes' can be either NULL or a character vector. In addition, 'namespace' is accepted to represent the namespace.
 #'
-#' For convenience, the function also accepts a list of character vectors, each containing a geneset. In this case, the function works as a wrapper of \code{as.gmtlist}
+#' For convenience, the function also accepts a list of character vectors, each containing a geneset. In this case, the function works as a wrapper of \code{as.GmtList}
 #' 
-#' @seealso If a list of gene symbols need to be converted into a GmtList, use 'as.gmtlist' instead
+#' @seealso If a list of gene symbols need to be converted into a GmtList, use 'as.GmtList' instead
 #' 
 #' @examples
 #' testList <- list(list(name="GS_A", desc=NULL, genes=LETTERS[1:3]),
@@ -134,7 +134,7 @@ setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedInde
 #'                  list(name="GS_C", desc="gene set C", genes=NULL))
 #' testGmt <- GmtList(testList)
 #'
-#' # as wrapper of as.gmtlist
+#' # as wrapper of as.GmtList
 #' testGeneList <- list(GS_A=LETTERS[1:3], GS_B=LETTERS[1:5], GS_C=NULL)
 #' testGeneGmt <- GmtList(testGeneList)
 #' 
@@ -143,7 +143,7 @@ setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedInde
 GmtList <- function(list) {
     isGeneSymbols <- all(sapply(list, function(x) is.null(x) || is.character(x)))
     if(isGeneSymbols) {
-        return(as.gmtlist(list))
+        return(as.GmtList(list))
     } else {
         return(new("GmtList", .Data=list))
     }

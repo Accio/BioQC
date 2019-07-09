@@ -11,9 +11,9 @@ testRawGmtList <- list(GS1=c("AKT1", "AKT2"),
                        GS2=c("EGFR", "ERBB2", "ERBB3", "ERBB4"),
                        GS3=NULL,
                        GS4=c("TSC1", "TSC2", "PR", NA))
-testGmtList <- as.gmtlist(testRawGmtList)
+testGmtList <- as.GmtList(testRawGmtList)
 testGmtListWithMethod <- GmtList(testRawGmtList)
-test_that("GmtList works as a wrapper of as.gmtlist", {
+test_that("GmtList works as a wrapper of as.GmtList", {
               expect_equal(testGmtList, testGmtListWithMethod)
           })
 

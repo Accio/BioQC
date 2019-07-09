@@ -76,21 +76,21 @@ test_that("readSignedGmt", {
               expect_equal(expSignedGenesets, testSignedGenesets@.Data)
           })
 
-## as.gmtlist
+## as.GmtList
 context("Convert a list of gene symbols into a gmtlist object")
 testVec <- list(GeneSet1=c("AKT1", "AKT2"),
                 GeneSet2=c("MAPK1", "MAPK3"),
                 GeneSet3=NULL)
-testVecGmtlist <- as.gmtlist(testVec)
+testVecGmtlist <- as.GmtList(testVec)
 expVecGmtlist <- list(GeneSet1=list(name="GeneSet1", desc=NULL, genes=c("AKT1", "AKT2"), namespace=NULL),
                       GeneSet2=list(name="GeneSet2", desc=NULL, genes=c("MAPK1", "MAPK3"), namespace=NULL),
                       GeneSet3=list(name="GeneSet3", desc=NULL, genes=NULL, namespace=NULL))
 
-testVecGmtlist.desc <- as.gmtlist(testVec, desc=c("GS1", "GS2", "GS3"))
+testVecGmtlist.desc <- as.GmtList(testVec, desc=c("GS1", "GS2", "GS3"))
 expVecGmtlist.desc <- list(GeneSet1=list(name="GeneSet1", desc="GS1", genes=c("AKT1", "AKT2"), namespace=NULL),
                       GeneSet2=list(name="GeneSet2", desc="GS2", genes=c("MAPK1", "MAPK3"), namespace=NULL),
                       GeneSet3=list(name="GeneSet3", desc="GS3", genes=NULL, namespace=NULL))
-test_that("as.gmtlist",{
+test_that("as.GmtList",{
               expect_equivalent(testVecGmtlist, expVecGmtlist)
               expect_equivalent(testVecGmtlist.desc, expVecGmtlist.desc)
          })
