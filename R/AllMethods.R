@@ -213,6 +213,7 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 #' myGmtList[1:2]
 #' myGmtList[1] ## default behaviour: not dropping
 #' myGmtList[1,drop=TRUE] ## force dropping
+#' @export
 `[.GmtList` <- function(x, i, drop=FALSE) {
   if(is.character(i))
     i <- match(i, names(x))
@@ -229,6 +230,7 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 #' @examples 
 #' myGmtList <- GmtList(list(gs1=letters[1:3], gs2=letters[3:4], gs3=letters[4:5]))
 #' myGmtList[[1]]
+#' @export
 `[[.GmtList` <- function(x, i) {
   if(is.character(i))
     i <- match(i, names(x))
