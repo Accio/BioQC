@@ -73,7 +73,7 @@ Given an  $m \times n$ input matrix of gene expression data with $m$ genes and $
 Therefore, we approximate the WMW-test by extending $b$ to all genes in the sample, keeping the background unchanged when testing multiple gene sets. Like this, $b$ has to be sorted only once per sample.
 The individual gene sets still need to be sorted, which is not a major issue, as they are small in comparison to the set of background genes. 
 
-<img src="bioqc-efficiency_files/wmw-speedup.svg" style="display:block; margin: auto" alt="bioqc speedup" />
+<img src="wmw-speedup.svg" style="display:block; margin: auto" alt="bioqc speedup" />
 <p class="caption">**Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding futile sorting operations on the same sample.</p>
 
 &nbsp;
