@@ -145,7 +145,9 @@ GmtList <- function(list) {
     if(isGeneSymbols) {
         return(as.GmtList(list))
     } else {
-        return(new("GmtList", .Data=list))
+        res <- new("GmtList", .Data=list)
+        names(res) <- names(list)
+        return(res)
     }
 }
 
