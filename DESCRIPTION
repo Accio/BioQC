@@ -1,8 +1,8 @@
 Package: BioQC
 Type: Package
 Title: Detect tissue heterogeneity in expression profiles with gene sets
-Version: 1.13.3
-Date: 2019-07-09
+Version: 1.15.1
+Date: 2019-11-04
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>, Laura Badi, Gregor
     Sturm, Roland Ambs
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
