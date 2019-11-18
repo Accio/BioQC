@@ -14,8 +14,10 @@
 \alias{wmwTest,ANY,logical-method}
 \alias{wmwTest,ANY,list-method}
 \alias{wmwTest,matrix,SignedIndexList-method}
+\alias{wmwTest,matrix,SignedGenesets-method}
 \alias{wmwTest,numeric,SignedIndexList-method}
 \alias{wmwTest,eSet,SignedIndexList-method}
+\alias{wmwTest,eSet,SignedGenesets-method}
 \title{Wilcoxon-Mann-Whitney rank sum test for high-throughput expression
 profiling data}
 \usage{
@@ -61,10 +63,18 @@ wmwTest(x, indexList, col = "GeneSymbol", valType = c("p.greater",
 \S4method{wmwTest}{matrix,SignedIndexList}(x, indexList, valType,
   simplify = TRUE)
 
+\S4method{wmwTest}{matrix,SignedGenesets}(x, indexList, valType,
+  simplify = TRUE)
+
 \S4method{wmwTest}{numeric,SignedIndexList}(x, indexList, valType,
   simplify = TRUE)
 
 \S4method{wmwTest}{eSet,SignedIndexList}(x, indexList, valType,
+  simplify = TRUE)
+
+\S4method{wmwTest}{eSet,SignedGenesets}(x, indexList, col = "GeneSymbol",
+  valType = c("p.greater", "p.less", "p.two.sided", "U",
+  "abs.log10p.greater", "log10p.less", "abs.log10p.two.sided", "Q"),
   simplify = TRUE)
 }
 \arguments{
@@ -107,7 +117,7 @@ A special case is when \code{x} is an \code{eSet} object
 (e.g. \code{ExpressionSet}), and \code{indexList} is a list returned
 from \code{readGmt} function. In this case, the only requirement is
 that one column named \code{GeneSymbol} in the \code{featureData}
-contain gene symbols used in the GMT file. See the example below.
+contain gene symbols used in the GMT file. The same applies to signed Gmt files. See the example below.
 
 Besides the conventional value types such as \sQuote{p.greater},
 \sQuote{p.less}, \sQuote{p.two.sided} , and \sQuote{U} (the U-statistic), 
@@ -146,10 +156,16 @@ rather greater than (positive) or  less than (negative).
 \item \code{x = matrix,indexList = SignedIndexList}: \code{x} is a \code{matrix} and \code{indexList} is a 
 \code{SignedIndexList}
 
+\item \code{x = matrix,indexList = SignedGenesets}: \code{x} is a \code{eSet} and \code{indexList} is a 
+\code{SignedIndexList}
+
 \item \code{x = numeric,indexList = SignedIndexList}: \code{x} is a \code{numeric} and \code{indexList} is a 
 \code{SignedIndexList}
 
 \item \code{x = eSet,indexList = SignedIndexList}: \code{x} is a \code{eSet} and \code{indexList} is a 
+\code{SignedIndexList}
+
+\item \code{x = eSet,indexList = SignedGenesets}: \code{x} is a \code{eSet} and \code{indexList} is a 
 \code{SignedIndexList}
 }}
 
@@ -218,6 +234,14 @@ eset<-new("ExpressionSet",
          featureData=new("AnnotatedDataFrame",data.frame(GeneSymbol=gss)))
 esetWmwRes <- wmwTest(eset ,gmt_list, valType="p.greater")
 summary(esetWmwRes)
+
+## using signed GMT file
+signed_gmt_file <- system.file("extdata/test.gmt", package="BioQC")
+signed_gmt <- readSignedGmt(signed_gmt_file)
+esetSignedWmwRes <- wmwTest(eset, signed_gmt, valType="p.greater")
+
+esetMat <- exprs(eset); rownames(esetMat) <- fData(eset)$GeneSymbol
+esetSignedWmwRes2 <- wmwTest(esetMat, signed_gmt, valType="p.greater")
 }
 \references{
 Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional namespaces in microarray data. _Annals of Applied Statistics_ 2, 286-315.
