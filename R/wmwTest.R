@@ -252,7 +252,7 @@ setMethod("wmwTest", c("ANY", "list"),
 #'(e.g. \code{ExpressionSet}), and \code{indexList} is a list returned
 #'from \code{readGmt} function. In this case, the only requirement is
 #'that one column named \code{GeneSymbol} in the \code{featureData}
-#'contain gene symbols used in the GMT file. See the example below.
+#'contain gene symbols used in the GMT file. The same applies to signed Gmt files. See the example below.
 #'
 #'Besides the conventional value types such as \sQuote{p.greater},
 #'\sQuote{p.less}, \sQuote{p.two.sided} , and \sQuote{U} (the U-statistic), 
@@ -349,6 +349,14 @@ setMethod("wmwTest", c("ANY", "list"),
 #'          featureData=new("AnnotatedDataFrame",data.frame(GeneSymbol=gss)))
 #'esetWmwRes <- wmwTest(eset ,gmt_list, valType="p.greater")
 #'summary(esetWmwRes)
+#'
+#'## using signed GMT file
+#'signed_gmt_file <- system.file("extdata/test.gmt", package="BioQC")
+#'signed_gmt <- readSignedGmt(signed_gmt_file)
+#'esetSignedWmwRes <- wmwTest(eset, signed_gmt, valType="p.greater")
+#'
+#'esetMat <- exprs(eset); rownames(esetMat) <- fData(eset)$GeneSymbol
+#'esetSignedWmwRes2 <- wmwTest(esetMat, signed_gmt, valType="p.greater")
 #'@name wmwTest
 NULL
 
@@ -392,34 +400,35 @@ wmwTestSignedGenesets.default <- function(matrix,
 #'@describeIn wmwTest \code{x} is a \code{matrix} and \code{indexList} is a 
 #'\code{SignedIndexList}
 setMethod("wmwTest", c("matrix", "SignedIndexList"), function(x, indexList, valType, simplify = TRUE) {
-    wmwTestSignedGenesets.default(x, indexList, valType, simplify = simplify)
+    wmwTestSignedGenesets.default(x, indexList, valType=valType, simplify = simplify)
 })
+
+#'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a 
+#'\code{SignedIndexList}
+setMethod("wmwTest", c("matrix", "SignedGenesets"),
+          function(x, indexList,
+                   valType, simplify = TRUE) {
+            indexList <- matchGenes(indexList, x)
+            wmwTestSignedGenesets.default(x, indexList, valType=valType, simplify=simplify)
+          })
+
 #'@describeIn wmwTest \code{x} is a \code{numeric} and \code{indexList} is a 
 #'\code{SignedIndexList}
 setMethod("wmwTest", c("numeric", "SignedIndexList"), function(x, indexList, valType, simplify = TRUE) {
               x <- matrix(x, ncol=1L)
-              wmwTestSignedGenesets.default(x, indexList, valType, simplify = simplify)
+              wmwTestSignedGenesets.default(x, indexList, valType=valType, simplify = simplify)
 })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a 
 #'\code{SignedIndexList}
 setMethod("wmwTest", c("eSet", "SignedIndexList"), function(x, indexList, valType, simplify = TRUE) {
-              wmwTestSignedGenesets.default(exprs(x), indexList, valType, simplify = simplify)
+              wmwTestSignedGenesets.default(exprs(x), indexList, valType=valType, simplify = simplify)
           })
 
-##setGeneric("wmwTest",function(object, sub, alternative, statistic) standardGeneric("wmwTest"))
-##setGeneric("wmwTest",function(exprs, index, alternative) standardGeneric("wmwTest"))
-##setMethod("wmwTest", signature=c("ANY", "ANY", "character") , function(exprs, index, alternative) {
-##  wmwTestC(exprs, index, alternative=alternative)
-##})
-##setMethod("wmwTest", signature=c("eSet", "gmtlist", "character"), function(exprs, index, alternative) {
-##  if(!"GeneSymbol" %in% colnames(fData(exprs)))
-##    stop("ExpressionSet must has 'GeneSymbol' as fData column which contains gene symbols used in the GMT files\n")
-##  gb <- as.character(fData(exprs)[,"GeneSymbol"])
-##  ind <- lapply(index, function(x) {
-##    rind <- match(x$genes, gb)
-##    rind <- rind[!is.na(rind)]
-##    return(rind-1L)
-##  })
-##  names(ind) <- sapply(index, function(x) x$name)
-##  wmwTest(exprs(exprs), ind, alternative=alternative)
-##})
+#'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a 
+#'\code{SignedIndexList}
+setMethod("wmwTest", c("eSet", "SignedGenesets"),
+          function(x, indexList, col="GeneSymbol",
+                   valType, simplify = TRUE) {
+            indexList <- matchGenes(indexList, x, col = col)
+            wmwTestSignedGenesets.default(exprs(x), indexList, valType=valType, simplify=simplify)
+          })
