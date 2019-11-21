@@ -1,4 +1,8 @@
-## validity functions
+#' Function to validate a GmtList object
+#' @param object A GmtList object
+#' Use \code{setValidity("GmtList", "isValidGmtList")} to check integrity of GmtList objects.
+#' It can be very slow, therefore the feature is not turned on by default
+#' @export
 isValidGmtList <- function(object) {
   isList <- sapply(object, is.list)
   if(!all(isList))
@@ -18,7 +22,11 @@ isValidGmtList <- function(object) {
   return(TRUE)
 }
 
-
+#' Function to validate a SignedGenesets object
+#' @param object A SignedGenesets object
+#' Use \code{setValidity("SignedGenesets", "isValidSignedGenesets")} to check integrity of SignedGenesets objects.
+#' It can be very slow, therefore the feature is not turned on by default
+#' @export
 isValidSignedGenesets<- function(object) {
   isList <- sapply(object, is.list)
   if(!all(isList))
@@ -39,6 +47,11 @@ isValidSignedGenesets<- function(object) {
   return(TRUE)
 }
 
+#' Function to validate a BaseIndexList  object
+#' @param object A BaseIndexList  object
+#' Use \code{setValidity("BaseIndexList", "isValidBaseIndexList")} to check integrity of BaseIndexList  objects.
+#' It can be very slow, therefore the feature is not turned on by default
+#' @export
 isValidBaseIndexList <- function(object) {
   if(!(length(object@offset)==1L && is.integer(object@offset)))
     return(sprintf("offset must be a single integer. Its value now:%d; class:%s; length:%d",
@@ -52,6 +65,11 @@ isValidBaseIndexList <- function(object) {
   return(TRUE)
 }
 
+#' Function to validate an IndexList object
+#' @param object an IndexList object
+#' Use \code{setValidity("BaseIndexList", "isValidBaseIndexList")} to check integrity of IndexList objects.
+#' It can be very slow, therefore the feature is not turned on by default
+#' @export
 isValidIndexList <- function(object) {
   isInd <- sapply(object, function(x) is.null(x) || is.integer(x))
   if(!all(isInd))
@@ -60,6 +78,11 @@ isValidIndexList <- function(object) {
   return(TRUE)
 }
 
+#' Function to validate a SignedIndexList object
+#' @param object a SignedIndexList object
+#' Use \code{setValidity("SignedIndexList", "isValidSignedIndexList")} to check integrity of SignedIndexList objects.
+#' It can be very slow, therefore the feature is not turned on by default
+#' @export
 isValidSignedIndexList <- function(object) {
   isSigned <- sapply(object, function(x)
     all(c("pos", "neg") %in% names(x)))
@@ -79,13 +102,13 @@ isValidSignedIndexList <- function(object) {
 #' is in in turn a list containing following items: name, desc, and genes.
 #' @exportClass GmtList
 setClass("GmtList", 
-         contains="list", 
-         validity=isValidGmtList)
+         contains="list")
 
 #' An S4 class to hold signed genesets, each item in the list is in in turn a 
 #' list containing following items: name, pos, and neg.
 #' @exportClass SignedGenesets
-setClass("SignedGenesets", contains="list", validity=isValidSignedGenesets)
+setClass("SignedGenesets", contains="list")
+
 
 #' An S4 class to hold a list of indices, with the possibility to specify the 
 #' offset of the indices. IndexList and SignedIndexList extend this class
@@ -99,7 +122,7 @@ setClass("BaseIndexList",
              "keepNA"="logical",
              "keepDup"="logical"),
          prototype=prototype(offset=1L, keepNA=FALSE, keepDup=FALSE),
-         contains="list", validity=isValidBaseIndexList)
+         contains="list")
 
 #' An S4 class to hold a list of integers as indices, with the possibility to specify the offset of the indices
 #'
@@ -108,14 +131,25 @@ setClass("BaseIndexList",
 #' @slot keepDup Logical, whether duplicated values are kept during construction
 #' @name IndexList-class
 #' @exportClass IndexList
-setClass("IndexList", contains="BaseIndexList", validity=isValidIndexList)
+setClass("IndexList", contains="BaseIndexList")
 
 #'An S4 class to hold a list of signed integers as indices, with the possibility to specify the offset of the indices
 #' @slot offset An integer specifying the value of first element. Default 1
 #' @slot keepNA Logical, whether NA is kept during construction
 #' @slot keepDup Logical, whether duplicated values are kept during construction
 #' @exportClass SignedIndexList
-setClass("SignedIndexList", contains="BaseIndexList", validity=isValidSignedIndexList)
+setClass("SignedIndexList", contains="BaseIndexList")
+
+##----------------------------------------##
+## set validity checking functions
+##----------------------------------------##
+
+## they are disabled by default, since running them over large lists is slow
+## setValidity("GmtList", isValidGmtList)
+## setValidity("SignedGenesets", isValidSignedGenesets)
+## setValidity("BaseIndexList", isValidBaseIndexList)
+## setValidity("IndexList", isValidIndexList)
+## setValidity("SignedIndexList", isValidSignedIndexList)
 
 ##----------------------------------------##
 ## Constructors
