@@ -4,8 +4,7 @@
 \alias{as.GmtList}
 \title{Convert a list of gene symbols into a gmtlist}
 \usage{
-as.GmtList(list, description = NULL, uniqGenes = TRUE,
-  namespace = NULL)
+as.GmtList(list, description = NULL, uniqGenes = TRUE, namespace = NULL)
 }
 \arguments{
 \item{list}{A named list with character vectors of genes. Names will become names of gene sets; character vectors will become genes}
