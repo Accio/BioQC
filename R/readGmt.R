@@ -13,7 +13,7 @@ readSingleGmt <- function(filename, uniqGenes=TRUE, namespace=NULL) {
     list(name=x[1], desc=x[2], genes=genes, namespace=namespace)
   })
   names(res) <- sapply(res, function(x) x$name)
-  return(GmtList(res))
+  return(res)
 }
 
 #' Read in gene-sets from a GMT file
