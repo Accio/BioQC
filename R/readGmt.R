@@ -1,5 +1,6 @@
 readSingleGmt <- function(filename, uniqGenes=TRUE, namespace=NULL) {
-  stopifnot(file.exists(filename))
+  if(!file.exists(filename))
+    stop(sprintf("File %s does not exist", filename))
   lines <- readLines(filename)
   splitLines <- strsplit(lines, "\t")
   isValid <- sapply(splitLines, function(x) length(x)>=3)
