@@ -1,70 +1,50 @@
+## AUTOMATICALLY GENERATED FROM TEMPLATE (Mo Jul  8 20:50:58 CEST 2019). DO NOT EDIT IT MANUALLY!
 ################################################################################
 ##
 ##  Makefile
 ##      Author: Jitao David Zhang <jitao_david.zhang@roche.com>
-##	BEDA TRS, pRED, Hoffmann-La Roche AG
+##	    F. Hoffmann-La Roche AG
 ##      Description: Makefile for building distributions etc.
-##                   the Makefile provides the following targets:
-##                   
-##                   - make install  calls R CMD INSTALL
-##                   - make check    calls R CMD check (with RUnit)
-##                   - make dist     calls R CMD build
 ##
 ################################################################################
-R=R
-PKG_ROOT_DIR=`pwd`
-
-PKG=BioQC
-
-PKG_VERSION=`awk 'BEGIN{FS=":"}{if ($$1=="Version") {gsub(/ /, "",$$2);print $$2}}' ${PKG}/DESCRIPTION`
-
-PKG_SRC_DIR=$(PKG_ROOT_DIR)/src
+R:=R
 
 roxygenise:
 	@echo '====== roxygenize ======'	
-	@(cd ..; ${R} --vanilla -q -e "library(devtools);load_all(\"$(PKG)\");document(\"$(PKG)\")")
+	@(${R} -q -e "library(devtools);load_all();document('.')")
 	@echo ' '
+
+test:
+	@echo '====== test ======'
+	@(${R} -q -e "library(devtools);test('.')")
+	@echo 
 
 doVignettes:
 	@echo "====== vignettes ======"
-	@(${R} --vanilla -q -e "library(devtools); devtools::build_vignettes()")
+	@(${R} -q -e "library(devtools); devtools::build_vignettes()")
 	@echo ' '
 
-build: clean
-	@echo '===== Building ====='
-	@(cd ..; ${R} CMD build $(PKG))
-	@echo '===== End building ====='
-	@echo ' '
-
-dist:	clean roxygenise
+build: roxygenise
 	@echo '====== Building Distribution ======'
-	@(cd ..; ${R} CMD build ${DISTADD} $(PKG) )
+	@(${R} -q -e "library(devtools); devtools::build()")
 	@echo '====== Building finished ======'
 	@echo ' '
 
-install: dist
+install: roxygenise
 	@echo '====== Installing Package ======'
-	(cd ..; ${R} CMD INSTALL ${PKG}_${PKG_VERSION}.tar.gz) 
+	@(${R} -q -e "library(devtools); devtools::install(reload=FALSE, quick=FALSE, build=TRUE, upgrade=FALSE)")
 	@echo '====== Installing finished ======'
 	@echo ' '
 
-install-test: 
-	${R} CMD INSTALL ../${PKG} && ${R} -e "library(testthat); test_dir('./tests')"
-
-check:
+check: roxygenise
 	@echo '====== Checking Package ======'
-	@(cd ..; ${R} --vanilla -q -e "devtools::check(\"$(PKG)\")")
+	@(${R} -q -e "library(devtools);check('.', check_dir=\"..\")")
 	@echo '====== Checking finished ======'
 	@echo ' '
 
-envcheck: dist
-	@echo '====== Checking Package w/o Environmental Vars ======'
-	@(cd ..; env -i BIOINFOCONFDIR=${BIOINFOCONFDIR} PATH="/usr/bin/:/usr/local/bin:/bin/:/usr/bin/:/usr/sbin/:/usr/local/bin/:/usr/X11R6/bin:/opt/oracle/client/10/run_1/bin:/usr/kerberos/bin:" LD_LIBRARY_PATH="/homebasel/beda/zhangj83/libs" ${R} CMD check ${CHECKADD} ${PKG}_${PKG_VERSION}.tar.gz) 
-	@echo '====== Checking finished ======'
-
 clean:
 	@echo '====== Cleaning Package ======'
-	@(rm -f $(PKG_SRC_DIR)/*.o $(PKG_SRC_DIR)/*.so $(PKG_SRC_DIR)/*.dll $(PKG_SRC_DIR)/*.rds)
+	@(rm -f src/*.o src/*.so src/*.dll src/*.rds)
 	@(find . -type f -name "*~" -exec rm '{}' \;)
 	@(find . -type f -name ".Rhistory" -exec rm '{}' \;)
 	@echo ' '
