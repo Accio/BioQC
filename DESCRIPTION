@@ -49,4 +49,4 @@ VignetteBuilder: knitr
 biocViews: GeneExpression,QualityControl,StatisticalMethod, GeneSetEnrichment
 License: GPL (>=3)
 Encoding: UTF-8
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
