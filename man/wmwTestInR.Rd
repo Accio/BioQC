@@ -4,8 +4,7 @@
 \alias{wmwTestInR}
 \title{Wilcoxon-Mann-Whitney test in R}
 \usage{
-wmwTestInR(x, sub, valType = c("p.greater", "p.less", "p.two.sided",
-  "W"))
+wmwTestInR(x, sub, valType = c("p.greater", "p.less", "p.two.sided", "W"))
 }
 \arguments{
 \item{x}{A numerical vector}

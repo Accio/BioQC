@@ -4,9 +4,14 @@
 \alias{readSignedGmt}
 \title{Read signed GMT files}
 \usage{
-readSignedGmt(filename, posPattern = "_UP$", negPattern = "_DN$",
-  nomatch = c("ignore", "pos", "neg"), uniqGenes = TRUE,
-  namespace = NULL)
+readSignedGmt(
+  filename,
+  posPattern = "_UP$",
+  negPattern = "_DN$",
+  nomatch = c("ignore", "pos", "neg"),
+  uniqGenes = TRUE,
+  namespace = NULL
+)
 }
 \arguments{
 \item{filename}{A gmt file}
