@@ -119,9 +119,13 @@ setNamespace <- function(x, namespace) {
       return(gs)
     }))
   } else {
-    stopifnot(length(namespace) == length(x) &&
+    stopifnot((length(namespace) == length(x) ||
+                 length(namespace) == 1) &&
                 (is.character(namespace) || is.factor(namespace) || 
                    is.numeric(namespace) || is.logical(namespace)))
+    if(length(namespace)==1) {
+      namespace <- rep_len(namespace, length(x))
+    }
     res <- GmtList(lapply(seq(along=x), function(i) {
       gs <- x[[i]]
       gs$namespace <- namespace[i]
