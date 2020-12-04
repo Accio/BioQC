@@ -29,18 +29,17 @@ wmwTest(
   simplify = TRUE
 )
 
-\S4method{wmwTest}{matrix,IndexList}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{matrix,IndexList}(x, indexList, valType = "p.greater", simplify = TRUE)
 
-\S4method{wmwTest}{numeric,IndexList}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{numeric,IndexList}(x, indexList, valType = "p.greater", simplify = TRUE)
 
-\S4method{wmwTest}{matrix,GmtList}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{matrix,GmtList}(x, indexList, valType = "p.greater", simplify = TRUE)
 
 \S4method{wmwTest}{eSet,GmtList}(
   x,
   indexList,
   col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-    "log10p.less", "abs.log10p.two.sided", "Q"),
+  valType = "p.greater",
   simplify = TRUE
 )
 
@@ -48,8 +47,7 @@ wmwTest(
   x,
   indexList,
   col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-    "log10p.less", "abs.log10p.two.sided", "Q"),
+  valType = "p.greater",
   simplify = TRUE
 )
 
@@ -57,8 +55,7 @@ wmwTest(
   x,
   indexList,
   col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-    "log10p.less", "abs.log10p.two.sided", "Q"),
+  valType = "p.greater",
   simplify = TRUE
 )
 
@@ -66,16 +63,15 @@ wmwTest(
   x,
   indexList,
   col = "GeneSymbol",
-  valType = c("p.greater", "p.less", "p.two.sided", "U", "abs.log10p.greater",
-    "log10p.less", "abs.log10p.two.sided", "Q"),
+  valType = "p.greater",
   simplify = TRUE
 )
 
-\S4method{wmwTest}{ANY,numeric}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{ANY,numeric}(x, indexList, valType = "p.greater", simplify = TRUE)
 
-\S4method{wmwTest}{ANY,logical}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{ANY,logical}(x, indexList, valType = "p.greater", simplify = TRUE)
 
-\S4method{wmwTest}{ANY,list}(x, indexList, valType, simplify = TRUE)
+\S4method{wmwTest}{ANY,list}(x, indexList, valType = "p.greater", simplify = TRUE)
 
 \S4method{wmwTest}{matrix,SignedIndexList}(x, indexList, valType, simplify = TRUE)
 
@@ -148,7 +144,7 @@ reports absolute log10-transformation of \emph{p}-value of the
 two-side variant,  and gives a proper sign to it, depending on whether it is
 rather greater than (positive) or  less than (negative). 
 
-From version 1.17-2, the rank-biserial correlation coefficient (\sQuote{r})
+From version 1.19.1, the rank-biserial correlation coefficient (\sQuote{r})
 and the common language effect size (\sQuote{f}) are supported value types.
 }
 \section{Methods (by class)}{

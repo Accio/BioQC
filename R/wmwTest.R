@@ -148,64 +148,64 @@ wmwTest.default <- function(matrix,
 #'@describeIn wmwTest \code{x} is a \code{matrix} and \code{indexList} is a \code{IndexList}
 setMethod("wmwTest", c("matrix", "IndexList"),
           function(x, indexList,
-                   valType, simplify = TRUE) {
+                   valType="p.greater", simplify = TRUE) {
               wmwTest.default(x, indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{numeric} and \code{indexList} is a \code{IndexList}
 setMethod("wmwTest", c("numeric", "IndexList"),
           function(x, indexList,
-                    valType, simplify = TRUE) {
+                    valType="p.greater", simplify = TRUE) {
               x <- matrix(x, ncol=1)
               wmwTest.default(x, indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{matrix} and \code{indexList} is a \code{GmtList}
 setMethod("wmwTest", c("matrix", "GmtList"),
           function(x, indexList,
-                   valType, simplify = TRUE) {
+                   valType="p.greater", simplify = TRUE) {
               indexList <- matchGenes(indexList, x)
               wmwTest.default(x, indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{GmtList}
 setMethod("wmwTest", c("eSet", "GmtList"),
           function(x, indexList, col="GeneSymbol",
-                   valType, simplify = TRUE) {
+                   valType="p.greater", simplify = TRUE) {
               indexList <- matchGenes(indexList, x, col = col)
               wmwTest.default(exprs(x), indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{numeric}
 setMethod("wmwTest", c("eSet", "numeric"),
           function(x, indexList, col="GeneSymbol",
-                   valType, simplify = TRUE) {
+                   valType="p.greater", simplify = TRUE) {
               wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{logical}
 setMethod("wmwTest", c("eSet", "logical"),
           function(x, indexList, col="GeneSymbol",
-                   valType, simplify = TRUE) {
+                   valType="p.greater", simplify = TRUE) {
               wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is a \code{eSet} and \code{indexList} is a \code{list}
 setMethod("wmwTest", c("eSet", "list"),
           function(x, indexList, col="GeneSymbol",
-                   valType, simplify = TRUE) {
+                   valType="p.greater", simplify = TRUE) {
               indexList <- IndexList(indexList)
               wmwTest(exprs(x), indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is \code{ANY} and \code{indexList} is a \code{numeric}
 setMethod("wmwTest", c("ANY", "numeric"),
-          function(x, indexList, valType, simplify = TRUE) {
+          function(x, indexList, valType="p.greater", simplify = TRUE) {
               indexList <- IndexList(indexList)
               wmwTest(x, indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is \code{ANY} and \code{indexList} is a \code{logical}
 setMethod("wmwTest", c("ANY", "logical"),
-          function(x, indexList, valType, simplify = TRUE) {
+          function(x, indexList, valType="p.greater", simplify = TRUE) {
               indexList <- IndexList(indexList)
               wmwTest(x, indexList, valType=valType, simplify=simplify)
           })
 #'@describeIn wmwTest \code{x} is \code{ANY} and \code{indexList} is a \code{list}
 setMethod("wmwTest", c("ANY", "list"),
-          function(x, indexList, valType, simplify = TRUE) {
+          function(x, indexList, valType="p.greater", simplify = TRUE) {
               indexList <- IndexList(indexList)
               wmwTest(x, indexList, valType=valType, simplify=simplify)
           })
