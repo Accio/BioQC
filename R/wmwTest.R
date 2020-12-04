@@ -96,8 +96,8 @@ TYPE_CODES <- c("p.greater"=0L, "p.less"=1L,
                 "log10p.less"=5L,
                 "abs.log10p.two.sided"=6L,
                 "Q"=7L,
-		"r"=8L,
-		"f"=9L)
+                "r"=8L,
+                "f"=9L)
 #'prints the options of valTypes of wmwTest
 valTypes <- function() names(TYPE_CODES)
 

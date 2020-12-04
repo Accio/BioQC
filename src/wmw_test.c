@@ -23,7 +23,7 @@ typedef enum testtype {greater=0,
                        abslog10twoSided=6,
                        Q=7,
                        r=8,
-		       f=9} TestType;
+                       f=9} TestType;
 
 /*
  * void pnorm_both(double x, double *cum, double *ccum, int i_tail, int log_p)
