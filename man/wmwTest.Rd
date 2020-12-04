@@ -146,7 +146,10 @@ negative for less than); \code{abs.log10p.two.sided} transforms
 two-sided \emph{p}-values to non-negative values; and \code{Q} score
 reports absolute log10-transformation of \emph{p}-value of the
 two-side variant,  and gives a proper sign to it, depending on whether it is
-rather greater than (positive) or  less than (negative).
+rather greater than (positive) or  less than (negative). 
+
+From version 1.17-2, the rank-biserial correlation coefficient (\sQuote{r})
+and the common language effect size (\sQuote{f}) are supported value types.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -210,6 +213,8 @@ rd2 <- rd - ifelse(rl, 0.2, 0)
 wmwTest(rd2, rl, valType="p.greater")
 wmwTest(rd2, rl, valType="p.two.sided")
 wmwTest(rd2, rl, valType="p.less")
+wmwTest(rd2, rl, valType="r")
+wmwTest(rd2, rl, valType="f")
 
 ## matrix forms
 rmat <- matrix(c(rd, rd1, rd2), ncol=3, byrow=FALSE)
@@ -225,6 +230,8 @@ wmwTest(rmat, which(rl), valType="abs.log10p.greater")
 wmwTest(rmat, which(rl), valType="log10p.less")
 wmwTest(rmat, which(rl), valType="abs.log10p.two.sided")
 wmwTest(rmat, which(rl), valType="Q")
+wmwTest(rmat, which(rl), valType="r")
+wmwTest(rmat, which(rl), valType="f")
 
 ## using ExpressionSet
 data(sample.ExpressionSet)
