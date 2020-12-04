@@ -21,7 +21,9 @@ typedef enum testtype {greater=0,
                        abslog10greater=4,
                        log10less=5,
                        abslog10twoSided=6,
-                       Q=7} TestType;
+                       Q=7,
+                       r=8,
+		       f=9} TestType;
 
 /*
  * void pnorm_both(double x, double *cum, double *ccum, int i_tail, int log_p)
@@ -41,10 +43,14 @@ double wmw_test_stat(double rankSum, int nInds, int nTotal, double tieCoef, Test
   
   if(type == U) {
     res = uStat;
+  } else if (type == r) {
+    res = 2 * uStat / nTotal / nInds - 1;
+  } else if (type == f) {
+    res = uStat / nTotal / nInds;
   } else {
     mu = (double)nInds*nBg*0.5; // NOT mu=n1*n2*0.5
     sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
-    
+
     if(type == greater || type == abslog10greater) { /* greater */
 zval = (uStat+0.5-mu)/sqrt(sigma2); // z lower tail
       pnorm_both(zval, &pgt, &plt, 0, 0);
