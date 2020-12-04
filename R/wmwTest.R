@@ -95,7 +95,9 @@ TYPE_CODES <- c("p.greater"=0L, "p.less"=1L,
                 "abs.log10p.greater"=4L,
                 "log10p.less"=5L,
                 "abs.log10p.two.sided"=6L,
-                "Q"=7L)
+                "Q"=7L,
+		"r"=8L,
+		"f"=9L)
 #'prints the options of valTypes of wmwTest
 valTypes <- function() names(TYPE_CODES)
 
@@ -266,6 +268,9 @@ setMethod("wmwTest", c("ANY", "list"),
 #'two-side variant,  and gives a proper sign to it, depending on whether it is
 #'rather greater than (positive) or  less than (negative). 
 #'
+#'From version 1.19.1, the rank-biserial correlation coefficient (\sQuote{r})
+#'and the common language effect size (\sQuote{f}) are supported value types.
+#'
 #'@return A numeric matrix or vector containing the statistic.
 #'
 #'@references Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional namespaces in microarray data. _Annals of Applied Statistics_ 2, 286-315.
@@ -307,6 +312,8 @@ setMethod("wmwTest", c("ANY", "list"),
 #'wmwTest(rd2, rl, valType="p.greater")
 #'wmwTest(rd2, rl, valType="p.two.sided")
 #'wmwTest(rd2, rl, valType="p.less")
+#'wmwTest(rd2, rl, valType="r")
+#'wmwTest(rd2, rl, valType="f")
 #'
 #'## matrix forms
 #'rmat <- matrix(c(rd, rd1, rd2), ncol=3, byrow=FALSE)
@@ -322,6 +329,8 @@ setMethod("wmwTest", c("ANY", "list"),
 #'wmwTest(rmat, which(rl), valType="log10p.less")
 #'wmwTest(rmat, which(rl), valType="abs.log10p.two.sided")
 #'wmwTest(rmat, which(rl), valType="Q")
+#'wmwTest(rmat, which(rl), valType="r")
+#'wmwTest(rmat, which(rl), valType="f")
 #'
 #'## using ExpressionSet
 #'data(sample.ExpressionSet)
@@ -365,7 +374,7 @@ wmwTestSignedGenesets.default <- function(matrix,
                                           signedIndexList,
                                           valType=c("p.greater", "p.less", "p.two.sided", "U",
                                               "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
-                                              "Q"),
+                                              "Q", "r", "f"),
                                           simplify=TRUE) {
     if(!is.matrix(matrix) || !is(signedIndexList, "SignedIndexList"))
         stop("'matrix' and 'signedIndexList' must be matrix and an SignedIndexList object, respectively")
