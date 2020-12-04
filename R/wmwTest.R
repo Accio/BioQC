@@ -115,7 +115,7 @@ wmwTest.default <- function(matrix,
                             indexList,
                             valType=c("p.greater", "p.less", "p.two.sided", "U",
                                 "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
-                                "Q"),
+                                "Q", "r", "f"),
                             simplify=TRUE) {
     if(!is.matrix(matrix) || !is(indexList, "IndexList"))
         stop("'matrix' and 'indexList' must be matrix and an IndexList object, respectively")
