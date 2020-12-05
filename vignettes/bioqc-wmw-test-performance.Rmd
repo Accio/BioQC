@@ -22,10 +22,9 @@ library(hgu133plus2.db) ## to simulate an microarray expression dataset
 library(lattice)
 library(latticeExtra)
 library(gridExtra)
-library(GEOquery)
-library(xtable)
 library(gplots)
 library(reshape2)
+library(plyr)
 library(ggplot2)
 library(rbenchmark)
 
@@ -51,8 +50,53 @@ Based on these considerations, BioQC implements a computationally efficient vers
 
 Nevertheless, in order to demonstrate the power of WMW test in comparison with the KS-test or the t-test, we performed the sensitivity benchmark described in the [simulation studies](bioqc-simulation.html), for the two alternative tests respectively. 
 
+```{r helper, include=FALSE}
+## Summarizes data.
+## Gives count, mean, standard deviation, standard error of the mean, and confidence interval (default 95%).
+##   data: a data frame.
+##   measurevar: the name of a column that contains the variable to be summariezed
+##   groupvars: a vector containing names of columns that contain grouping variables
+##   na.rm: a boolean that indicates whether to ignore NA's
+##   conf.interval: the percent range of the confidence interval (default is 95%)
+## 
+## Source: http://www.cookbook-r.com/Manipulating_data/Summarizing_data/
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
+        conf.interval=.95, .drop=TRUE) {
+
+# New version of length which can handle NA's: if na.rm==T, don't count them
+        length2 <- function (x, na.rm=FALSE) {
+            if (na.rm) sum(!is.na(x))
+            else       length(x)
+        }
+
+# This does the summary. For each group's data frame, return a vector with
+# N, mean, and sd
+    datac <- ddply(data, groupvars, .drop=.drop,
+            .fun = function(xx, col) {
+            c(N    = length2(xx[[col]], na.rm=na.rm),
+                mean = mean   (xx[[col]], na.rm=na.rm),
+                sd   = sd     (xx[[col]], na.rm=na.rm)
+             )
+            },
+            measurevar
+            )
+
+# Rename the "mean" column    
+        datac <- rename(datac, c("mean" = measurevar))
+
+        datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+
+# Confidence interval multiplier for standard error
+# Calculate t-statistic for confidence interval: 
+# e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+        ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+        datac$ci <- datac$se * ciMult
+
+        return(datac)
+}
+```
+
 ```{r sensitivity_benchmark_fig, echo=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, dev='svg', fig.cap="**Figure 1:** Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. The lines show the enrichment score for the Wilcoxon-Mann-Whitney test, the t-test and the Kolmogorov-Smirnov test respectively. In the right panel, outliers were added by adding a random value to 1% of the simulated genes. "}
-source("helper.R")
 
 randomMatrixButOneSignature <- function(rows=humanGenes, signatureGenes,
                                         amplitudes=seq(0, 3, by=0.5)) {
@@ -120,12 +164,12 @@ comp.summary.outlier = compare.tests(senseMatOutlier)
 plot.comp = ggplot(comp.summary, aes(x=senseAmplitudes, y=value, color=variable)) + 
   geom_line() +
   geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.1) + 
-  geom_point() + xlab("Mean expression differnce") + ylab("Enrichment score") + ggtitle("without noise")
+  geom_point() + xlab("Mean expression differnce") + ylab("Enrichment score") + ggtitle("without noise") + theme_bw() + scale_color_brewer(palette="Dark2")
 
 plot.comp.outlier = ggplot(comp.summary.outlier, aes(x=senseAmplitudes, y=value, color=variable)) + 
   geom_line() +
   geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.1) + 
-  geom_point() + xlab("Mean expression differnce") + ylab("Enrichment score") + ggtitle("with noise")
+  geom_point() + xlab("Mean expression differnce") + ylab("Enrichment score") + ggtitle("with noise") + theme_bw()  + scale_color_brewer(palette="Dark2")
 
 grid.arrange(plot.comp, plot.comp.outlier, ncol=2)
 ``` 
@@ -138,11 +182,11 @@ As expected, the results suggest, that both the KS-test and the WMW-test are rob
 Computational Performance
 -------------------------
 
-```{r benchmark, cache=TRUE, include=FALSE}
+```{r benchmark, include=FALSE}
 runWMW = function() {return(wmwTest(senseMat, tissueInds, valType="p.greater", simplify=TRUE))}
 runKS = function() {return(do.test(senseMat, tissueInds[[selGeneSet]], test=function(x, y, alternative) {
     ks.test(y, x, alternative=alternative)}))}
-benchmark.res = benchmark(runWMW(), runKS(), columns=c("test", "replications", "elapsed", "relative"), replications=10)
+benchmark.res = benchmark(runWMW(), runKS(), columns=c("test", "replications", "elapsed", "relative"), replications=5)
 ```
 
 Since the KS-test is so slow, we did not replicate the sensitivity benchmark from the [simulation studies](bioqc-simulation.html) using the enrichment score rank. While it takes BioQC about `r round(benchmark.res[2, 'elapsed']/benchmark.res[2, 'replications'])` seconds on a single thread to test all 155 signatures, it already takes the KS-test about `r round(benchmark.res[1, 'elapsed']/benchmark.res[1, 'replications'])` seconds to test a single signature. 

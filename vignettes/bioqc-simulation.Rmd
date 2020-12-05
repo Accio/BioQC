@@ -33,7 +33,6 @@ library(hgu133plus2.db) ## to simulate an microarray expression dataset
 library(lattice)
 library(latticeExtra)
 library(gridExtra)
-# library(xtable)
 library(gplots)
 
 pdf.options(family="ArialMT", useDingbats=FALSE)
@@ -155,8 +154,8 @@ dogfile <- system.file("extdata/GSE20113.rda", package = "BioQC")
 #   dog$Label <- gsub("[0-9]$", "", as.character(dog$description))
 #   save(dog, file=dogfile)
 # } else {
-#   load(dogfile)
 # }
+load(dogfile)
 dogInds <- sapply(gmt, function(x) match(x$genes, fData(dog)$GeneSymbol))
 dogBioQC <- wmwTest(dog, gmt, valType="p.greater", simplify=TRUE)
 dogEnrich <- absLog10p(dogBioQC)

@@ -48,6 +48,9 @@ Suggests:
     gridExtra,
     org.Hs.eg.db,
     hgu133plus2.db,
+    ggplot2,
+    reshape2,
+    plyr,
     ineq,
     covr
 LinkingTo: Rcpp
