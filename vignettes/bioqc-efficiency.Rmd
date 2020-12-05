@@ -4,7 +4,7 @@ author: "Gregor Sturm and Jitao David Zhang"
 package: BioQC
 date: "`r Sys.Date()`"
 vignette: >
-  %\VignetteIndexEntry{BioQC Alogrithm: Speeding up the Wilcoxon-Mann-Whitney Test}
+  %\VignetteIndexEntry{BioQC Algorithm: Speeding up the Wilcoxon-Mann-Whitney Test}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 output: 
