@@ -167,7 +167,7 @@ op <- list(layout.widths = list(left.padding = 0, key.ylab.padding = 0.5,
            par.ylab.text=list(cex=1.4))
 ```
 
-```{r time_benchmark_vis, echo=FALSE, fig.width=8, fig.height=4.5, dev='svg', dev.args=list(pointsize=2.5), fig.cap="**Figure 2**: Time benchmark results of BioQC and R implementation of Wilcoxon-Mann-Whitney test. Left panel: elapsed time in seconds (logarithmic Y-axis). Right panel: ratio of elapsed time by two implementations. All results achieved by a single thread on in a RedHat Linux server."}
+```{r time_benchmark_vis, echo=FALSE, fig.width=8, fig.height=4.5, dev='png', dev.args=list(pointsize=2.5), fig.cap="**Figure 2**: Time benchmark results of BioQC and R implementation of Wilcoxon-Mann-Whitney test. Left panel: elapsed time in seconds (logarithmic Y-axis). Right panel: ratio of elapsed time by two implementations. All results achieved by a single thread on in a RedHat Linux server."}
 getTimeRes <- function(x) x$elapTime["elapsed"]
 bioqcTimeRes <- sapply(bioqcRes, getTimeRes)
 rTimeRes <- sapply(rRes, getTimeRes)

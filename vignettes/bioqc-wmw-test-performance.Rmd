@@ -103,7 +103,7 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 }
 ```
 
-```{r sensitivity_benchmark_fig, echo=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, dev='svg', fig.cap="**Figure 1:** Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. The lines show the enrichment score for the Wilcoxon-Mann-Whitney test, the t-test and the Kolmogorov-Smirnov test respectively. In the right panel, outliers were added by adding a random value to 1% of the simulated genes. "}
+```{r sensitivity_benchmark_fig, echo=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, dev='png', fig.cap="**Figure 1:** Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. The lines show the enrichment score for the Wilcoxon-Mann-Whitney test, the t-test and the Kolmogorov-Smirnov test respectively. In the right panel, outliers were added by adding a random value to 1% of the simulated genes. "}
 
 randomMatrixButOneSignature <- function(rows=humanGenes, signatureGenes,
                                         amplitudes=seq(0, 3, by=0.5)) {
