@@ -39,15 +39,45 @@ For more detailed examples, see the following Vignettes:
 ## Installation
 
 ### Bioconductor
+BioQC is available [from Bioconductor](https://www.bioconductor.org/packages/release/bioc/html/BioQC.html). 
+
+You can install it using 
+```R
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("BioQC")
+```
 
 ### Bioconda
+Alternatively, you can use the [conda](https://docs.conda.io/en/latest/miniconda.html) package
+manager. 
+
+1. Make sure you [set-up the Bioconda channel correctly](https://bioconda.github.io/user/install.html#set-up-channels). The order of the channels is important!
+2. (Optional) Create and activate an environment for BioQC
+   
+   ```bash
+   conda create -n bioqc
+   conda activate bioqc
+   ```
+
+3. Install the `bioconductor-bioqc` package in your current environment
+   
+   ```bash
+   conda install bioconductor-bioqc
+   ```
 
 ### from Github
 
-Simulation studies show that BioQC is both fast and sensitive in detecting tissue heterogeneity. 
+The easiest way to install the development version from GitHub is using the `remotes` package: 
+
+```R
+install.packages("remotes")
+remotes::install_github("accio/BioQC")
+```
 
 ## Contact
 
 If you have questions regarding BioQC or want to report a bug, please use the [issue tracker](https://github.com/accio/BioQC/issues). 
 
-Alternatively you can reach out to Jitao David Zhang via [e-mail](jitao_david.zhang@roche.com)
+Alternatively you can reach out to Jitao David Zhang via [e-mail](jitao_david.zhang@roche.com).
