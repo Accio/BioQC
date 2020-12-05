@@ -33,8 +33,7 @@ library(hgu133plus2.db) ## to simulate an microarray expression dataset
 library(lattice)
 library(latticeExtra)
 library(gridExtra)
-library(GEOquery)
-library(xtable)
+# library(xtable)
 library(gplots)
 
 pdf.options(family="ArialMT", useDingbats=FALSE)
@@ -136,28 +135,28 @@ The sensitivity benchmark above suffers from the limitation that the distributio
 Given the expression profile of a sample of tissue A ($\mathbf{Y}_A$), and that of a sample of tissue B ($\mathbf{Y}_B$), the weighted linear mixing produces a new profile $\mathbf{Y}=\omega\mathbf{Y_A}+(1-\omega)\mathbf{Y_B}$, where $\omega \in [0,1]$. In essence the profiles of two tissue types are linearly mixed in different proportions, which simulates varying severities of contaminations. We asked whether BioQC could detect such mixings, and if so, how sensitive is the method.
 
 ```{r mixing_benchmark, echo=FALSE}
-dogfile <- "data/GSE20113.RData"
-if(!file.exists(dogfile)) {
-  rawdog <- getGEO("GSE20113")[[1]]
-  filterFeatures <- function(eset) {
-    rawGeneSymbol <- fData(eset)[, "Gene Symbol"]
-    eset <- eset[!rawGeneSymbol %in% "" & !is.na(rawGeneSymbol),]
-    gs <- fData(eset)[, "Gene Symbol"]
-    
-    gsSplit <- split(1:nrow(eset), gs)
-    rmeans <- rowMeans(exprs(eset), na.rm=TRUE)
-    maxMean <- sapply(gsSplit, function(x) x[which.max(rmeans[x])])
-    maxMean <- unlist(maxMean)
-    res <- eset[maxMean,]
-    fData(res)$GeneSymbol <- fData(res)[, "Gene Symbol"]
-    return(res)
-    }
-  dog <- filterFeatures(rawdog)
-  dog$Label <- gsub("[0-9]$", "", as.character(dog$description))
-  save(dog, file=dogfile)
-  } else {
-    load(dogfile)
-    }
+dogfile <- system.file("extdata/GSE20113.rda", package = "BioQC")
+# if(!file.exists(dogfile)) {
+#   rawdog <- getGEO("GSE20113")[[1]]
+#   filterFeatures <- function(eset) {
+#     rawGeneSymbol <- fData(eset)[, "Gene Symbol"]
+#     eset <- eset[!rawGeneSymbol %in% "" & !is.na(rawGeneSymbol),]
+#     gs <- fData(eset)[, "Gene Symbol"]
+#     
+#     gsSplit <- split(1:nrow(eset), gs)
+#     rmeans <- rowMeans(exprs(eset), na.rm=TRUE)
+#     maxMean <- sapply(gsSplit, function(x) x[which.max(rmeans[x])])
+#     maxMean <- unlist(maxMean)
+#     res <- eset[maxMean,]
+#     fData(res)$GeneSymbol <- fData(res)[, "Gene Symbol"]
+#     return(res)
+#     }
+#   dog <- filterFeatures(rawdog)
+#   dog$Label <- gsub("[0-9]$", "", as.character(dog$description))
+#   save(dog, file=dogfile)
+# } else {
+#   load(dogfile)
+# }
 dogInds <- sapply(gmt, function(x) match(x$genes, fData(dog)$GeneSymbol))
 dogBioQC <- wmwTest(dog, gmt, valType="p.greater", simplify=TRUE)
 dogEnrich <- absLog10p(dogBioQC)
@@ -200,7 +199,7 @@ heart <- rowMeans(exprs(dog)[, dog$Label=="Heart"])
      return(vec1*(1-prop2)+vec2*prop2)
  }
  mixProps <- seq(0, 1, 0.05)
- mixPropsLabels <- sprintf("%d%%", mixProps*100)
+ mixPropsLabels <- sprintf("%f%%", mixProps*100)
  hjMix <- sapply(mixProps, function(x) linearMix(jejunum, heart, x))
  hjMixBioQC <- wmwTest(hjMix, dogInds, valType="p.greater", simplify=TRUE)
  hjMixSub <- hjMixBioQC[c("Intestine_small_NR_0.7_3","Muscle_cardiac_NR_0.7_3"),]
