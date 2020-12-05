@@ -3,12 +3,11 @@ title: "BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQ
 date: "`r Sys.Date()`"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{BioQC: Detect tissue heterogeneity in gene expression data}
+  %\VignetteIndexEntry{BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data}
   %\usepackage[utf8]{inputenc}
 output:
   rmarkdown::html_vignette:
     self_contained: no
-output: 
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE

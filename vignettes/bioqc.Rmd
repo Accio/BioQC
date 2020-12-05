@@ -3,12 +3,11 @@ title: "BioQC-kidney: The kidney expression example"
 date: "`r Sys.Date()`"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{BioQC: Detect tissue heterogeneity in gene expression data}
+  %\VignetteIndexEntry{BioQC-kidney: The kidney expression example}
   %\usepackage[utf8]{inputenc}
 output:
   rmarkdown::html_vignette:
     self_contained: no
-output:
   md_document:
     variant: markdown_phpextra
     preserve_yaml: TRUE
