@@ -1,4 +1,4 @@
-[![R build status](https://github.com/Accio/BioQC/workflows/R-CMD-check/badge.svg)](https://github.com/Accio/BioQC/actions)
+[![R build status](https://github.com/Accio/BioQC/workflows/check-bioc/badge.svg)](https://github.com/Accio/BioQC/actions)
 [![codecov](https://codecov.io/gh/Accio/BioQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Accio/BioQC)
 
 
@@ -13,28 +13,50 @@ Therefore, we propose applying BioQC as a routine step in every gene-expression 
 The BioQC method is described in 
 
 > Zhang, Jitao David, Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello, and Laura Badi.
-> “Detect Tissue Heterogeneity in Gene Expression Data with BioQC.” BMC Genomics 18 (2017): 277. doi:10.1186/s12864-017-3661-2.
-
-```
-todo: 
- * reconcile example repo and main repo
- * use pgkdown for documentation
- * set-up github actions CI 
-```
-
+> “Detect Tissue Heterogeneity in Gene Expression Data with BioQC.” BMC Genomics 18 (2017): 277. [doi:10.1186/s12864-017-3661-2](https://doi.org/10.1186/s12864-017-3661-2)).
 
 
 ## Basic Usage
 
-BioQC implements a computationally efficient Wilcoxon-Mann-Whitney test and provides more than 150 signatures of tissue-enriched genes derived from large-scale transcriptomics studies. 
+BioQC implements a computationally efficient Wilcoxon-Mann-Whitney test for testing
+for enrichment of tissue signatures. A database of 150 tissue signatures derived
+from large-scale transcriptomics studies is shipped with the BioQC package. 
 
-// show simple example (-> Kidney) to detect contamination
+To apply BioQC to a `genes x samples` gene expression matrix, run:
 
-For more detailed examples, see the following Vignettes: 
- * Getting started
- * Fast single-sample gene set enrichment analysis with BioQC 
- * The WMW test
- * Benchmark
+```R
+library(BioQC)
+
+# load the tissue signatures
+gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt",
+                        package="BioQC")
+gmt <- readGmt(gmtFile)
+
+# perform BioQC enrichment test on a gene expression matrix
+bioqc_res = wmwTest(expr_mat, gmt)
+bioqc_scores = absLog10p(bioqc_res)
+```
+
+The following figure shows the BioQC scores from the [kidney example](https://accio.github.io/BioQC/bioqc.html) 
+visualized as heatmap. We note that in samples 23-25 *adipose* and *pancreas* signatures
+have been detected, hinting at a containation with those tissues. For this dataset, 
+we could validate the contamination with qPCR. 
+
+![example heatmap](man/figures/kidney_heatmap.png)
+
+For a more detailed example explaining how to use other data structures or custom signatures
+see
+ * [Applying BioQC to a real-world kidney dataset](https://accio.github.io/BioQC/bioqc.html). 
+ * [Introduction to BioQC](https://accio.github.io/BioQC/articles/bioqc-introduction.html). 
+
+For advanced usages, check out:
+ * [Single sample gene set enrichment analysis with BioQC](https://accio.github.io/BioQC/articles/bioqc-signedGenesets.html)
+
+For benchmarks and details about the algorithm, see: 
+ * [BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data](https://accio.github.io/BioQC/bioqc-simulation.html)
+ * [Comparing the Wilcoxon-Mann-Whitney to alternative statistical tests](https://accio.github.io/BioQC/articles/bioqc-wmw-test-performance.html)
+ * [The BioQC algorithm: speeding up the WMW-test](https://accio.github.io/BioQC/articles/bioqc-efficiency.html)
+
 
 ## Installation
 
@@ -67,7 +89,7 @@ manager.
    conda install bioconductor-bioqc
    ```
 
-### from Github
+### From Github
 
 The easiest way to install the development version from GitHub is using the `remotes` package: 
 

@@ -1,0 +1,163 @@
+---
+title: "Comparing the Wilcoxon-Mann-Whitney to alternative statistical tests"
+output: 
+  md_document:
+    variant: markdown_phpextra
+    preserve_yaml: TRUE
+---
+
+```{r setup, include=FALSE}
+options(fig_caption=TRUE)
+library(knitr)
+opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
+```
+
+In this document, we show that the Wilcoxon-Mann-Whitney test is comparable or superior to alternative methods. 
+
+
+```{r lib, warning=FALSE, message=FALSE, results="hide", include=FALSE}
+library(testthat)
+library(BioQC)
+library(hgu133plus2.db) ## to simulate an microarray expression dataset
+library(lattice)
+library(latticeExtra)
+library(gridExtra)
+library(GEOquery)
+library(xtable)
+library(gplots)
+library(reshape2)
+library(ggplot2)
+library(rbenchmark)
+
+pdf.options(family="ArialMT", useDingbats=FALSE)
+
+set.seed(1887)
+
+## list human genes
+humanGenes <- unique(na.omit(unlist(as.list(hgu133plus2SYMBOL))))
+
+## read tissue-specific gene signatures
+gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt",
+                       package="BioQC")
+gmt <- readGmt(gmtFile)
+```
+
+Two alternative methods could be compared with the Wilcoxon-Mann-Whitney (WMW) test proposed by BioQC: the Kolmogorov-Smirnov (KS) test, and the Student’s t-test, or more particularly, the Welch’s test which does not assume equal sample number or equal variance, which is appropriate in the setting of gene expression studies. 
+
+1. It is documented in statistics literature that the WMW test offers a higher power than the Kolmogorov-Smirnov test[^1],[^2]. 
+2. Compared with parameterized test methods such as the t-test, the WMW test is (a) resistance to monotone transformation,  (b) suffers less from outliers, and (c) provides higher efficiency when many genes are profiled and the distribution of gene expression deviates from the normal distribution, which are important criteria in genome-wide expression data. 
+
+Based on these considerations, BioQC implements a computationally efficient version of the WMW test. In order not to confuse end-users, no alternative methods are implemented.
+
+Nevertheless, in order to demonstrate the power of WMW test in comparison with the KS-test or the t-test, we performed the sensitivity benchmark described in the [simulation studies](bioqc-simulation.html), for the two alternative tests respectively. 
+
+```{r sensitivity_benchmark_fig, echo=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, dev='svg', fig.cap="**Figure 1:** Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. The lines show the enrichment score for the Wilcoxon-Mann-Whitney test, the t-test and the Kolmogorov-Smirnov test respectively. In the right panel, outliers were added by adding a random value to 1% of the simulated genes. "}
+source("helper.R")
+
+randomMatrixButOneSignature <- function(rows=humanGenes, signatureGenes,
+                                        amplitudes=seq(0, 3, by=0.5)) {
+  nrow <- length(rows)
+  ncol <- length(amplitudes)
+  mat <- matrix(rnorm(nrow*ncol),
+                nrow=nrow, byrow=FALSE)
+  rownames(mat) <- rows
+  sigInd <- na.omit(match(signatureGenes, humanGenes))
+  
+  colClass <- factor(amplitudes)
+  
+  for(colInd in unique(colClass)) {
+    isCurrCol <- colInd==colClass
+    replaceMatrix <- matrix(rnorm(length(sigInd)*sum(isCurrCol),
+                                  mean=amplitudes[isCurrCol][1]),
+                            nrow=length(sigInd), byrow=FALSE)
+    mat[sigInd, isCurrCol] <-  replaceMatrix
+    }
+  return(mat)
+}
+
+addNoise = function(matrix, fractionAffected=.1, stdv=1) {
+  noise = matrix(rnorm(nrow(matrix)*ncol(matrix), sd=stdv), nrow=nrow(matrix), byrow=FALSE)
+  addNoise = matrix(runif(nrow(matrix)*ncol(matrix)), nrow=nrow(matrix), byrow=FALSE) < fractionAffected
+  matrix = matrix + addNoise*noise
+  return(matrix)
+}
+
+do.test <- function(senseMat, tissueInd, test=t.test, alternative="greater") {
+  bgInds = setdiff(1:nrow(senseMat), tissueInd)
+  res = apply(senseMat, 2, function(col) {
+    gs = col[tissueInd]
+    bg = col[bgInds]
+    return(test(gs, bg, alternative=alternative)$p.value)
+  })
+  return(res)
+}
+
+
+selGeneSet <- "Ovary_NGS_RNASEQATLAS_0.6_3"
+selSignature <- gmt[[selGeneSet]]$genes
+tissueInds <- sapply(gmt, function(x) match(x$genes, humanGenes))
+senseAmplitudes <- rep(c(seq(0, 1, by=0.25), seq(1.5, 3, by=0.5)), each=50)
+senseMat <- randomMatrixButOneSignature(rows=humanGenes,
+                                        signatureGenes=selSignature,
+                                        amplitudes=senseAmplitudes)
+senseMatOutlier = addNoise(senseMat, stdv=15, fractionAffected=.01)
+
+compare.tests = function(senseMat) {
+  senseBioQC <- wmwTest(senseMat, tissueInds, valType="p.greater", simplify=TRUE)[selGeneSet,]
+  senseTTest <- do.test(senseMat, tissueInds[[selGeneSet]], test=t.test)
+  senseKS <- do.test(senseMat, tissueInds[[selGeneSet]], test=function(x, y, alternative) {
+    ks.test(y, x, alternative=alternative)})
+  
+  comp = data.frame(BioQC=-log10(senseBioQC), t.test=-log10(senseTTest), ks.test=-log10(senseKS), senseAmplitudes=senseAmplitudes)
+  comp.molten = melt(comp, id="senseAmplitudes")
+  comp.summary = summarySE(comp.molten, measurevar="value", groupvars=c("senseAmplitudes", "variable"))
+  return(comp.summary)
+}
+
+comp.summary = compare.tests(senseMat)
+comp.summary.outlier = compare.tests(senseMatOutlier)
+
+plot.comp = ggplot(comp.summary, aes(x=senseAmplitudes, y=value, color=variable)) + 
+  geom_line() +
+  geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.1) + 
+  geom_point() + xlab("Mean expression differnce") + ylab("Enrichment score") + ggtitle("without noise")
+
+plot.comp.outlier = ggplot(comp.summary.outlier, aes(x=senseAmplitudes, y=value, color=variable)) + 
+  geom_line() +
+  geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.1) + 
+  geom_point() + xlab("Mean expression differnce") + ylab("Enrichment score") + ggtitle("with noise")
+
+grid.arrange(plot.comp, plot.comp.outlier, ncol=2)
+``` 
+
+
+As expected, the results suggest, that both the KS-test and the WMW-test are robust to noise, while the performance of the t-test drops significantly on noisy data. Additionally, the WMW-test appears to be superior to the KS-test for low expression differences. 
+
+
+
+Computational Performance
+-------------------------
+
+```{r benchmark, cache=TRUE, include=FALSE}
+runWMW = function() {return(wmwTest(senseMat, tissueInds, valType="p.greater", simplify=TRUE))}
+runKS = function() {return(do.test(senseMat, tissueInds[[selGeneSet]], test=function(x, y, alternative) {
+    ks.test(y, x, alternative=alternative)}))}
+benchmark.res = benchmark(runWMW(), runKS(), columns=c("test", "replications", "elapsed", "relative"), replications=10)
+```
+
+Since the KS-test is so slow, we did not replicate the sensitivity benchmark from the [simulation studies](bioqc-simulation.html) using the enrichment score rank. While it takes BioQC about `r round(benchmark.res[2, 'elapsed']/benchmark.res[2, 'replications'])` seconds on a single thread to test all 155 signatures, it already takes the KS-test about `r round(benchmark.res[1, 'elapsed']/benchmark.res[1, 'replications'])` seconds to test a single signature. 
+
+```{r benchmark_res, echo=FALSE}
+benchmark.res
+```
+
+R Session Info
+----------------
+```{r session_info}
+sessionInfo()
+```
+
+References
+----------
+[^1]: Irizarry, Rafael A., et al. "Gene set enrichment analysis made simple."Statistical methods in medical research 18.6 (2009): 565-575.
+[^2]: Filion, Guillaume J. "The signed Kolmogorov-Smirnov test: why it should not be used." GigaScience 4.1 (2015): 1.

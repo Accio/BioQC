@@ -1,0 +1,442 @@
+---
+title: "BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data"
+output: 
+  md_document:
+    variant: markdown_phpextra
+    preserve_yaml: TRUE
+---
+Supplementary Information for "Detect issue heterogenity in gene expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello and [Laura Badi](mailto:laura.badi@roche.com))
+
+```{r setup, include=FALSE}
+options(fig_caption=TRUE)
+library(knitr)
+opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
+```
+
+In this vignette, we perform simulations with both model-generated and real-world data using *BioQC*. We show that *BioQC* is a sensitive method to detect tissue heterogeneity from high-throughput gene expression data. The source code used to produce this document can be found in the github repository [BioQC-example](https://github.com/Accio/BioQC-example).
+
+*BioQC* is a R/Bioconductor package to detect tissue heterogeneity from high-throughput gene expression profiling data. It implements an efficient Wilcoxon-Mann-Whitney test, and offers tissue-specific gene signatures that are ready to use 'out of the box'.
+
+
+Experiment setup
+----------------
+In this document, we perform two simulation studies with *BioQC*:
+
+* **Sensitivity benchmark** tests the sensitivity and specificity of *BioQC* detecting tissue heterogeneity using model-generated, simulated data;
+* **Mixing benchmark** tests the sensitivity and specificity of *BioQC* using simulated contamination with real-world data.
+
+All source code that is needed to reproduce the results can be found in the `.Rmd` file generating this document. 
+
+```{r lib, warning=FALSE, message=FALSE, results="hide"}
+library(BioQC)
+library(hgu133plus2.db) ## to simulate an microarray expression dataset
+library(lattice)
+library(latticeExtra)
+library(gridExtra)
+library(GEOquery)
+library(xtable)
+library(gplots)
+
+pdf.options(family="ArialMT", useDingbats=FALSE)
+
+set.seed(1887)
+
+## list human genes
+humanGenes <- unique(na.omit(unlist(as.list(hgu133plus2SYMBOL))))
+
+## read tissue-specific gene signatures
+gmtFile <- system.file("extdata/exp.tissuemark.affy.roche.symbols.gmt",
+                       package="BioQC")
+gmt <- readGmt(gmtFile)
+tissueInds <- sapply(gmt, function(x) match(x$genes, humanGenes))
+```
+
+Sensitivity Benchmark
+---------------------
+We next asked the question how sensitive *BioQC* is to expression changes of tissue signature genes. Similar to the previous simulation, we create random expression matrices. While keeping all other genes $i.i.d$ normally distributed following $\mathcal{N}(0,1)$, we dedicatedly increase the expression of genes in one randomly selected tissue signature (ovary, with 43 genes) by different amplitudes: these genes' expression levels are randomly drawn from different normal distributions with varying expectation and constant variance between $\mathcal{N}(0,1)$ and $\mathcal{N}(3,1)$. To test the robustness of the algorithm, 10 samples are generated for each mean expression difference value.
+
+```{r sensitivity_benchmark_fig, echo=FALSE, fig.width=8, fig.height=4.5, dev='svg', fig.cap=sprintf("**Figure 1:** Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. Left panel: enrichment scores reported by *BioQC* for the ovary signature, plotted against the differences in mean expression values; Right panel: rank of ovary enrichment scores in all %s signatures plotted against the difference in mean expression values.", length(gmt))}
+
+tissueInds <- sapply(gmt, function(x) match(x$genes, humanGenes))
+
+randomMatrixButOneSignature <- function(rows=humanGenes, signatureGenes,
+                                        amplitudes=seq(0, 3, by=0.5)) {
+  nrow <- length(rows)
+  ncol <- length(amplitudes)
+  mat <- matrix(rnorm(nrow*ncol),
+                nrow=nrow, byrow=FALSE)
+  rownames(mat) <- rows
+  sigInd <- na.omit(match(signatureGenes, humanGenes))
+  
+  colClass <- factor(amplitudes)
+  
+  for(colInd in unique(colClass)) {
+    isCurrCol <- colInd==colClass
+    replaceMatrix <- matrix(rnorm(length(sigInd)*sum(isCurrCol),
+                                  mean=amplitudes[isCurrCol][1]),
+                            nrow=length(sigInd), byrow=FALSE)
+    mat[sigInd, isCurrCol] <-  replaceMatrix
+    }
+  return(mat)
+}
+
+selGeneSet <- "Ovary_NGS_RNASEQATLAS_0.6_3"
+selSignature <- gmt[[selGeneSet]]$genes
+senseAmplitudes <- rep(c(seq(0, 1, by=0.25),
+                         seq(1.5, 3, 0.5)), each=10)
+senseMat <- randomMatrixButOneSignature(rows=humanGenes,
+                                        signatureGenes=selSignature,
+                                        amplitudes=senseAmplitudes)
+senseBioQC <- wmwTest(senseMat, tissueInds, valType="p.greater", simplify=TRUE)
+senseRank <- apply(senseBioQC, 2, function(x) rank(x)[selGeneSet])
+mydot <- function(x,y,abline=1,...) {panel.abline(h=abline, col="darkgray");panel.dotplot(x,y,...)}
+senseBW <- bwplot(-log10(senseBioQC[selGeneSet,])~senseAmplitudes, horizontal=FALSE,
+                  pch="|", do.out=FALSE,
+                  par.settings=list(box.rectangle=list(col="black", fill="#ccddee")),
+                  scales=list(tck=c(1,0), alternating=1L,
+                              x=list(at=seq(along=unique(senseAmplitudes)), labels=unique(senseAmplitudes))),
+                  ylab="Enrichment score", xlab="Mean expression difference")
+senseDot <- dotplot(-log10(senseBioQC[selGeneSet,])~senseAmplitudes, horizontal=FALSE,
+                    cex=0.9,
+                    panel=mydot, abline=0,
+                    scales=list(tck=c(1,0), alternating=1L,
+                                x=list(at=seq(along=unique(senseAmplitudes)), labels=unique(senseAmplitudes))))
+
+senseRankBW <- bwplot(senseRank~senseAmplitudes, horizontal=FALSE,
+                      pch="|", do.out=FALSE, col="black", ylim=c(155, -5),
+                      par.settings=list(box.rectangle=list(col="black", fill="#d9dddd")),
+                      scales=list(tck=c(1,0), alternating=1L,
+                                  y=list(at=c(1,50,100,150)),
+                                  x=list(at=seq(along=unique(senseAmplitudes)), labels=unique(senseAmplitudes))),
+                      ylab="Enrichment score rank", xlab="Mean expression difference")
+senseRankDot <- dotplot(senseRank~senseAmplitudes, horizontal=FALSE,
+                        panel=mydot, abline=1,
+                        cex=0.9, col="black",ylim=c(155, -5),
+                        scales=list(tck=c(1,0), alternating=1L,
+                                    x=list(at=seq(along=unique(senseAmplitudes)), labels=unique(senseAmplitudes))))
+
+sensePlot <- senseBW + senseDot
+senseRankPlot <- senseRankBW + senseRankDot
+
+grid.arrange(sensePlot, senseRankPlot, ncol=2)
+``` 
+
+
+The above figure visualizes the distribution of enrichment scores and their ranks dependent on the mean expression difference between ovary signature genes and background genes. As soon as the expression of signature genes increases by a very moderate ampltiude $1\sigma$, *BioQC* will identify the gene set as the highest-ranking signature. A even stronger difference in expression will lead to higher enrichment scores but no change in the rank.
+
+The results suggest that *BioQC* is sensitive even to moderate changes in the average expression of a gene set.
+
+
+
+
+Mixing Benchmark
+----------------
+The sensitivity benchmark above suffers from the limitation that the distributions of gene expression are not physiological. To overcome this, we      designed and performed a benchmark by *in silico* mixing expression profiles with weighted linear combination, thereby mimicking tissue contamination.
+
+Given the expression profile of a sample of tissue A ($\mathbf{Y}_A$), and that of a sample of tissue B ($\mathbf{Y}_B$), the weighted linear mixing produces a new profile $\mathbf{Y}=\omega\mathbf{Y_A}+(1-\omega)\mathbf{Y_B}$, where $\omega \in [0,1]$. In essence the profiles of two tissue types are linearly mixed in different proportions, which simulates varying severities of contaminations. We asked whether BioQC could detect such mixings, and if so, how sensitive is the method.
+
+```{r mixing_benchmark, echo=FALSE}
+dogfile <- "data/GSE20113.RData"
+if(!file.exists(dogfile)) {
+  rawdog <- getGEO("GSE20113")[[1]]
+  filterFeatures <- function(eset) {
+    rawGeneSymbol <- fData(eset)[, "Gene Symbol"]
+    eset <- eset[!rawGeneSymbol %in% "" & !is.na(rawGeneSymbol),]
+    gs <- fData(eset)[, "Gene Symbol"]
+    
+    gsSplit <- split(1:nrow(eset), gs)
+    rmeans <- rowMeans(exprs(eset), na.rm=TRUE)
+    maxMean <- sapply(gsSplit, function(x) x[which.max(rmeans[x])])
+    maxMean <- unlist(maxMean)
+    res <- eset[maxMean,]
+    fData(res)$GeneSymbol <- fData(res)[, "Gene Symbol"]
+    return(res)
+    }
+  dog <- filterFeatures(rawdog)
+  dog$Label <- gsub("[0-9]$", "", as.character(dog$description))
+  save(dog, file=dogfile)
+  } else {
+    load(dogfile)
+    }
+dogInds <- sapply(gmt, function(x) match(x$genes, fData(dog)$GeneSymbol))
+dogBioQC <- wmwTest(dog, gmt, valType="p.greater", simplify=TRUE)
+dogEnrich <- absLog10p(dogBioQC)
+dogEnrich.best <- apply(dogEnrich,2, which.max)
+dogEnrich.second <- apply(dogEnrich,2, function(x) which(rank(-x)==2))
+shortLabel <- function(x) gsub("_NR_0\\.7_3|_NGS_RNASEQATLAS_0\\.6_3", "", x)
+dogEnrich.bestLabels <- shortLabel(rownames(dogEnrich)[dogEnrich.best])
+dogEnrich.secondLabels <- shortLabel(rownames(dogEnrich)[dogEnrich.second])
+dogTable <- data.frame(Label=dog$Label,
+                       BioQC.best=dogEnrich.bestLabels,
+                       BioQC.second=dogEnrich.secondLabels,
+                       row.names=sampleNames(dog))
+``` 
+
+
+
+### Dataset selection and quality control
+
+In order to avoid over-fitting of signatures derived from human expression data, we decided to use a normal tissue expression dataset from a non-human mammal species, because it has been shown that tissue-preferential expression patterns tend to be conserved between mammal species. We           identified a dataset of *Canis lupus familiaris* (dog), which is publicly available in Gene Expression Omnibus ([GDS4164](http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS4164)).
+
+In this study, the authors examined 39 samples from 10 pathologically normal tissues (liver, kidney, heart, lung, brain, lymph node, spleen, jejunum,  pancreas, and skeletal muscle) of four dogs (with one pancreas sample missing). We downloaded the data, and performed minimal pre-processing: for multiple probesets that map to same genes, we kept the one with the highest average expression level and removed the rest. The resulting dataset contained expression of `r nrow(dog)` genes. BioQC was applied to the dataset to test whether there are major contamination issues. The results, including tissues reported by the authors, and the BioQC tissue signatures with the highest and second-highest scores, are reported in the following table: 
+
+```{r dog_table, echo=FALSE}
+kable(dogTable, caption="Quality control of the mixing benchmark input data with *BioQC*. Four columns (f.l.t.r.): sample index; tissue         reported by the authors; the tissue signature with the highest enrichment score reported by *BioQC*; the tissue signature with the second-   highest enrichment score.")
+``` 
+
+By comparing the tissue labels provided by the authors and the predictions of *BioQC*, we notice that in most cases the two match well        (despite of ontological differences). In three cases (sample ID GSM502573, GSM502594, and GSM502596) though, there seem to be intriguing differences, which might be explained by different sampling procedures or immune cell infiltration. We will however in this vignette not further explore them. These three samples are removed from the simulation procedures.
+
+
+### An example of weighted mixing: heart and jejunum
+
+As an example, we take average expression of heart and jejunum samples, and mix them by different compositions. 
+This allows us comparing enrichment scores and their ranks when the expression profiles of heart and jejunum are mixed *in silico*:
+
+```{r hj_mix, echo=FALSE}
+heart <- rowMeans(exprs(dog)[, dog$Label=="Heart"])
+ jejunum <- rowMeans(exprs(dog)[, dog$Label=="Jejunum"])
+ linearMix <- function(vec1, vec2, prop2=0) {
+     stopifnot(prop2>=0 && prop2<=1)
+     return(vec1*(1-prop2)+vec2*prop2)
+ }
+ mixProps <- seq(0, 1, 0.05)
+ mixPropsLabels <- sprintf("%d%%", mixProps*100)
+ hjMix <- sapply(mixProps, function(x) linearMix(jejunum, heart, x))
+ hjMixBioQC <- wmwTest(hjMix, dogInds, valType="p.greater", simplify=TRUE)
+ hjMixSub <- hjMixBioQC[c("Intestine_small_NR_0.7_3","Muscle_cardiac_NR_0.7_3"),]
+ hjMixSubEnrich <- absLog10p(hjMixSub)
+ hjMixBioQCrank <- apply(hjMixBioQC, 2, function(x) rank(x))
+ hjMixSubRank <- hjMixBioQCrank[c("Intestine_small_NR_0.7_3","Muscle_cardiac_NR_0.7_3"),]
+ colnames(hjMixSubEnrich) <- colnames(hjMixSubRank) <- mixPropsLabels
+``` 
+
+```{r hjMixVis, echo=FALSE, fig.width=8, fig.height=4, dev='svg', fig.cap="**Figure 2:** Results of a mixing case study. Left panel: *BioQC* enrichment scores of small intestine and cardiac muscle varying upon different proportions of jejunum; Right panel: ranks of enrichment scores varying upon different proportions of jejunum."}
+mixPropsShow <- seq(0, 1, 0.25)
+mixPropsShowLabels <- sprintf("%d%%", mixPropsShow*100)
+hjCols <- c("orange", "lightblue")
+hjTissues <- c("Small intenstine","Cardiac muscle")
+hjMixData <- data.frame(Tissue=rep(hjTissues, ncol(hjMixSubEnrich)),
+                        Prop=rep(mixProps, each=nrow(hjMixSubEnrich)),
+                        EnrichScore=as.vector(hjMixSubEnrich))
+hjMixDataRank <- data.frame(Tissue=rep(hjTissues, ncol(hjMixSubEnrich)),
+                            Prop=rep(mixProps, each=nrow(hjMixSubEnrich)),
+                            EnrichScore=as.vector(hjMixSubRank))
+hjMixXY <- xyplot(EnrichScore ~ Prop, group=Tissue, data=hjMixData, type="b",
+                  xlab="Proportion of heart", ylab="Enrichment score",
+                  par.settings=list(superpose.symbol=list(cex=1.25, pch=16, col=hjCols),
+                                    superpose.line=list(col=hjCols)),
+                  auto.key=list(columns=1L), abline=list(h=3, col="lightgray", lty=2, lwd=2),
+                  scales=list(tck=c(1,0), alternating=1L,
+                              x=list(at=mixPropsShow, labels=mixPropsShowLabels)))
+hjMixRankXY <- xyplot(EnrichScore ~ Prop, group=Tissue, data=hjMixDataRank, type="b",
+                      xlab="Proportion of heart", ylab="Enrichment score rank", ylim=c(155, 0.8),
+                      auto.key=list(columns=1L),
+                      par.settings=list(superpose.symbol=list(cex=1.25, pch=16, col=hjCols),
+                                        superpose.line=list(col=hjCols)),
+                      abline=list(h=log2(10), col="lightgray", lty=2, lwd=2),
+                      scales=list(tck=c(1,0), alternating=1L,
+                                  x=list(at=mixPropsShow, labels=mixPropsShowLabels),
+                                  y=list(log=2, at=c(1,2,3,4,6,10,25,50,100,150))))
+
+grid.arrange(hjMixXY, hjMixRankXY, ncol=2)
+``` 
+
+We observe that with as little as 5% contamination of heart tissue in jejunum samples (rightmost in the right panel), the rank of heart signature jumps from 34 to 9; 10% and 20% contamination will further enhance the rank to 4 and 3 respectively. If we start from the other end, namely assuming jejunum contamination in heart samples, the BioQC algorithms ranks jejunum the 7th only when there are more than 25% contamination. If we set enrichment score equal or over 3 as the threshold of calling a suspected contamination event ($p<0.001$ in the one-sided Wilcoxon-Mann-Whitney test), it takes about 10% heart in jejunum tissue or about 30% jejunum tissue in heart to make a call. It means the sensitivity of contamination detection is not symmetric between tissues: contamination by tissues with distinct expression patterns (such as heart) are easier to be  detected than contamination by tissues with less distinct expression patterns (such as small intestine).
+
+While it is difficult to quantify the absolute sensitivity of contamination detection, it is apparent that if the enrichment score of a unforeseen tissue is very high (or ranked high), one may suspect potential contamination. Also, if there are replicates of samples from the same tissue, a        higher value in one sample compared with the other samples suggests a contamination or infiltration incident.
+
+```{r dog_mix, echo=FALSE}
+dogFilter <- dog[,-c(1,22,24)]
+dogAvg <- tapply(1:ncol(dogFilter), dogFilter$Label, function(x) rowMeans(exprs(dogFilter)[,x]))
+dogAvgMat <- do.call(cbind, dogAvg)
+dogLabels <- c("Brain_Cortex_prefrontal_NR_0.7_3",
+               "Muscle_cardiac_NR_0.7_3",
+               "Intestine_small_NR_0.7_3",
+               "Kidney_NR_0.7_3",
+               "Liver_NR_0.7_3",
+               "Lung_NR_0.7_3",
+               "Lymphocyte_B_FOLL_NR_0.7_3",
+               "Pancreas_Islets_NR_0.7_3",
+               "Muscle_skeletal_NR_0.7_3",
+               "Monocytes_NR_0.7_3")
+dogComb <- subset(expand.grid(1:ncol(dogAvgMat),1:ncol(dogAvgMat)), Var2>Var1)
+dogPairwise <- apply(dogComb, 1, function(x) {
+                      vec1 <- dogAvgMat[,x[1]]
+                      vec2 <- dogAvgMat[,x[2]]
+                      label1 <- dogLabels[x[1]]
+                      label2 <- dogLabels[x[2]]
+                      mix <- sapply(mixProps, function(x) linearMix(vec1, vec2, x))
+                      bioqc <- wmwTest(mix, dogInds, valType="p.greater", simplify=TRUE)
+                      ranks <- apply(bioqc, 2, rank)
+                      enrich <- absLog10p(bioqc)
+                      colnames(enrich) <- colnames(ranks) <- mixPropsLabels
+                      res <- list(EnrichScore=enrich[c(label1, label2),],
+                                  Rank=ranks[c(label1, label2),])
+                      return(res)
+                   })
+contamInd <- sapply(dogPairwise, function(x) {
+                      successScore <- x$EnrichScore[2,]>=3
+                      successRank <- x$Rank[2,]<=10
+                      if(all(successScore) & all(successRank)) {
+                        return(NA)
+                        }
+                      pmin(min(which(successScore)), min(which(successRank)))
+                  })
+revContamInd <- sapply(dogPairwise, function(x) {
+                        successScore <- x$EnrichScore[1,]>=3
+                        successRank <- x$Rank[1,]<=10
+                        if(all(successScore) & all(successRank)) {
+                          return(NA)
+                          }
+                        pmax(max(which(successScore)), max(which(successRank)))
+                      })
+
+fromMinProp <- mixProps[contamInd]
+toMaxProp <- 1-mixProps[revContamInd]
+comProp <- matrix(NA, nrow=ncol(dogAvgMat), ncol=ncol(dogAvgMat))
+colnames(comProp) <- rownames(comProp) <- colnames(dogAvgMat)
+for(i in 1:nrow(dogComb)) {
+  comProp[dogComb[i,1], dogComb[i,2]] <- fromMinProp[i]
+  comProp[dogComb[i,2], dogComb[i,1]] <- toMaxProp[i]
+}
+
+``` 
+
+### Pairwise Mixing
+
+Following the heart-jejunum example, we performed all 45 pairwise mixing experiments, producing weighted linear combinations of gene expression        profiles of each pair of tissues (excluding self-mixing). The results are summaried in a heatmap:
+
+```{r dog_mix_vis, echo=FALSE, fig.width=8, fig.height=5, dev='svg', fig.cap="**Figure 3:** Results of the pairwise mixing experiment. Each cell represents the minimal percentage of tissue of the column as contamination in the tissue of the row that can be detected by *BioQC*. No values are available for cells on the diagonal because self-mixing was excluded. Heart  and skeletal muscle are very close to each other and therefore their detection limit is not considered."}
+
+dogMixCol <- colorRampPalette(c("#67A9CF", "black", "#EF8A62"))(100)
+heatmap.2(x=comProp, Rowv=NULL,Colv=NULL, 
+          col = dogMixCol, 
+          scale="none",
+          margins=c(9,9), # ("margin.Y", "margin.X")
+          trace='none', 
+          symkey=FALSE, 
+          symbreaks=FALSE, 
+          breaks=seq(0,1,0.01),
+          dendrogram='none',
+          density.info='none', 
+          denscol="black",
+          na.col="gray",
+          offsetRow=0, offsetCol=0,
+          keysize=1, key.title="Enrichment score", key.xlab="Detection limit", 
+          xlab="Contamination tissue", ylab="Originating tissue",
+          #( "bottom.margin", "left.margin", "top.margin", "right.margin" )
+          key.par=list(mar=c(5,0,1,8)),
+          # lmat -- added 2 lattice sections (5 and 6) for padding
+          lmat=rbind(c(5, 4, 2), c(6, 1, 3)), lhei=c(1.6, 5), lwid=c(1, 4, 1))
+
+```
+
+```{r dog_mix_vis_example, echo=FALSE}
+cell12 <- comProp[1,2]
+cell21 <- comProp[2,1]
+cell12Per <- as.integer(cell12*100)
+cell21Per <- as.integer(cell21*100)
+```
+
+The heatmap visualization summarizes the detection limit of contamination of each pair of tissues. Take the cell in row 1 column 2 from top left: its  value (`r cell12`) means that if there are `r cell12Per`% or more contamination by heart in the brain sample, *BioQC* will be able to detect it (with the threshold enrichment score $\geqslant3$ or the rank $\leqslant10$), because the enrichment score is equal to or larger than 3, or the heart tissue signature ranks in the top 10 of all tissue signatures.
+
+Take another cell in row 2 column 1 from top left: its value (`r cell21`) means that if there are `r cell21Per`% or more contanmination by brain in a heart sample, *BioQC* will be able to detect it. Here we observe the asymmetry again that we observed before with the heart/jejenum example: while it is realtively easy to identify heart contamination of a brain sample, it is more difficult to identify brain contamination of a heart sample in this dataset.
+
+The average detection limits of tissues as contamination sources are listed in the following table. The values are derived from median values of each column in the heatmap, except for diagonal and missing elements.
+
+```{r table_detect_limit, echo=FALSE, tab.cap="Median lower detection limites of tissues as contamination sources."}
+meanThr <- colMeans(comProp, na.rm=TRUE)
+meanThrShow <- data.frame(Tissue=names(meanThr), MedianDetectionLimit=sprintf("%1.2f%%", meanThr*100))
+kable(meanThrShow, caption="Median lower detection limites of tissues as contamination sources.")
+```
+
+Interestingly, brain samples are a special case: if they contaminate other tissues, it is more difficult to identify (but not other way around). It can be partially explained by the experiment design: Briggs *et al.* profiled the whole cerebrum, whereas in *BioQC* there are `r length(grep("Brain", names(gmt), ignore.case=TRUE))` distinct gene sets assigned to distinct brain regions. Though the prefrontal cortex signature scored highest in the canine brain samples, its score is relative low (7.45), and the genes in the signature are not too far away from the background genes:  
+
+```{r brain_low_exp, echo=FALSE, fig.width=6, fig.height=3, dev='svg', fig.cap="**Figure 4:** Average expression of tissue-preferential genes in respective tissues. For each tissue (*e.g.* brain), we calculate the median ratio of gene expression level of specific genes over the median expression level of background genes. The value reflects the specificity of tissue-specific genes in respective tissues. Likely due to the sampling of different brain regions, the score of brain ranks the lowest."}
+dogAvgGs <- c("Brain_Cortex_prefrontal_NR_0.7_3",
+              "Muscle_cardiac_NR_0.7_3",
+              "Intestine_small_NR_0.7_3",
+              "Kidney_NR_0.7_3",
+              "Liver_NR_0.7_3",
+              "Lung_NR_0.7_3",
+              "Lymphocyte_B_FOLL_NR_0.7_3",
+              "Pancreas_Islets_NR_0.7_3",
+              "Muscle_skeletal_NR_0.7_3",
+              "Monocytes_NR_0.7_3")
+dogAvgGsGenes <- sapply(gmt[dogAvgGs], function(x) x$genes)
+dogAvgGsGeneInds <- lapply(dogAvgGsGenes, function(x) {
+  inds <- match(x, fData(dog)$GeneSymbol)
+  inds[!is.na(inds)]
+  })
+
+## boxplot of tissue-specific genes
+dogAvgGsRel <- sapply(seq(along=dogAvgGsGeneInds), function(i) {
+  ind <- dogAvgGsGeneInds[[i]]
+  bgInd <- setdiff(1:nrow(dog), ind)
+  apply(dogAvgMat, 2, function(x) median(x[ind]/median(x[bgInd])))
+  })
+colnames(dogAvgGsRel) <- colnames(dogAvgMat)
+##heatmap.2(log2(dogAvgGsRel),zlim=c(-1,1),
+##          cellnote=round(dogAvgGsRel,1),
+##          Rowv=NA, Colv=NA, dendrogram="none",  col=greenred,
+##          lwid=c(1,3), lhei=c(1,3),
+##          key.title="Enrichment score", key.xlab="Detection limit",
+##          xlab="Tissue signature", ylab="Tissue profiles",
+##          key.par=list(cex.lab=1.25, mar=c(4,2,1,0), mgp=c(1.5,0.5,0)),
+##          cexRow=1.25, margins=c(8,8), trace="none", offsetRow=0, offsetCol=0,
+##          density.info="none",na.col="gray", breaks=seq(-1,1,0.01), symbreaks=TRUE)
+
+op <- par(mar=c(8,4,1,1))
+barplot(sort(diag(dogAvgGsRel)), las=3, ylab="Median ratio of expression (signature/background)")
+abline(h=1.25)
+## op <- par(mar=c(8,4,1,1))
+## dogAvgES <- absLog10p(diag(wmwTest(dogAvgMat, dogAvgGsGeneInds, alternative="greater")))
+## names(dogAvgES) <- colnames(dogAvgMat)
+## barplot(sort(dogAvgES, decreasing=TRUE), las=3, ylab="ES in respective average tissue profile")
+## par(op)
+## plot(meanThr, dogAvgES, type="n", xlab="Average lower detection limit", ylab="BioQC ES score")
+## text(meanThr, dogAvgES, colnames(dogAvgMat))
+
+```
+
+Therefore only a strong contamination by brain in this dataset will be detected by the given threshold. We expect that if prefrontal cortex instead of cerebrum sample was profiled, the mixing profile of brain will be similar to other organs. This needs to be tested in other datasets. 
+
+Apart from that, most *in silico* contamination events are detectable in this dataset, with median detection limit around `r median(comProp, na.rm=TRUE)`. This suggests that *BioQC* is sensitive towards tissue heterogeneity in physiological settings.
+
+
+
+
+Conclusions
+===========
+Benchmark studies with similated and real-world data demonstrate that *BioQC* is an efficient and sensitive method to detect tissue heterogeneity from high-throughput gene expression data.
+
+
+Appendix
+========
+
+### Comparing BioQC with Principal Component Analysis (PCA)
+In the context of the dog transcriptome dataset, we can compare the results of principal component analysis (PCA) with that of *BioQC*:
+
+```{r pca, echo=FALSE, fig.width=6, fig.height=6, dev='svg', fig.cap="Sample separation revealed by principal component analysis (PCA) of the dog transcriptome dataset."}
+par(mar=c(4,4,2,2))
+dogEXP <- exprs(dog); colnames(dogEXP) <- dog$Label
+dogPCA <- prcomp(t(dogEXP))
+expVar <- function(pcaRes, n) {vars <- pcaRes$sdev^2; (vars/sum(vars))[n]}
+biplot(dogPCA, col=c("#335555dd", "transparent"), cex=1.15,
+       xlab=sprintf("Principal component 1 (%1.2f%%)", expVar(dogPCA,1)*100),
+       ylab=sprintf("Principal component 1 (%1.2f%%)", expVar(dogPCA,2)*100))
+
+```
+
+PCA sugggests that samples from each tissue tend to cluster together, in line with the *BioQC* results. In addition, PCA reveals that tissues with cells of similar origins cluster together, such as skeletal muscle and heart. As expected, one brain sample and two lung samples seem to be different from other samples of the same cluster, which are consistent with the *BioQC* findings; however, unlike BioQC, PCA does not provide information on what are potential contamination/infiltration casues.
+
+Therefore, we believe *BioQC* complements existing unsupervised methods to inspect quality of gene expression data.
+
+
+
+
+R Session Info
+----------------
+```{r session_info}
+sessionInfo()
+```
