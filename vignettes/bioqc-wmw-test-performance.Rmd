@@ -1,5 +1,13 @@
 ---
 title: "Comparing the Wilcoxon-Mann-Whitney to alternative statistical tests"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{BioQC: Detect tissue heterogeneity in gene expression data}
+  %\usepackage[utf8]{inputenc}
+output:
+  rmarkdown::html_vignette:
+    self_contained: no
 output: 
   md_document:
     variant: markdown_phpextra
