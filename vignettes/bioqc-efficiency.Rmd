@@ -15,9 +15,6 @@ output:
     preserve_yaml: TRUE
 ---
 
-Supplementary Information for "Detect issue heterogenity in gene expression data with [*BioQC*](https://github.com/Accio/BioQC)" ([Jitao David Zhang](mailto:jitao_david.zhang@roche.com), Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello and [Laura Badi](laura.badi@roche.com))
-
-
 ```{r setup, include=FALSE}
 options(fig_caption=TRUE)
 library(knitr)
@@ -73,11 +70,9 @@ Given an  $m \times n$ input matrix of gene expression data with $m$ genes and $
 Therefore, we approximate the WMW-test by extending $b$ to all genes in the sample, keeping the background unchanged when testing multiple gene sets. Like this, $b$ has to be sorted only once per sample.
 The individual gene sets still need to be sorted, which is not a major issue, as they are small in comparison to the set of background genes. 
 
-<img src="wmw-speedup.svg" style="display:block; margin: auto" alt="bioqc speedup" />
-<p class="caption">**Figure 1**: BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding futile sorting operations on the same sample.</p>
-
-&nbsp;
-
+```{r algofig, echo=FALSE, fig.height=4.5, fig.cap="BioQC speeds up the Wilcoxon-Mann-Whitney test by avoiding futile sorting operations on the same sample."}
+knitr::include_graphics("wmw-speedup.png")
+```
 
 
 Time benchmark
