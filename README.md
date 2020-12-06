@@ -1,4 +1,4 @@
-[![R build status](https://github.com/Accio/BioQC/workflows/check-bioc/badge.svg)](https://github.com/Accio/BioQC/actions)
+[![R-CMD-check-bioc](https://github.com/Accio/BioQC/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/Accio/BioQC/actions)
 [![codecov](https://codecov.io/gh/Accio/BioQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Accio/BioQC)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/bioconductor-bioqc/README.html)
 [![license](https://img.shields.io/badge/license-GPLv3-green.svg)](https://github.com/accio/BioQC/blob/master/LICENSE.md)
