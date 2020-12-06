@@ -80,10 +80,10 @@ wmwTest(myMatrix, myList, valType="p.greater", simplify=TRUE)
 
 Case study with real dataset
 ----------------------------
-We have applied *BioQC* to a real gene expression profiling dataset. *BioQC* helped to generated hypotheses about potential contamination of rat kidney examples by pancreas tissues, which could be confirmed with qRT-PCR. 
+We have applied *BioQC* to a real gene expression profiling dataset. *BioQC* helped to generated
+hypotheses about potential contamination of rat kidney examples by pancreas tissues, which could be confirmed with qRT-PCR. 
 
-The data and the script used to perform the analysis can be found in the github repository [BioQC-example](https://github.com/Accio/BioQC-example). 
-
+See the [BioQC-kidney](https://accio.github.io/BioQC/articles/BioQC.html) vignette for more details.
 
 
 Benchmarking against R implementation

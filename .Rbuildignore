@@ -8,3 +8,7 @@
 ^coverage\.txt$
 ^coverage\.r$
 ^codecov\.yml$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

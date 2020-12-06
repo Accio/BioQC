@@ -3,14 +3,19 @@ Type: Package
 Title: Detect tissue heterogeneity in expression profiles with gene sets
 Version: 1.19.2
 Date: 2020-12-04
-Author: Jitao David Zhang <jitao_david.zhang@roche.com>, Laura Badi, Gregor
-    Sturm, Roland Ambs, Iakov Davydov
-Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
+Authors@R: c(
+    person("Jitao David", "Zhang", email="jitao_david.zhang@roche.com", role = c("cre", "aut")), 
+    person("Laura", "Badi", role="aut"),
+    person("Gregor", "Sturm", email="mail@gregor-sturm.de", role=c("aut")),
+    person("Roland", "Ambs", role="aut"),
+    person("Iakov", "Davydov", role="aut"))
 Description: BioQC performs quality control of high-throughput expression data
     based on tissue gene signatures. It can detect tissue heterogeneity in gene
     expression data. The core algorithm is a Wilcoxon-Mann-Whitney test that is
     optimised for high performance.
+biocViews: GeneExpression,QualityControl,StatisticalMethod, GeneSetEnrichment
 Depends:
+    R,
     Biobase
 Imports:
     edgeR,
@@ -42,11 +47,16 @@ Suggests:
     gplots,
     gridExtra,
     org.Hs.eg.db,
+    hgu133plus2.db,
+    ggplot2,
+    reshape2,
+    plyr,
     ineq,
     covr
 LinkingTo: Rcpp
 VignetteBuilder: knitr
-biocViews: GeneExpression,QualityControl,StatisticalMethod, GeneSetEnrichment
-License: GPL (>=3)
+License: GPL (>=3) + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.1
+URL: https://accio.github.io/BioQC
+BugReports: https://accio.github.io/BioQC/issues

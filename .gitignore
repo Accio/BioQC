@@ -7,3 +7,5 @@ doc
 *.rds
 *.html
 .Rproj.user
+*.code-workspace
+docs

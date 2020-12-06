@@ -1,9 +1,0 @@
-language: r
-r: bioc-release
-cache: packages
-warnings_are_errors: false
-r_github_packages:
-  - r-lib/covr
-
-after_success:
-  - Rscript -e 'covr::codecov()'
