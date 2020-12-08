@@ -91,13 +91,17 @@ wmwTestInR <- function(x, sub, valType=c("p.greater", "p.less", "p.two.sided",  
 
 ## type2int and formatMatrixInd are helper functions for wmwTest and wmwSignedTest
 TYPE_CODES <- c("p.greater"=0L, "p.less"=1L,
-                "p.two.sided"=2L, "U"=3L,
+                "p.two.sided"=2L,
+		"U"=3L,
                 "abs.log10p.greater"=4L,
                 "log10p.less"=5L,
                 "abs.log10p.two.sided"=6L,
                 "Q"=7L,
                 "r"=8L,
-                "f"=9L)
+		"f"=9L,
+                "U1"=10L,
+		"U2"=11L)
+
 #'prints the options of valTypes of wmwTest
 valTypes <- function() names(TYPE_CODES)
 
@@ -115,7 +119,7 @@ wmwTest.default <- function(matrix,
                             indexList,
                             valType=c("p.greater", "p.less", "p.two.sided", "U",
                                 "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
-                                "Q", "r", "f"),
+                                "Q", "r", "f", "U1", "U2"),
                             simplify=TRUE) {
     if(!is.matrix(matrix) || !is(indexList, "IndexList"))
         stop("'matrix' and 'indexList' must be matrix and an IndexList object, respectively")
@@ -126,16 +130,16 @@ wmwTest.default <- function(matrix,
         valType <- match.arg(valType)
     }
     typeInt <- type2int(valType)
-    
+
     if(storage.mode(matrix)=="character")
         stop("Input must be a numeric matrix or anything that can be converted into a numeric matrix")
-    
+
     if(storage.mode(matrix)!="double")
         storage.mode(matrix) <- "double"
 
     if(offset(indexList)!=0L)
         offset(indexList) <- 0L
-    
+
     res <- .Call(C_wmw_test, matrix, indexList, typeInt)
     rownames(res) <- names(indexList)
     colnames(res) <- colnames(matrix)
@@ -236,9 +240,9 @@ setMethod("wmwTest", c("ANY", "list"),
 #'using GMT files.
 #'
 #'@param valType The value type to be returned, allowed values
-#'include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and 
-#'\code{abs.log10p.less} (one-sided tests),\code{p.two.sided}, and \code{U} 
-#'statistic, and their log10 transformation variants. See details below.
+#'include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and
+#'\code{abs.log10p.less} (one-sided tests),\code{p.two.sided}, and \code{U}
+#'statistic (or more specifically, either \code{U1} or \code{U2}), and their log10 transformation variants. See details below.
 #'
 #'@param col a string sometimes used with a \code{eSet}
 #'
@@ -271,6 +275,12 @@ setMethod("wmwTest", c("ANY", "list"),
 #'From version 1.19.1, the rank-biserial correlation coefficient (\sQuote{r})
 #'and the common language effect size (\sQuote{f}) are supported value types.
 #'
+#'Before version 1.19.3, the \sQuote{U} statistic returned is in fact
+#'\sQuote{U2}. From version 1.19.3, \sQuote{U1} is returned when \sQuote{U} is
+#'used, and users can specify additional parameter values \sQuote{U1} and
+#'\sQuote{U2}. The sum of \sQuote{U1} and \sQuote{U2} is the product of the
+#'sizes of two vectors to be compared.
+#'
 #'@return A numeric matrix or vector containing the statistic.
 #'
 #'@references Barry, W.T., Nobel, A.B., and Wright, F.A. (2008). A statistical framework for testing functional namespaces in microarray data. _Annals of Applied Statistics_ 2, 286-315.
@@ -283,8 +293,9 @@ setMethod("wmwTest", c("ANY", "list"),
 #' @import Rcpp
 #' @importFrom Biobase fData exprs
 #' @importClassesFrom Biobase eSet
-#' 
-#'@author Jitao David Zhang <jitao_david.zhang@roche.com>
+#'
+#'@author Jitao David Zhang <jitao_david.zhang@roche.com>, with critical inputs
+#'from Jan Aettig and Iakov Davydov about U statistics.
 #'
 #'@note The function has been optimized for expression profiling data. It
 #'avoids repetitive ranking of data as done by native R implementations
@@ -298,7 +309,7 @@ setMethod("wmwTest", c("ANY", "list"),
 #'@seealso code{wilcox.test} in the \code{stats} package, and \code{rankSumTestWithCorrelation} in
 #'the \code{limma} package.
 #'
-#'@examples 
+#'@examples
 #'## R-native data structures
 #'set.seed(1887)
 #'rd <- rnorm(1000)
@@ -374,7 +385,7 @@ wmwTestSignedGenesets.default <- function(matrix,
                                           signedIndexList,
                                           valType=c("p.greater", "p.less", "p.two.sided", "U",
                                               "abs.log10p.greater","log10p.less","abs.log10p.two.sided",
-                                              "Q", "r", "f"),
+                                              "Q", "r", "f", "U1", "U2"),
                                           simplify=TRUE) {
     if(!is.matrix(matrix) || !is(signedIndexList, "SignedIndexList"))
         stop("'matrix' and 'signedIndexList' must be matrix and an SignedIndexList object, respectively")
@@ -385,16 +396,16 @@ wmwTestSignedGenesets.default <- function(matrix,
         valType <- match.arg(valType)
     }
     typeInt <- type2int(valType)
-    
+
     if(storage.mode(matrix)=="character")
         stop("Input must be a numeric matrix or anything that can be converted into a numeric matrix")
-    
+
     if(storage.mode(matrix)!="double")
         storage.mode(matrix) <- "double"
 
     if(offset(signedIndexList)!=0L)
         offset(signedIndexList) <- 0L
-    
+
     res <- .Call(C_signed_wmw_test, matrix,
                  signedIndexList,
                  typeInt)
