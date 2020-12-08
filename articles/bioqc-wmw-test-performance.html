@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
       </span>
     </div>
 
@@ -111,8 +111,8 @@
 <a href="#computational-performance" class="anchor"></a>Computational Performance</h2>
 <p>Since the KS-test is so slow, we did not replicate the sensitivity benchmark from the <a href="bioqc-simulation.html">simulation studies</a> using the enrichment score rank. While it takes BioQC about 4 seconds on a single thread to test all 155 signatures, it already takes the KS-test about 2 seconds to test a single signature.</p>
 <pre><code>##       test replications elapsed relative
-## 2  runKS()            5   9.675    1.000
-## 1 runWMW()            5  17.559    1.815</code></pre>
+## 2  runKS()            5  10.896    1.000
+## 1 runWMW()            5  18.023    1.654</code></pre>
 </div>
 <div id="r-session-info" class="section level2">
 <h2 class="hasAnchor">
@@ -143,7 +143,7 @@
 ##  [4] reshape2_1.4.4       gplots_3.1.1         gridExtra_2.3       
 ##  [7] latticeExtra_0.6-29  lattice_0.20-41      hgu133plus2.db_3.2.3
 ## [10] org.Hs.eg.db_3.12.0  AnnotationDbi_1.53.0 IRanges_2.25.4      
-## [13] S4Vectors_0.29.5     BioQC_1.19.2         Biobase_2.51.0      
+## [13] S4Vectors_0.29.5     BioQC_1.19.3         Biobase_2.51.0      
 ## [16] BiocGenerics_0.37.0  testthat_3.0.0       knitr_1.30          
 ## 
 ## loaded via a namespace (and not attached):

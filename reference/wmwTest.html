@@ -78,7 +78,7 @@ stats, or rankSumTestWithCorrelation in limma)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
       </span>
     </div>
 
@@ -252,9 +252,9 @@ using GMT files.</p></td>
     <tr>
       <th>valType</th>
       <td><p>The value type to be returned, allowed values
-include <code>p.greater</code>, <code>p.less</code>, <code>abs.log10p.greater</code> and 
-<code>abs.log10p.less</code> (one-sided tests),<code>p.two.sided</code>, and <code>U</code> 
-statistic, and their log10 transformation variants. See details below.</p></td>
+include <code>p.greater</code>, <code>p.less</code>, <code>abs.log10p.greater</code> and
+<code>abs.log10p.less</code> (one-sided tests),<code>p.two.sided</code>, and <code>U</code>
+statistic (or more specifically, either <code>U1</code> or <code>U2</code>), and their log10 transformation variants. See details below.</p></td>
     </tr>
     <tr>
       <th>simplify</th>
@@ -290,6 +290,11 @@ two-side variant,  and gives a proper sign to it, depending on whether it is
 rather greater than (positive) or  less than (negative).</p>
 <p>From version 1.19.1, the rank-biserial correlation coefficient (&#8216;r&#8217;)
 and the common language effect size (&#8216;f&#8217;) are supported value types.</p>
+<p>Before version 1.19.3, the &#8216;U&#8217; statistic returned is in fact
+&#8216;U2&#8217;. From version 1.19.3, &#8216;U1&#8217; is returned when &#8216;U&#8217; is
+used, and users can specify additional parameter values &#8216;U1&#8217; and
+&#8216;U2&#8217;. The sum of &#8216;U1&#8217; and &#8216;U2&#8217; is the product of the
+sizes of two vectors to be compared.</p>
     <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
 
     
@@ -337,7 +342,8 @@ accounting for inter-gene correlation. _Nucleic Acids Research_ 40(17):e133</p>
 the <code>limma</code> package.</p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    <p>Jitao David Zhang &lt;jitao_david.zhang@roche.com&gt;</p>
+    <p>Jitao David Zhang &lt;jitao_david.zhang@roche.com&gt;, with critical inputs
+from Jan Aettig and Iakov Davydov about U statistics.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## R-native data structures</span>
@@ -349,13 +355,13 @@ the <code>limma</code> package.</p></div>
 </div><div class='output co'>#&gt; [1] 0.8535404</div><div class='input'><span class='va'>rd1</span> <span class='op'>&lt;-</span> <span class='va'>rd</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>rl</span>, <span class='fl'>0.5</span>, <span class='fl'>0</span><span class='op'>)</span>
 <span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd1</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"p.greater"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 1.949087e-14</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd1</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"U"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 90452</div><div class='input'><span class='va'>rd2</span> <span class='op'>&lt;-</span> <span class='va'>rd</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>rl</span>, <span class='fl'>0.2</span>, <span class='fl'>0</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 159539</div><div class='input'><span class='va'>rd2</span> <span class='op'>&lt;-</span> <span class='va'>rd</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>rl</span>, <span class='fl'>0.2</span>, <span class='fl'>0</span><span class='op'>)</span>
 <span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd2</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"p.greater"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.9976222</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd2</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"p.two.sided"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.004758899</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd2</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"p.less"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.002379449</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd2</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"r"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.1031357</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd2</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"f"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.5515679</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -0.1031357</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rd2</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"f"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.4484321</div><div class='input'>
 <span class='co'>## matrix forms</span>
 <span class='va'>rmat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>rd</span>, <span class='va'>rd1</span>, <span class='va'>rd2</span><span class='op'>)</span>, ncol<span class='op'>=</span><span class='fl'>3</span>, byrow<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='va'>rl</span>, valType<span class='op'>=</span><span class='st'>"p.two.sided"</span><span class='op'>)</span>
@@ -366,13 +372,13 @@ the <code>limma</code> package.</p></div>
 </div><div class='output co'>#&gt; [1] 4.267702e-01 1.949087e-14 9.976222e-01</div><div class='input'>
 <span class='co'>## other valTypes</span>
 <span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"U"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 124152  90452 137887</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"abs.log10p.greater"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 125839 159539 112104</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"abs.log10p.greater"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1]  0.369805934 13.710168669  0.001033906</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"log10p.less"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] -2.416062e-01 -8.437865e-15 -2.623524e+00</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"abs.log10p.two.sided"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1]  0.06877594 13.40913867  2.32249352</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"Q"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1]  0.06877594 13.40913867 -2.32249352</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"r"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -0.006748243 -0.276357949  0.103135713</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"f"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.4966259 0.3618210 0.5515679</div><div class='input'>
+</div><div class='output co'>#&gt; [1]  0.006748243  0.276357949 -0.103135713</div><div class='input'><span class='fu'>wmwTest</span><span class='op'>(</span><span class='va'>rmat</span>, <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>rl</span><span class='op'>)</span>, valType<span class='op'>=</span><span class='st'>"f"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.5033741 0.6381790 0.4484321</div><div class='input'>
 <span class='co'>## using ExpressionSet</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>sample.ExpressionSet</span><span class='op'>)</span>
 <span class='va'>testSet</span> <span class='op'>&lt;-</span> <span class='va'>sample.ExpressionSet</span>
