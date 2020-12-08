@@ -17,52 +17,55 @@
 typedef enum testtype {greater=0,
                        less=1,
                        twoSided=2,
-                       U=3,
+                       U=3, // prior to 1.19.3, U points to U2; from 1.19.3, it points to U1
                        abslog10greater=4,
                        log10less=5,
                        abslog10twoSided=6,
                        Q=7,
                        r=8,
-                       f=9} TestType;
+                       f=9,
+		       U1=10,
+		       U2=11} TestType;
 
 /*
  * void pnorm_both(double x, double *cum, double *ccum, int i_tail, int log_p)
- 
+
  * i_tail in {0,1,2} means: "lower", "upper", or "both" :
  * if(lower) return  *cum := P[X <= x]
  * if(upper) return *ccum := P[X >  x] = 1 - P[X <= x]
  */
 
 double wmw_test_stat(double rankSum, int nInds, int nTotal, double tieCoef, TestType type) {
-  
-  double uStat, mu, sigma2, zval, pgt, plt;
+
+  double u1, u2, mu, sigma2, zval, pgt, plt;
   double res;
   int nBg = nTotal-nInds;
-  
-  uStat = nInds*nBg+nInds*(nInds+1.0)*0.5-rankSum;
-  
-  if(type == U) {
-    res = uStat;
+
+  u2 = nInds*nBg+nInds*(nInds+1.0)*0.5-rankSum;
+  u1 = nInds * nBg - u2;
+
+  if(type==U || type == U1) {
+    res = u1;
+  } else if (type == U2) {
+    res = u2;
   } else if (type == r) {
-    // note: uStat is in fact n1 * n2 - U
-    res = - 2 * uStat / nInds / (nTotal - nInds) + 1;
+    res = 1 - 2 * u2 / nInds / (nTotal - nInds);
   } else if (type == f) {
-    // note: uStat is in fact n1 * n2 - U
-    res = 1 - uStat / nInds / (nTotal - nInds);
+    res = u1 / nInds / (nTotal - nInds);
   } else {
     mu = (double)nInds*nBg*0.5; // NOT mu=n1*n2*0.5
     sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
 
     if(type == greater || type == abslog10greater) { /* greater */
-zval = (uStat+0.5-mu)/sqrt(sigma2); // z lower tail
+      zval = (u2+0.5-mu)/sqrt(sigma2); // z lower tail
       pnorm_both(zval, &pgt, &plt, 0, 0);
       res = type==greater ? pgt : ABSLOG(pgt);
     } else if (type == less || type == log10less) { /* less */
-zval = (uStat-0.5-mu)/sqrt(sigma2); // z higher tail
+      zval = (u2-0.5-mu)/sqrt(sigma2); // z higher tail
       pnorm_both(zval, &pgt, &plt, 1, 0);
       res = type==less ? plt : log10(plt);
     } else if (type == twoSided || type == abslog10twoSided || type == Q) { /* two sided*/
-zval = (uStat-mu-(uStat>mu ? 0.5 : -0.5))/sqrt(sigma2);
+      zval = (u2-mu-(u2>mu ? 0.5 : -0.5))/sqrt(sigma2);
       pnorm_both(zval, &pgt, &plt, 2, 0);
       res = mu==0.0 ? 1.0 : 2.0*MIN(pgt, plt);
       if(type == abslog10twoSided) {
@@ -77,6 +80,7 @@ zval = (uStat-mu-(uStat>mu ? 0.5 : -0.5))/sqrt(sigma2);
   }
   return(res);
 }
+
 /*
  double wmw_test_core(const DRankList valList,
  const int *inds, int nInds,
@@ -84,16 +88,17 @@ zval = (uStat-mu-(uStat>mu ? 0.5 : -0.5))/sqrt(sigma2);
  int i;
  double indRankSum; // sum of index rank
  double res;
- 
+
  indRankSum = 0.0;
  for(i = 0;i<nInds;++i)
  indRankSum += valList->list[inds[i]]->rank;
- 
+
  res = wmw_test_stat(indRankSum, nInds, nTotal,
  tieCoef(valList), type);
  return(res);
  }
  */
+
 void wmw_test_list(const double *valPtr, int n,
                    SEXP indlist,
                    double *resPtr, TestType type) {
@@ -101,27 +106,27 @@ void wmw_test_list(const double *valPtr, int n,
   int i, j;
   int nInd;
   int* ip;
-  
+
   double tie;
   double indRankSum;
-  
+
   list = createDRankList(valPtr, n);
   prepareDRankList(list);
-  
+
   tie = tieCoef(list);
-  
+
 #pragma omp parallel for
   for(i=0;i<length(indlist);++i) {
     ip=INTEGER(VECTOR_ELT(indlist,i));
     nInd=length(VECTOR_ELT(indlist,i));
-    
+
     indRankSum = 0.0;
     for(j=0; j<nInd; ++j) {
       if(!(ip[j]>=0 && ip[j]<=n-1))
         error("Index out of range: gene set %d, gene %d\n", i+1, j+1);
       indRankSum += list->list[ip[j]]->rank;
     }
-    
+
     resPtr[i] = wmw_test_stat(indRankSum,
                               nInd,
                               n,
@@ -149,17 +154,17 @@ extern SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
   const int type=INTEGER(rtype)[0];
   const int m=length(indlist);
   const int n=NROW(matrix);
-  
+
   int i;
   double *matColPtr; // pointer to the current column of the matrix
   SEXP res;
   double *resPtr;
-  
+
   res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
-  
+
   resPtr=REAL(res);
   matColPtr=REAL(matrix);
-  
+
 #pragma omp parallel for
   for(i=0; i<NCOL(matrix);++i) {
     wmw_test_list(matColPtr, n,
@@ -168,7 +173,7 @@ extern SEXP wmw_test(SEXP matrix, SEXP indlist, SEXP rtype) {
     resPtr+=m;
     matColPtr+=n;
   }
-  
+
   UNPROTECT(1);
   return(res);
 }
@@ -184,23 +189,23 @@ void signed_wmw_test_list(const double *valPtr, int n,
   int nPos, nNeg;
   int *ipPos,*ipNeg;
   SEXP pairInd, posInd, negInd;
-  
+
   double tie;
   double indRankSum;
-  
+
   list=createDRankList(valPtr, n);
   prepareDRankList(list);
-  
+
   tie = tieCoef(list);
-  
+
 #pragma omp parallel for
   for(i=0;i<length(signedIndList);++i) {
     pairInd = VECTOR_ELT(signedIndList, i);
     posInd = VECTOR_ELT(pairInd, 0);
     negInd = VECTOR_ELT(pairInd, 1);
-    
+
     indRankSum = 0.0;
-    
+
     if(posInd != NULL_USER_OBJECT) {
       ipPos = INTEGER(posInd);
       nPos = length(posInd);
@@ -212,7 +217,7 @@ void signed_wmw_test_list(const double *valPtr, int n,
     } else {
       nPos = 0;
     }
-    
+
     if(negInd != NULL_USER_OBJECT) {
       ipNeg = INTEGER(negInd);
       nNeg = length(negInd);
@@ -224,7 +229,7 @@ void signed_wmw_test_list(const double *valPtr, int n,
     } else {
       nNeg = 0;
     }
-    
+
     resPtr[i]=wmw_test_stat(indRankSum,
                             nPos+nNeg,
                             n,
@@ -251,17 +256,17 @@ extern SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
   const int type=INTEGER(rtype)[0];
   const int m=length(signedIndList);
   const int n=NROW(matrix);
-  
+
   int i;
   double *matColPtr; // pointer to the current column of the matrix
   SEXP res;
   double *resPtr;
-  
+
   res=PROTECT(allocMatrix(REALSXP, m, NCOL(matrix)));
-  
+
   resPtr=REAL(res);
   matColPtr=REAL(matrix);
-  
+
 #pragma omp parallel for
   for(i=0; i<NCOL(matrix);++i) {
     signed_wmw_test_list(matColPtr, n,
@@ -270,7 +275,7 @@ extern SEXP signed_wmw_test(SEXP matrix, SEXP signedIndList, SEXP rtype) {
     resPtr+=m;
     matColPtr+=n;
   }
-  
+
   UNPROTECT(1);
   return(res);
 }
