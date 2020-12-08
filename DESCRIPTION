@@ -1,8 +1,8 @@
 Package: BioQC
 Type: Package
 Title: Detect tissue heterogeneity in expression profiles with gene sets
-Version: 1.19.2
-Date: 2020-12-04
+Version: 1.19.3
+Date: 2020-12-08
 Authors@R: c(
     person("Jitao David", "Zhang", email="jitao_david.zhang@roche.com", role = c("cre", "aut")), 
     person("Laura", "Badi", role="aut"),
@@ -15,7 +15,7 @@ Description: BioQC performs quality control of high-throughput expression data
     optimised for high performance.
 biocViews: GeneExpression,QualityControl,StatisticalMethod, GeneSetEnrichment
 Depends:
-    R,
+    R (>= 3.5.0),
     Biobase
 Imports:
     edgeR,
