@@ -235,7 +235,7 @@ testSignedGreater <- wmwTest(testMatrix, testSignedMatch, valType="p.greater")
 testSignedLess <- wmwTest(testMatrix, testSignedMatch, valType="p.less")
 testSignedTwoSided <- wmwTest(testMatrix, testSignedMatch, valType="p.two.sided")
 testSignedQ <- wmwTest(testMatrix, testSignedMatch, valType="Q")
-testSignedU <- wmwTest(testMatrix, testSignedMatch, valType="U")
+testSignedU2 <- wmwTest(testMatrix, testSignedMatch, valType="U2")
 ## U statistic is calculated by hand
 expSignedUBase <- c(0, 99, 4, 196, 0)
 expSignedU <- matrix(rep(expSignedUBase, each=10L), ncol=10, byrow=TRUE)
@@ -243,18 +243,18 @@ expSignedU <- matrix(rep(expSignedUBase, each=10L), ncol=10, byrow=TRUE)
 test_that("wmwTest works for signed genesets", {
               expect_equivalent(testMatrixRankHead, expMatrixRankHead)
               expect_equivalent(testSignedMatch, expSignedMatch)
-              expect_equivalent(testSignedU, expSignedU)
+              expect_equivalent(testSignedU2, expSignedU)
           })
 
-testSignedUcol1 <- wmwTest(testMatrix[,1], testSignedMatch, valType="U")
+testSignedU2col1 <- wmwTest(testMatrix[,1], testSignedMatch, valType="U2")
 testSignedEset <- new("ExpressionSet",
                       exprs=testMatrix)
-testSignedEsetU <- wmwTest(testSignedEset, testSignedMatch, valType="U")
+testSignedEsetU2 <- wmwTest(testSignedEset, testSignedMatch, valType="U2")
 
 test_that("wmwTest works for signed genesets and polymorphism", {
-              expect_equivalent(testSignedUcol1, expSignedUBase)
-              expect_equivalent(testSignedEsetU, expSignedU)
+              expect_equivalent(testSignedU2col1, expSignedUBase)
+              expect_equivalent(testSignedEsetU2, expSignedU)
 
-              expect_equal(names(testSignedUcol1), names(testRawSignedGenesets))
-              expect_equal(rownames(testSignedEsetU), names(testRawSignedGenesets))
+              expect_equal(names(testSignedU2col1), names(testRawSignedGenesets))
+              expect_equal(rownames(testSignedEsetU2), names(testRawSignedGenesets))
           })
