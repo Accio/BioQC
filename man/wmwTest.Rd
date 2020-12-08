@@ -103,9 +103,9 @@ using GMT files.}
 \item{col}{a string sometimes used with a \code{eSet}}
 
 \item{valType}{The value type to be returned, allowed values
-include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and 
-\code{abs.log10p.less} (one-sided tests),\code{p.two.sided}, and \code{U} 
-statistic, and their log10 transformation variants. See details below.}
+include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and
+\code{abs.log10p.less} (one-sided tests),\code{p.two.sided}, and \code{U}
+statistic (or more specifically, either \code{U1} or \code{U2}), and their log10 transformation variants. See details below.}
 
 \item{simplify}{Logical. If not, the returning value is in matrix
 format; if set to \code{TRUE}, the results are simplified into
@@ -146,6 +146,12 @@ rather greater than (positive) or  less than (negative).
 
 From version 1.19.1, the rank-biserial correlation coefficient (\sQuote{r})
 and the common language effect size (\sQuote{f}) are supported value types.
+
+Before version 1.19.3, the \sQuote{U} statistic returned is in fact
+\sQuote{U2}. From version 1.19.3, \sQuote{U1} is returned when \sQuote{U} is
+used, and users can specify additional parameter values \sQuote{U1} and
+\sQuote{U2}. The sum of \sQuote{U1} and \sQuote{U2} is the product of the
+sizes of two vectors to be compared.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -276,5 +282,6 @@ code{wilcox.test} in the \code{stats} package, and \code{rankSumTestWithCorrelat
 the \code{limma} package.
 }
 \author{
-Jitao David Zhang <jitao_david.zhang@roche.com>
+Jitao David Zhang <jitao_david.zhang@roche.com>, with critical inputs
+from Jan Aettig and Iakov Davydov about U statistics.
 }
