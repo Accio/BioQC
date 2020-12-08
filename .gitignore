@@ -9,3 +9,4 @@ doc
 .Rproj.user
 *.code-workspace
 docs
+*.swp
