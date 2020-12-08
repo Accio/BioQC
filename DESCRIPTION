@@ -52,7 +52,9 @@ Suggests:
     reshape2,
     plyr,
     ineq,
-    covr
+    covr,
+    limma,
+    RColorBrewer
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 License: GPL (>=3) + file LICENSE
