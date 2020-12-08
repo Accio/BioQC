@@ -84,7 +84,7 @@
       <h1 data-toc-skip>BioQC: Detect tissue heterogeneity in gene expression data</h1>
                         <h4 class="author">Jitao David Zhang, Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, and Laura Badi</h4>
             
-            <h4 class="date">2020-12-06</h4>
+            <h4 class="date">2020-12-08</h4>
       
       
       <div class="hidden name"><code>bioqc-introduction.Rmd</code></div>
@@ -162,13 +162,13 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="va">Cres</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wmwTest.html">wmwTest</a></span><span class="op">(</span><span class="va">exprs</span>, <span class="va">ind</span>, valType<span class="op">=</span><span class="st">"p.less"</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.089   0.000   0.089</code></pre>
+##   0.073   0.000   0.073</code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="va">Rres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">exprs</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
                           <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">ind</span>, <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span>
                                  <span class="fu"><a href="../reference/wmwTestInR.html">wmwTestInR</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, valType<span class="op">=</span><span class="st">"p.less"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   1.568   0.024   1.592</code></pre>
+##   1.252   0.020   1.272</code></pre>
 <p>With 22000 genes, five samples, and five gene sets, the <em>BioQC</em> implementation is about 20x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the <em>BioQC</em> signature list), the <em>BioQC</em> implementation can be about 1000x faster than the R implementation.</p>
 </div>
 <div id="technical-notes" class="section level2">
