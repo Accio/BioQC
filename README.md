@@ -15,7 +15,7 @@ Therefore, we propose applying BioQC as a routine step in every gene-expression 
 The BioQC method is described in 
 
 > Zhang, Jitao David, Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello, and Laura Badi.
-> “Detect Tissue Heterogeneity in Gene Expression Data with BioQC.” BMC Genomics 18 (2017): 277. [doi:10.1186/s12864-017-3661-2](https://doi.org/10.1186/s12864-017-3661-2)).
+> “Detect Tissue Heterogeneity in Gene Expression Data with BioQC.” BMC Genomics 18 (2017): 277. [doi:10.1186/s12864-017-3661-2](https://doi.org/10.1186/s12864-017-3661-2).
 
 
 ## Basic Usage
