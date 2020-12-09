@@ -48,7 +48,8 @@ we could validate the contamination with qPCR.
 
 For a more detailed example explaining how to use other data structures or custom signatures
 see
- * [Applying BioQC to a real-world kidney dataset](https://accio.github.io/BioQC/bioqc.html). 
+ * [Applying BioQC to a real-world kidney
+   dataset](https://accio.github.io/BioQC/articles/bioqc.html). 
  * [Introduction to BioQC](https://accio.github.io/BioQC/articles/bioqc-introduction.html). 
 
 For advanced usages, check out:
