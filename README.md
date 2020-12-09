@@ -56,7 +56,8 @@ For advanced usages, check out:
  * [Single sample gene set enrichment analysis with BioQC](https://accio.github.io/BioQC/articles/bioqc-signedGenesets.html)
 
 For benchmarks and details about the algorithm, see: 
- * [BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data](https://accio.github.io/BioQC/bioqc-simulation.html)
+ * [BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on
+   simulated and real-world data](https://accio.github.io/BioQC/articles/bioqc-simulation.html)
  * [Comparing the Wilcoxon-Mann-Whitney to alternative statistical tests](https://accio.github.io/BioQC/articles/bioqc-wmw-test-performance.html)
  * [The BioQC algorithm: speeding up the WMW-test](https://accio.github.io/BioQC/articles/bioqc-efficiency.html)
 
