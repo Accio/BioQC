@@ -48,9 +48,9 @@ we could validate the contamination with qPCR.
 
 For a more detailed example explaining how to use other data structures or custom signatures
 see
+ * [Introduction to BioQC](https://accio.github.io/BioQC/articles/bioqc-introduction.html).
  * [Applying BioQC to a real-world kidney
-   dataset](https://accio.github.io/BioQC/articles/bioqc.html). 
- * [Introduction to BioQC](https://accio.github.io/BioQC/articles/bioqc-introduction.html). 
+   dataset](https://accio.github.io/BioQC/index.html).
 
 For advanced usages, check out:
  * [Single sample gene set enrichment analysis with BioQC](https://accio.github.io/BioQC/articles/bioqc-signedGenesets.html)
