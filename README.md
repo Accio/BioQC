@@ -50,12 +50,12 @@ For a more detailed example explaining how to use other data structures or custo
 see
  * [Introduction to BioQC](https://accio.github.io/BioQC/articles/bioqc-introduction.html).
  * [Applying BioQC to a real-world kidney
-   dataset](https://accio.github.io/BioQC/index.html).
+   dataset](https://accio.github.io/BioQC/articles/BioQC.html).
 
 For advanced usages, check out:
  * [Single sample gene set enrichment analysis with BioQC](https://accio.github.io/BioQC/articles/bioqc-signedGenesets.html)
 
-For benchmarks and details about the algorithm, see: 
+For benchmarks and details about the algorithm, see:
  * [BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on
    simulated and real-world data](https://accio.github.io/BioQC/articles/bioqc-simulation.html)
  * [Comparing the Wilcoxon-Mann-Whitney to alternative statistical tests](https://accio.github.io/BioQC/articles/bioqc-wmw-test-performance.html)
