@@ -49,9 +49,9 @@ double wmw_test_stat(double rankSum, int nInds, int nTotal, double tieCoef, Test
   } else if (type == U2) {
     res = u2;
   } else if (type == r) {
-    res = 1 - 2 * u2 / nInds / (nTotal - nInds);
+    res = 2 * u1 / nInds / nBg - 1;
   } else if (type == f) {
-    res = u1 / nInds / (nTotal - nInds);
+    res = u1 / nInds / nBg;
   } else {
     mu = (double)nInds*nBg*0.5; // NOT mu=n1*n2*0.5
     sigma2 = nInds*nBg*(nTotal+1.0)/12.0*tieCoef; //NOT sigma2 = n1*n2*(n+1)/12*tieCoef
