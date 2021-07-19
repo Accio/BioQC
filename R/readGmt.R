@@ -7,6 +7,7 @@ readSingleGmt <- function(filename, uniqGenes=TRUE, namespace=NULL) {
   validLines <- splitLines[isValid]
   res <- lapply(validLines, function(x)  {
     genes <- x[3:length(x)]
+    genes <- genes[!genes %in% ""]
     if(uniqGenes) {
       genes <- unique(genes)
     }

@@ -51,10 +51,10 @@ gmtlist2signedGenesets <- function(gmtlist, posPattern="_UP$", negPattern="_DN$"
       }
     } else {
       if(any(isPos[i])) {
-        pos <- unique(unlist(genes[i][isPos[i]]))
+        pos <- setdiff(unique(unlist(genes[i][isPos[i]])), "")
       }
       if(any(isNeg[i])) {
-        neg <- unique(unlist(genes[i][isNeg[i]]))
+        neg <- setdiff(unique(unlist(genes[i][isNeg[i]])), "")
       }
     }
     return(list(name=as.character(stemFactor)[i][1], 

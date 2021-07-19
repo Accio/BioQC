@@ -38,6 +38,7 @@ Collate:
     matchGenes.R
     wmwTest.R
     readCurrentSignatures.R
+    prettySigNames.R
 Suggests:
     testthat,
     knitr,
