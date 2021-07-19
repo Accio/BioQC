@@ -37,6 +37,7 @@ Collate:
     readGmt.R
     matchGenes.R
     wmwTest.R
+    readCurrentSignatures.R
 Suggests:
     testthat,
     knitr,
