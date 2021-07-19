@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -56,9 +58,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
       </span>
     </div>
 
@@ -133,7 +141,7 @@
     <p>Make names of gene-sets unique by namespace, and member genes of gene-sets unique</p>
     </div>
 
-    <pre class="usage"><span class='fu'>uniqGenesetsByNamespace</span><span class='op'>(</span><span class='va'>gmtList</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>uniqGenesetsByNamespace</span><span class='op'>(</span><span class='va'>gmtList</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,7 +154,7 @@
 <li><p>genes within each gene-set are unique, by removing duplicated genes</p></li>
 </ul>
 
-<p>Gene-sets with duplicated names and different <code>desc</code> are merged, <code>desc</code> are made unique, and in case of multiple values, concatenated (with <code><a href='https://rdrr.io/r/base/Logic.html'>|</a></code> as the collapse character).</p></td>
+<p>Gene-sets with duplicated names and different <code>desc</code> are merged, <code>desc</code> are made unique, and in case of multiple values, concatenated (with <code>|</code> as the collapse character).</p></td>
     </tr>
     </table>
 
@@ -155,29 +163,31 @@
     <p>A <code>GmtList</code> object, with unique gene-sets and unique gene lists. If not already present, a new item <code>namespace</code> is appended to each <code>list</code> element in the <code>GmtList</code> object, recording the namespace used to make gene-sets unique. The order of the returned <code>GmtList</code> object is given by the unique gene-set name of the input object.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>myGmtList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GmtList.html'>GmtList</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet1"</span>, desc<span class='op'>=</span><span class='st'>"Namespace1"</span>, genes<span class='op'>=</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet2"</span>, desc<span class='op'>=</span><span class='st'>"Namespace1"</span>, genes<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet1"</span>, desc<span class='op'>=</span><span class='st'>"Namespace1"</span>, genes<span class='op'>=</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span><span class='op'>)</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet3"</span>, desc<span class='op'>=</span><span class='st'>"Namespace2"</span>, genes<span class='op'>=</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
- 
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>myGmtList</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; A gene-set list in GMT format with 4 genesets
-#&gt; Gene-sets:
-#&gt;   GeneSet1 (Namespace1,n=3): A,B,C
-#&gt;   GeneSet2 (Namespace1,n=6): D,E,F,...
-#&gt;   GeneSet1 (Namespace1,n=3): D,E,F
-#&gt;   GeneSet3 (Namespace2,n=5): A,B,C,...</div><div class='input'><span class='va'>myGmtList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setNamespace.html'>setNamespace</a></span><span class='op'>(</span><span class='va'>myGmtList</span>, namespace<span class='op'>=</span><span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>desc</span><span class='op'>)</span>
-<span class='va'>myUniqGmtList</span> <span class='op'>&lt;-</span> <span class='fu'>uniqGenesetsByNamespace</span><span class='op'>(</span><span class='va'>myGmtList</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>myUniqGmtList</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; A gene-set list in GMT format with 3 genesets
-#&gt; Namespaces:
-#&gt;   [1] Namespace1 (n=2)
-#&gt;   [2] Namespace2 (n=1)
-#&gt; Gene-sets:
-#&gt;   GeneSet1 (Namespace1,n=6): A,B,C,...
-#&gt;   GeneSet2 (Namespace1,n=3): D,E,F
-#&gt;   GeneSet3 (Namespace2,n=5): A,B,C,...</div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='va'>myGmtList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GmtList.html'>GmtList</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet1"</span>, desc<span class='op'>=</span><span class='st'>"Namespace1"</span>, genes<span class='op'>=</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet2"</span>, desc<span class='op'>=</span><span class='st'>"Namespace1"</span>, genes<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet1"</span>, desc<span class='op'>=</span><span class='st'>"Namespace1"</span>, genes<span class='op'>=</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"GeneSet3"</span>, desc<span class='op'>=</span><span class='st'>"Namespace2"</span>, genes<span class='op'>=</span><span class='va'>LETTERS</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'> </span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>myGmtList</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A gene-set list in GMT format with 4 genesets</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Gene-sets:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   GeneSet1 (Namespace1,n=3): A,B,C</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   GeneSet2 (Namespace1,n=6): D,E,F,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   GeneSet1 (Namespace1,n=3): D,E,F</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   GeneSet3 (Namespace2,n=5): A,B,C,...</span>
+<span class='r-in'><span class='va'>myGmtList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setNamespace.html'>setNamespace</a></span><span class='op'>(</span><span class='va'>myGmtList</span>, namespace<span class='op'>=</span><span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>desc</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>myUniqGmtList</span> <span class='op'>&lt;-</span> <span class='fu'>uniqGenesetsByNamespace</span><span class='op'>(</span><span class='va'>myGmtList</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>myUniqGmtList</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A gene-set list in GMT format with 3 genesets</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Namespaces:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [1] Namespace1 (n=2)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [2] Namespace2 (n=1)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Gene-sets:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   GeneSet1 (Namespace1,n=6): A,B,C,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   GeneSet2 (Namespace1,n=3): D,E,F</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   GeneSet3 (Namespace2,n=5): A,B,C,...</span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -189,11 +199,11 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
+  <p><p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -201,6 +211,8 @@
 
   
 
+
+  
 
   </body>
 </html>

@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
       </span>
     </div>
 
@@ -78,12 +80,12 @@
 
       
 
-      </header><script src="bioqc-simulation_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="bioqc-simulation_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>BioQC-benchmark: Testing Efficiency, Sensitivity and Specificity of BioQC on simulated and real-world data</h1>
             
-            <h4 class="date">2020-12-09</h4>
+            <h4 data-toc-skip class="date">2021-07-19</h4>
       
       
       <div class="hidden name"><code>bioqc-simulation.Rmd</code></div>
@@ -92,12 +94,12 @@
 
     
     
-<p>Supplementary Information for “Detect issue heterogenity in gene expression data with <a href="https://github.com/Accio/BioQC"><em>BioQC</em></a>” (<a href="mailto:jitao_david.zhang@roche.com">Jitao David Zhang</a>, Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello and <a href="mailto:laura.badi@roche.com">Laura Badi</a>)</p>
-<p>In this vignette, we perform simulations with both model-generated and real-world data using <em>BioQC</em>. We show that <em>BioQC</em> is a sensitive method to detect tissue heterogeneity from high-throughput gene expression data. The source code used to produce this document can be found in the github repository <a href="https://github.com/Accio/BioQC-example">BioQC-example</a>.</p>
+<p>Supplementary Information for “Detect issue heterogenity in gene expression data with <a href="https://github.com/Accio/BioQC" class="external-link"><em>BioQC</em></a>” (<a href="mailto:jitao_david.zhang@roche.com">Jitao David Zhang</a>, Klas Hatje, Gregor Sturm, Clemens Broger, Martin Ebeling, Martine Burtin, Fabiola Terzi, Silvia Ines Pomposiello and <a href="mailto:laura.badi@roche.com">Laura Badi</a>)</p>
+<p>In this vignette, we perform simulations with both model-generated and real-world data using <em>BioQC</em>. We show that <em>BioQC</em> is a sensitive method to detect tissue heterogeneity from high-throughput gene expression data. The source code used to produce this document can be found in the github repository <a href="https://github.com/Accio/BioQC-example" class="external-link">BioQC-example</a>.</p>
 <p><em>BioQC</em> is a R/Bioconductor package to detect tissue heterogeneity from high-throughput gene expression profiling data. It implements an efficient Wilcoxon-Mann-Whitney test, and offers tissue-specific gene signatures that are ready to use ‘out of the box’.</p>
 <div id="experiment-setup" class="section level2">
 <h2 class="hasAnchor">
-<a href="#experiment-setup" class="anchor"></a>Experiment setup</h2>
+<a href="#experiment-setup" class="anchor" aria-hidden="true"></a>Experiment setup</h2>
 <p>In this document, we perform two simulation studies with <em>BioQC</em>:</p>
 <ul>
 <li>
@@ -107,29 +109,29 @@
 </ul>
 <p>All source code that is needed to reproduce the results can be found in the <code>.Rmd</code> file generating this document.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://accio.github.io/BioQC">BioQC</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">hgu133plus2.db</span><span class="op">)</span> <span class="co">## to simulate an microarray expression dataset</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lattice.r-forge.r-project.org/">lattice</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://latticeextra.r-forge.r-project.org/">latticeExtra</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/talgalili/gplots">gplots</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://accio.github.io/BioQC" class="external-link">BioQC</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hgu133plus2.db</span><span class="op">)</span> <span class="co">## to simulate an microarray expression dataset</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://lattice.r-forge.r-project.org/" class="external-link">lattice</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://latticeextra.r-forge.r-project.org/" class="external-link">latticeExtra</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/talgalili/gplots" class="external-link">gplots</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.options.html">pdf.options</a></span><span class="op">(</span>family<span class="op">=</span><span class="st">"ArialMT"</span>, useDingbats<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.options.html" class="external-link">pdf.options</a></span><span class="op">(</span>family<span class="op">=</span><span class="st">"ArialMT"</span>, useDingbats<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1887</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1887</span><span class="op">)</span>
 
 <span class="co">## list human genes</span>
-<span class="va">humanGenes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">as.list</a></span><span class="op">(</span><span class="va">hgu133plus2SYMBOL</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">humanGenes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/BimapFormatting.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">hgu133plus2SYMBOL</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co">## read tissue-specific gene signatures</span>
-<span class="va">gmtFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/exp.tissuemark.affy.roche.symbols.gmt"</span>,
+<span class="va">gmtFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/exp.tissuemark.affy.roche.symbols.gmt"</span>,
                        package<span class="op">=</span><span class="st">"BioQC"</span><span class="op">)</span>
 <span class="va">gmt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readGmt.html">readGmt</a></span><span class="op">(</span><span class="va">gmtFile</span><span class="op">)</span>
-<span class="va">tissueInds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">gmt</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/match.html">match</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">genes</span>, <span class="va">humanGenes</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">tissueInds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">gmt</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">genes</span>, <span class="va">humanGenes</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="sensitivity-benchmark" class="section level2">
 <h2 class="hasAnchor">
-<a href="#sensitivity-benchmark" class="anchor"></a>Sensitivity Benchmark</h2>
+<a href="#sensitivity-benchmark" class="anchor" aria-hidden="true"></a>Sensitivity Benchmark</h2>
 <p>We next asked the question how sensitive <em>BioQC</em> is to expression changes of tissue signature genes. Similar to the previous simulation, we create random expression matrices. While keeping all other genes <span class="math inline">\(i.i.d\)</span> normally distributed following <span class="math inline">\(\mathcal{N}(0,1)\)</span>, we dedicatedly increase the expression of genes in one randomly selected tissue signature (ovary, with 43 genes) by different amplitudes: these genes’ expression levels are randomly drawn from different normal distributions with varying expectation and constant variance between <span class="math inline">\(\mathcal{N}(0,1)\)</span> and <span class="math inline">\(\mathcal{N}(3,1)\)</span>. To test the robustness of the algorithm, 10 samples are generated for each mean expression difference value.</p>
 <div class="figure" style="text-align: center">
 <img src="bioqc-simulation_files/figure-html/sensitivity_benchmark_fig-1.png" alt="**Figure 1:** Sensitivity benchmark. Expression levels of genes in the ovary signature are dedicately sampled randomly from normal distributions with different mean values. Left panel: enrichment scores reported by *BioQC* for the ovary signature, plotted against the differences in mean expression values; Right panel: rank of ovary enrichment scores in all 155 signatures plotted against the difference in mean expression values." width="768" style="display:block; margin: auto"><p class="caption">
@@ -141,13 +143,13 @@
 </div>
 <div id="mixing-benchmark" class="section level2">
 <h2 class="hasAnchor">
-<a href="#mixing-benchmark" class="anchor"></a>Mixing Benchmark</h2>
+<a href="#mixing-benchmark" class="anchor" aria-hidden="true"></a>Mixing Benchmark</h2>
 <p>The sensitivity benchmark above suffers from the limitation that the distributions of gene expression are not physiological. To overcome this, we designed and performed a benchmark by <em>in silico</em> mixing expression profiles with weighted linear combination, thereby mimicking tissue contamination.</p>
 <p>Given the expression profile of a sample of tissue A (<span class="math inline">\(\mathbf{Y}_A\)</span>), and that of a sample of tissue B (<span class="math inline">\(\mathbf{Y}_B\)</span>), the weighted linear mixing produces a new profile <span class="math inline">\(\mathbf{Y}=\omega\mathbf{Y_A}+(1-\omega)\mathbf{Y_B}\)</span>, where <span class="math inline">\(\omega \in [0,1]\)</span>. In essence the profiles of two tissue types are linearly mixed in different proportions, which simulates varying severities of contaminations. We asked whether BioQC could detect such mixings, and if so, how sensitive is the method.</p>
 <div id="dataset-selection-and-quality-control" class="section level3">
 <h3 class="hasAnchor">
-<a href="#dataset-selection-and-quality-control" class="anchor"></a>Dataset selection and quality control</h3>
-<p>In order to avoid over-fitting of signatures derived from human expression data, we decided to use a normal tissue expression dataset from a non-human mammal species, because it has been shown that tissue-preferential expression patterns tend to be conserved between mammal species. We identified a dataset of <em>Canis lupus familiaris</em> (dog), which is publicly available in Gene Expression Omnibus (<a href="http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS4164">GDS4164</a>).</p>
+<a href="#dataset-selection-and-quality-control" class="anchor" aria-hidden="true"></a>Dataset selection and quality control</h3>
+<p>In order to avoid over-fitting of signatures derived from human expression data, we decided to use a normal tissue expression dataset from a non-human mammal species, because it has been shown that tissue-preferential expression patterns tend to be conserved between mammal species. We identified a dataset of <em>Canis lupus familiaris</em> (dog), which is publicly available in Gene Expression Omnibus (<a href="http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS4164" class="external-link">GDS4164</a>).</p>
 <p>In this study, the authors examined 39 samples from 10 pathologically normal tissues (liver, kidney, heart, lung, brain, lymph node, spleen, jejunum, pancreas, and skeletal muscle) of four dogs (with one pancreas sample missing). We downloaded the data, and performed minimal pre-processing: for multiple probesets that map to same genes, we kept the one with the highest average expression level and removed the rest. The resulting dataset contained expression of 16797 genes. BioQC was applied to the dataset to test whether there are major contamination issues. The results, including tissues reported by the authors, and the BioQC tissue signatures with the highest and second-highest scores, are reported in the following table:</p>
 <table class="table">
 <caption>Quality control of the mixing benchmark input data with <em>BioQC</em>. Four columns (f.l.t.r.): sample index; tissue reported by the authors; the tissue signature with the highest enrichment score reported by <em>BioQC</em>; the tissue signature with the second- highest enrichment score.</caption>
@@ -398,7 +400,7 @@
 </div>
 <div id="an-example-of-weighted-mixing-heart-and-jejunum" class="section level3">
 <h3 class="hasAnchor">
-<a href="#an-example-of-weighted-mixing-heart-and-jejunum" class="anchor"></a>An example of weighted mixing: heart and jejunum</h3>
+<a href="#an-example-of-weighted-mixing-heart-and-jejunum" class="anchor" aria-hidden="true"></a>An example of weighted mixing: heart and jejunum</h3>
 <p>As an example, we take average expression of heart and jejunum samples, and mix them by different compositions. This allows us comparing enrichment scores and their ranks when the expression profiles of heart and jejunum are mixed <em>in silico</em>:</p>
 <div class="figure" style="text-align: center">
 <img src="bioqc-simulation_files/figure-html/hjMixVis-1.png" alt="**Figure 2:** Results of a mixing case study. Left panel: *BioQC* enrichment scores of small intestine and cardiac muscle varying upon different proportions of jejunum; Right panel: ranks of enrichment scores varying upon different proportions of jejunum." width="768" style="display:block; margin: auto"><p class="caption">
@@ -410,7 +412,7 @@
 </div>
 <div id="pairwise-mixing" class="section level3">
 <h3 class="hasAnchor">
-<a href="#pairwise-mixing" class="anchor"></a>Pairwise Mixing</h3>
+<a href="#pairwise-mixing" class="anchor" aria-hidden="true"></a>Pairwise Mixing</h3>
 <p>Following the heart-jejunum example, we performed all 45 pairwise mixing experiments, producing weighted linear combinations of gene expression profiles of each pair of tissues (excluding self-mixing). The results are summaried in a heatmap:</p>
 <div class="figure" style="text-align: center">
 <img src="bioqc-simulation_files/figure-html/dog_mix_vis-1.png" alt="**Figure 3:** Results of the pairwise mixing experiment. Each cell represents the minimal percentage of tissue of the column as contamination in the tissue of the row that can be detected by *BioQC*. No values are available for cells on the diagonal because self-mixing was excluded. Heart  and skeletal muscle are very close to each other and therefore their detection limit is not considered." width="768" style="display:block; margin: auto"><p class="caption">
@@ -481,15 +483,15 @@
 </div>
 <div id="conclusions" class="section level1">
 <h1 class="hasAnchor">
-<a href="#conclusions" class="anchor"></a>Conclusions</h1>
+<a href="#conclusions" class="anchor" aria-hidden="true"></a>Conclusions</h1>
 <p>Benchmark studies with similated and real-world data demonstrate that <em>BioQC</em> is an efficient and sensitive method to detect tissue heterogeneity from high-throughput gene expression data.</p>
 </div>
 <div id="appendix" class="section level1">
 <h1 class="hasAnchor">
-<a href="#appendix" class="anchor"></a>Appendix</h1>
+<a href="#appendix" class="anchor" aria-hidden="true"></a>Appendix</h1>
 <div id="comparing-bioqc-with-principal-component-analysis-pca" class="section level3">
 <h3 class="hasAnchor">
-<a href="#comparing-bioqc-with-principal-component-analysis-pca" class="anchor"></a>Comparing BioQC with Principal Component Analysis (PCA)</h3>
+<a href="#comparing-bioqc-with-principal-component-analysis-pca" class="anchor" aria-hidden="true"></a>Comparing BioQC with Principal Component Analysis (PCA)</h3>
 <p>In the context of the dog transcriptome dataset, we can compare the results of principal component analysis (PCA) with that of <em>BioQC</em>:</p>
 <div class="figure" style="text-align: center">
 <img src="bioqc-simulation_files/figure-html/pca-1.png" alt="Sample separation revealed by principal component analysis (PCA) of the dog transcriptome dataset." width="576" style="display:block; margin: auto"><p class="caption">
@@ -501,12 +503,12 @@ Sample separation revealed by principal component analysis (PCA) of the dog tran
 </div>
 <div id="r-session-info" class="section level2">
 <h2 class="hasAnchor">
-<a href="#r-session-info" class="anchor"></a>R Session Info</h2>
+<a href="#r-session-info" class="anchor" aria-hidden="true"></a>R Session Info</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## R Under development (unstable) (2020-12-04 r79554)
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## R version 4.1.0 (2021-05-18)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.1 LTS
+## Running under: Ubuntu 20.04.2 LTS
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
@@ -520,28 +522,36 @@ Sample separation revealed by principal component analysis (PCA) of the dog tran
 ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
-## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
-## [8] methods   base     
+## [1] stats4    stats     graphics  grDevices utils     datasets  methods  
+## [8] base     
 ## 
 ## other attached packages:
-##  [1] gplots_3.1.1         gridExtra_2.3        latticeExtra_0.6-29 
-##  [4] lattice_0.20-41      hgu133plus2.db_3.2.3 org.Hs.eg.db_3.12.0 
-##  [7] AnnotationDbi_1.53.0 IRanges_2.25.4       S4Vectors_0.29.5    
-## [10] BioQC_1.19.3         Biobase_2.51.0       BiocGenerics_0.37.0 
-## [13] knitr_1.30          
+##  [1] gplots_3.1.1          gridExtra_2.3         latticeExtra_0.6-29  
+##  [4] lattice_0.20-44       hgu133plus2.db_3.13.0 org.Hs.eg.db_3.13.0  
+##  [7] AnnotationDbi_1.55.1  IRanges_2.27.0        S4Vectors_0.31.0     
+## [10] BioQC_1.21.0          Biobase_2.53.0        BiocGenerics_0.39.1  
+## [13] knitr_1.33           
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5         highr_0.8          RColorBrewer_1.1-2 compiler_4.1.0    
-##  [5] bitops_1.0-6       tools_4.1.0        digest_0.6.27      bit_4.0.4         
-##  [9] gtable_0.3.0       evaluate_0.14      memoise_1.1.0      RSQLite_2.2.1     
-## [13] png_0.1-7          pkgconfig_2.0.3    rlang_0.4.9        DBI_1.1.0         
-## [17] yaml_2.2.1         pkgdown_1.6.1.9000 xfun_0.19          stringr_1.4.0     
-## [21] caTools_1.18.0     gtools_3.8.2       desc_1.2.0         fs_1.5.0          
-## [25] vctrs_0.3.5        systemfonts_0.3.2  locfit_1.5-9.4     rprojroot_2.0.2   
-## [29] bit64_4.0.5        grid_4.1.0         R6_2.5.0           jpeg_0.1-8.1      
-## [33] textshaping_0.2.1  rmarkdown_2.5      limma_3.47.1       blob_1.2.1        
-## [37] edgeR_3.33.0       magrittr_2.0.1     htmltools_0.5.0    assertthat_0.2.1  
-## [41] ragg_0.4.0         KernSmooth_2.23-18 stringi_1.5.3      crayon_1.3.4</code></pre>
+##  [1] KEGGREST_1.33.0        gtools_3.9.2           locfit_1.5-9.4        
+##  [4] xfun_0.24              bslib_0.2.5.1          vctrs_0.3.8           
+##  [7] htmltools_0.5.1.1      yaml_2.2.1             blob_1.2.1            
+## [10] rlang_0.4.11           pkgdown_1.6.1.9001     jquerylib_0.1.4       
+## [13] DBI_1.1.1              RColorBrewer_1.1-2     bit64_4.0.5           
+## [16] jpeg_0.1-8.1           GenomeInfoDbData_1.2.6 stringr_1.4.0         
+## [19] zlibbioc_1.39.0        Biostrings_2.61.1      gtable_0.3.0          
+## [22] ragg_1.1.3             caTools_1.18.2         memoise_2.0.0         
+## [25] evaluate_0.14          fastmap_1.1.0          GenomeInfoDb_1.29.3   
+## [28] highr_0.9              Rcpp_1.0.7             KernSmooth_2.23-20    
+## [31] edgeR_3.35.0           cachem_1.0.5           limma_3.49.1          
+## [34] desc_1.3.0             jsonlite_1.7.2         XVector_0.33.0        
+## [37] systemfonts_1.0.2      fs_1.5.0               bit_4.0.4             
+## [40] textshaping_0.3.5      png_0.1-7              digest_0.6.27         
+## [43] stringi_1.7.2          grid_4.1.0             rprojroot_2.0.2       
+## [46] tools_4.1.0            bitops_1.0-7           magrittr_2.0.1        
+## [49] sass_0.4.0             RCurl_1.98-1.3         RSQLite_2.2.7         
+## [52] crayon_1.4.1           pkgconfig_2.0.3        rmarkdown_2.9         
+## [55] httr_1.4.2             R6_2.5.0               compiler_4.1.0</code></pre>
 </div>
 </div>
   </div>
@@ -557,11 +567,13 @@ Sample separation revealed by principal component analysis (PCA) of the dog tran
 
 
       <footer><div class="copyright">
-  <p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
+  <p></p>
+<p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -569,6 +581,8 @@ Sample separation revealed by principal component analysis (PCA) of the dog tran
 
   
 
+
+  
 
   </body>
 </html>

@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -56,9 +58,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
       </span>
     </div>
 
@@ -133,7 +141,7 @@
     <p>Convert a list to an IndexList object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span>, keepNA <span class='op'>=</span> <span class='cn'>FALSE</span>, keepDup <span class='op'>=</span> <span class='cn'>FALSE</span>, offset <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span>, keepNA <span class='op'>=</span> <span class='cn'>FALSE</span>, keepDup <span class='op'>=</span> <span class='cn'>FALSE</span>, offset <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span>
 
 <span class='co'># S4 method for numeric</span>
 <span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span>, keepNA <span class='op'>=</span> <span class='cn'>FALSE</span>, keepDup <span class='op'>=</span> <span class='cn'>FALSE</span>, offset <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span>
@@ -142,7 +150,7 @@
 <span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span>, keepNA <span class='op'>=</span> <span class='cn'>FALSE</span>, keepDup <span class='op'>=</span> <span class='cn'>FALSE</span>, offset <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span>
 
 <span class='co'># S4 method for list</span>
-<span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>object</span>, keepNA <span class='op'>=</span> <span class='cn'>FALSE</span>, keepDup <span class='op'>=</span> <span class='cn'>FALSE</span>, offset <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span></pre>
+<span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>object</span>, keepNA <span class='op'>=</span> <span class='cn'>FALSE</span>, keepDup <span class='op'>=</span> <span class='cn'>FALSE</span>, offset <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,28 +183,31 @@ vectors (of same lengths), or a numerical vector or a logical vector. NA is disc
     <p>The function returns a list of vectors</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>testList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>GS_A<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>3</span><span class='op'>)</span>,
-                 GS_B<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>5</span><span class='op'>)</span>,
-                 GS_C<span class='op'>=</span><span class='cn'>NULL</span>,
-                 GS_D<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='cn'>NA</span><span class='op'>)</span>,
-                 GS_E<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>testIndexList</span> <span class='op'>&lt;-</span> <span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>testList</span><span class='op'>)</span>
-<span class='fu'>IndexList</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span>, <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>FALSE</span>, <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>TRUE</span>, <span class='cn'>FALSE</span>, <span class='cn'>FALSE</span><span class='op'>)</span>, offset<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; A list of 3 indices with offset=0
-#&gt; Options: NA removed: TRUE; duplicates removed: TRUE
-#&gt;   NONAME (n=2): 2,3
-#&gt;   NONAME (n=1): 3
-#&gt;   NONAME (n=1): 1</div><div class='input'><span class='fu'>IndexList</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>A<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, B<span class='op'>=</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>5</span>, C<span class='op'>=</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; A list of 3 indices with offset=1
-#&gt; Options: NA removed: TRUE; duplicates removed: TRUE
-#&gt;   A (n=3): 1,2,3
-#&gt;   B (n=2): 4,5
-#&gt;   C (n=3): 7,8,9</div><div class='input'><span class='fu'>IndexList</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>A<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, B<span class='op'>=</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>5</span>, C<span class='op'>=</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span>, offset<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; A list of 3 indices with offset=0
-#&gt; Options: NA removed: TRUE; duplicates removed: TRUE
-#&gt;   A (n=3): 1,2,3
-#&gt;   B (n=2): 4,5
-#&gt;   C (n=3): 7,8,9</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='va'>testList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>GS_A<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>3</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 GS_B<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>5</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 GS_C<span class='op'>=</span><span class='cn'>NULL</span>,</span>
+<span class='r-in'>                 GS_D<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='cn'>NA</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 GS_E<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>testIndexList</span> <span class='op'>&lt;-</span> <span class='fu'>IndexList</span><span class='op'>(</span><span class='va'>testList</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>IndexList</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span>, <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>FALSE</span>, <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>TRUE</span>, <span class='cn'>FALSE</span>, <span class='cn'>FALSE</span><span class='op'>)</span>, offset<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A list of 3 indices with offset=0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Options: NA removed: TRUE; duplicates removed: TRUE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   NONAME (n=2): 2,3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   NONAME (n=1): 3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   NONAME (n=1): 1</span>
+<span class='r-in'><span class='fu'>IndexList</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>A<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, B<span class='op'>=</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>5</span>, C<span class='op'>=</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A list of 3 indices with offset=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Options: NA removed: TRUE; duplicates removed: TRUE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   A (n=3): 1,2,3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   B (n=2): 4,5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   C (n=3): 7,8,9</span>
+<span class='r-in'><span class='fu'>IndexList</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>A<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, B<span class='op'>=</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>5</span>, C<span class='op'>=</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span>, offset<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A list of 3 indices with offset=0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Options: NA removed: TRUE; duplicates removed: TRUE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   A (n=3): 1,2,3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   B (n=2): 4,5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   C (n=3): 7,8,9</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -208,11 +219,11 @@ vectors (of same lengths), or a numerical vector or a logical vector. NA is disc
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
+  <p><p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -220,6 +231,8 @@ vectors (of same lengths), or a numerical vector or a logical vector. NA is disc
 
   
 
+
+  
 
   </body>
 </html>

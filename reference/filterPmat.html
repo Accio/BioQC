@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -56,9 +58,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
       </span>
     </div>
 
@@ -133,7 +141,7 @@
     <p>Filter rows of p-value matrix under the significance threshold</p>
     </div>
 
-    <pre class="usage"><span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>threshold</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>threshold</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,51 +167,54 @@ be returned.</p></td>
     <p>Jitao David Zhang &lt;jitao_david.zhang@roche.com&gt;</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1235</span><span class='op'>)</span>
-<span class='va'>testMatrix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>100</span>,<span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, nrow<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>
-
-<span class='co'>## filtering</span>
-<span class='op'>(</span><span class='va'>testMatrix.filter</span> <span class='op'>&lt;-</span> <span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>testMatrix</span>, threshold<span class='op'>=</span><span class='fl'>0.05</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;            [,1]        [,2]      [,3]      [,4]       [,5]       [,6]
-#&gt; [1,] 0.09942167 0.519080359 0.8610312 0.7301602 0.02303889 0.29758641
-#&gt; [2,] 0.42356115 0.006524904 0.7941721 0.5956656 0.89373905 0.67286840
-#&gt; [3,] 0.54449943 0.913918048 0.3366246 0.2526326 0.31682109 0.11527104
-#&gt; [4,] 0.21233559 0.846787080 0.4409803 0.1011335 0.11404830 0.06292524
-#&gt;            [,7]        [,8]      [,9]     [,10]
-#&gt; [1,] 0.08470704 0.667210379 0.1024085 0.1629068
-#&gt; [2,] 0.47513906 0.866471735 0.8204760 0.2696054
-#&gt; [3,] 0.30904022 0.006296073 0.4914639 0.7755592
-#&gt; [4,] 0.10296535 0.042746874 0.3686046 0.6102488</div><div class='input'><span class='co'>## more strict filtering</span>
-<span class='op'>(</span><span class='va'>testMatrix.strictfilter</span> <span class='op'>&lt;-</span> <span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>testMatrix</span>, threshold<span class='op'>=</span><span class='fl'>0.01</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;           [,1]        [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
-#&gt; [1,] 0.4235611 0.006524904 0.7941721 0.5956656 0.8937391 0.6728684 0.4751391
-#&gt; [2,] 0.5444994 0.913918048 0.3366246 0.2526326 0.3168211 0.1152710 0.3090402
-#&gt;             [,8]      [,9]     [,10]
-#&gt; [1,] 0.866471735 0.8204760 0.2696054
-#&gt; [2,] 0.006296073 0.4914639 0.7755592</div><div class='input'><span class='co'>## no filtering</span>
-<span class='op'>(</span><span class='va'>testMatrix.nofilter</span> <span class='op'>&lt;-</span> <span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>testMatrix</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;             [,1]        [,2]      [,3]      [,4]       [,5]       [,6]
-#&gt;  [1,] 0.24259237 0.955264658 0.1735149 0.6600869 0.49964633 0.36426726
-#&gt;  [2,] 0.51535594 0.542894020 0.9506383 0.4464108 0.91183977 0.35510430
-#&gt;  [3,] 0.09942167 0.519080359 0.8610312 0.7301602 0.02303889 0.29758641
-#&gt;  [4,] 0.90153593 0.629080697 0.2500496 0.5944550 0.47802527 0.28223439
-#&gt;  [5,] 0.83890292 0.743721835 0.2265801 0.3249363 0.88662049 0.49429587
-#&gt;  [6,] 0.42356115 0.006524904 0.7941721 0.5956656 0.89373905 0.67286840
-#&gt;  [7,] 0.54449943 0.913918048 0.3366246 0.2526326 0.31682109 0.11527104
-#&gt;  [8,] 0.74531624 0.601582744 0.5318425 0.3366423 0.49811558 0.91560261
-#&gt;  [9,] 0.54546342 0.656368798 0.2052040 0.6242061 0.71044726 0.59158016
-#&gt; [10,] 0.21233559 0.846787080 0.4409803 0.1011335 0.11404830 0.06292524
-#&gt;             [,7]        [,8]      [,9]      [,10]
-#&gt;  [1,] 0.09635398 0.845977069 0.5661316 0.54604221
-#&gt;  [2,] 0.49347185 0.538405826 0.6771958 0.05492638
-#&gt;  [3,] 0.08470704 0.667210379 0.1024085 0.16290676
-#&gt;  [4,] 0.64331855 0.120438496 0.3671928 0.36080728
-#&gt;  [5,] 0.98718476 0.540113622 0.5900340 0.64481398
-#&gt;  [6,] 0.47513906 0.866471735 0.8204760 0.26960538
-#&gt;  [7,] 0.30904022 0.006296073 0.4914639 0.77555919
-#&gt;  [8,] 0.88986665 0.391184572 0.8414607 0.67942271
-#&gt;  [9,] 0.95679199 0.977328825 0.3580521 0.99959032
-#&gt; [10,] 0.10296535 0.042746874 0.3686046 0.61024876</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1235</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>testMatrix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>100</span>,<span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, nrow<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## filtering</span></span>
+<span class='r-in'><span class='op'>(</span><span class='va'>testMatrix.filter</span> <span class='op'>&lt;-</span> <span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>testMatrix</span>, threshold<span class='op'>=</span><span class='fl'>0.05</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            [,1]        [,2]      [,3]      [,4]       [,5]       [,6]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,] 0.09942167 0.519080359 0.8610312 0.7301602 0.02303889 0.29758641</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [2,] 0.42356115 0.006524904 0.7941721 0.5956656 0.89373905 0.67286840</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [3,] 0.54449943 0.913918048 0.3366246 0.2526326 0.31682109 0.11527104</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [4,] 0.21233559 0.846787080 0.4409803 0.1011335 0.11404830 0.06292524</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            [,7]        [,8]      [,9]     [,10]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,] 0.08470704 0.667210379 0.1024085 0.1629068</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [2,] 0.47513906 0.866471735 0.8204760 0.2696054</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [3,] 0.30904022 0.006296073 0.4914639 0.7755592</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [4,] 0.10296535 0.042746874 0.3686046 0.6102488</span>
+<span class='r-in'><span class='co'>## more strict filtering</span></span>
+<span class='r-in'><span class='op'>(</span><span class='va'>testMatrix.strictfilter</span> <span class='op'>&lt;-</span> <span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>testMatrix</span>, threshold<span class='op'>=</span><span class='fl'>0.01</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>           [,1]        [,2]      [,3]      [,4]      [,5]      [,6]      [,7]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,] 0.4235611 0.006524904 0.7941721 0.5956656 0.8937391 0.6728684 0.4751391</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [2,] 0.5444994 0.913918048 0.3366246 0.2526326 0.3168211 0.1152710 0.3090402</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             [,8]      [,9]     [,10]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,] 0.866471735 0.8204760 0.2696054</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [2,] 0.006296073 0.4914639 0.7755592</span>
+<span class='r-in'><span class='co'>## no filtering</span></span>
+<span class='r-in'><span class='op'>(</span><span class='va'>testMatrix.nofilter</span> <span class='op'>&lt;-</span> <span class='fu'>filterPmat</span><span class='op'>(</span><span class='va'>testMatrix</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             [,1]        [,2]      [,3]      [,4]       [,5]       [,6]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1,] 0.24259237 0.955264658 0.1735149 0.6600869 0.49964633 0.36426726</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [2,] 0.51535594 0.542894020 0.9506383 0.4464108 0.91183977 0.35510430</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [3,] 0.09942167 0.519080359 0.8610312 0.7301602 0.02303889 0.29758641</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [4,] 0.90153593 0.629080697 0.2500496 0.5944550 0.47802527 0.28223439</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [5,] 0.83890292 0.743721835 0.2265801 0.3249363 0.88662049 0.49429587</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [6,] 0.42356115 0.006524904 0.7941721 0.5956656 0.89373905 0.67286840</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [7,] 0.54449943 0.913918048 0.3366246 0.2526326 0.31682109 0.11527104</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [8,] 0.74531624 0.601582744 0.5318425 0.3366423 0.49811558 0.91560261</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9,] 0.54546342 0.656368798 0.2052040 0.6242061 0.71044726 0.59158016</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [10,] 0.21233559 0.846787080 0.4409803 0.1011335 0.11404830 0.06292524</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             [,7]        [,8]      [,9]      [,10]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1,] 0.09635398 0.845977069 0.5661316 0.54604221</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [2,] 0.49347185 0.538405826 0.6771958 0.05492638</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [3,] 0.08470704 0.667210379 0.1024085 0.16290676</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [4,] 0.64331855 0.120438496 0.3671928 0.36080728</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [5,] 0.98718476 0.540113622 0.5900340 0.64481398</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [6,] 0.47513906 0.866471735 0.8204760 0.26960538</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [7,] 0.30904022 0.006296073 0.4914639 0.77555919</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [8,] 0.88986665 0.391184572 0.8414607 0.67942271</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9,] 0.95679199 0.977328825 0.3580521 0.99959032</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [10,] 0.10296535 0.042746874 0.3686046 0.61024876</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -215,11 +226,11 @@ be returned.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
+  <p><p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -227,6 +238,8 @@ be returned.</p></td>
 
   
 
+
+  
 
   </body>
 </html>

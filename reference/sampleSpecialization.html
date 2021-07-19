@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -56,9 +58,15 @@
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
       </span>
     </div>
 
@@ -133,7 +141,7 @@
     <p>Entropy-based sample specialization</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>mat</span>, norm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>mat</span>, norm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -144,7 +152,7 @@
     </tr>
     <tr>
       <th>norm</th>
-      <td><p>Logical, whether the specialization should be normalized by <code><a href='https://rdrr.io/r/base/Log.html'>log2(ncol(mat))</a></code>.</p></td>
+      <td><p>Logical, whether the specialization should be normalized by <code>log2(ncol(mat))</code>.</p></td>
     </tr>
     </table>
 
@@ -161,20 +169,24 @@ theory. PNAS 105(28):9709--9714</p>
     <div class='dont-index'><p><code><a href='entropy.html'>entropy</a></code> and <code><a href='entropyDiversity.html'>entropyDiversity</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>myMat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>5</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span>,<span class='fl'>6</span>,<span class='fl'>6</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>2</span>,<span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myMat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.01332588 0.07558228 0.11293612</div><div class='input'><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myMat</span>, norm<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.01332588 0.07558228 0.11293612</div><div class='input'>
-<span class='va'>myRandomMat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span>, ncol<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span>
-<span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myRandomMat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] 0.06834179 0.06481445 0.06571096 0.06345388 0.06278717 0.06436784
-#&gt;  [7] 0.06527698 0.06225818 0.06402973 0.06570540 0.06448398 0.06679575
-#&gt; [13] 0.06326795 0.06204996 0.06538794 0.06051159 0.06480306 0.06481328
-#&gt; [19] 0.06565086 0.06624296</div><div class='input'><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myRandomMat</span>, norm<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] 0.06834179 0.06481445 0.06571096 0.06345388 0.06278717 0.06436784
-#&gt;  [7] 0.06527698 0.06225818 0.06402973 0.06570540 0.06448398 0.06679575
-#&gt; [13] 0.06326795 0.06204996 0.06538794 0.06051159 0.06480306 0.06481328
-#&gt; [19] 0.06565086 0.06624296</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='va'>myMat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>5</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span>,<span class='fl'>6</span>,<span class='fl'>6</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>2</span>,<span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myMat</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.01332588 0.07558228 0.11293612</span>
+<span class='r-in'><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myMat</span>, norm<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.01332588 0.07558228 0.11293612</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>myRandomMat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span>, ncol<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myRandomMat</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] 0.06834179 0.06481445 0.06571096 0.06345388 0.06278717 0.06436784</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [7] 0.06527698 0.06225818 0.06402973 0.06570540 0.06448398 0.06679575</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [13] 0.06326795 0.06204996 0.06538794 0.06051159 0.06480306 0.06481328</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [19] 0.06565086 0.06624296</span>
+<span class='r-in'><span class='fu'>sampleSpecialization</span><span class='op'>(</span><span class='va'>myRandomMat</span>, norm<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] 0.06834179 0.06481445 0.06571096 0.06345388 0.06278717 0.06436784</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [7] 0.06527698 0.06225818 0.06402973 0.06570540 0.06448398 0.06679575</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [13] 0.06326795 0.06204996 0.06538794 0.06051159 0.06480306 0.06481328</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [19] 0.06565086 0.06624296</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -186,11 +198,11 @@ theory. PNAS 105(28):9709--9714</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
+  <p><p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -198,6 +210,8 @@ theory. PNAS 105(28):9709--9714</p>
 
   
 
+
+  
 
   </body>
 </html>

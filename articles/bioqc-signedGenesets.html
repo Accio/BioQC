@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
       </span>
     </div>
 
@@ -78,13 +80,13 @@
 
       
 
-      </header><script src="bioqc-signedGenesets_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="bioqc-signedGenesets_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using BioQC with signed genesets</h1>
-                        <h4 class="author">Jitao David Zhang and Gregor Sturm</h4>
+                        <h4 data-toc-skip class="author">Jitao David Zhang and Gregor Sturm</h4>
             
-            <h4 class="date">2020-12-09</h4>
+            <h4 data-toc-skip class="date">2021-07-19</h4>
       
       
       <div class="hidden name"><code>bioqc-signedGenesets.Rmd</code></div>
@@ -95,20 +97,20 @@
     
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<a href="#introduction" class="anchor" aria-hidden="true"></a>Introduction</h2>
 <p>Besides being used as a QC-tool for gene expression data, <em>BioQC</em> can be used for general-purpose gene-set enrichment analysis. Its core function, <em>wmwTest</em>, can handle not only “normal”, unsigned gene sets, but also signed genesets where two sets of genes represent signatures that are positively and negatively regulated respectively.</p>
 <p>This vignette describes an example of such applications. First we load the BioQC library.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://accio.github.io/BioQC">BioQC</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://accio.github.io/BioQC" class="external-link">BioQC</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="gmt-read-in" class="section level2">
 <h2 class="hasAnchor">
-<a href="#gmt-read-in" class="anchor"></a>GMT read-in</h2>
+<a href="#gmt-read-in" class="anchor" aria-hidden="true"></a>GMT read-in</h2>
 <p>We first open a toy GMT file containing signed genesets with <em>readSignedGmt</em>. The function reads the file into a <em>SignedGenesets</em> object.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gmtFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/test.gmt"</span>, package<span class="op">=</span><span class="st">"BioQC"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">gmtFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/test.gmt"</span>, package<span class="op">=</span><span class="st">"BioQC"</span><span class="op">)</span>
 <span class="co">## print the file context</span>
-<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">gmtFile</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">"\n"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">gmtFile</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">"\n"</span><span class="op">)</span></code></pre></div>
 <pre><code>## GS_A TestGeneSet_A   AKT1    AKT2    AKT3
 ## GS_B TestGeneSet_B   MAPK1   MAPK3   MAPK8
 ## GS_C_UP  TestGeneSet_C   ERBB2   ERBB3
@@ -119,7 +121,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## read the file into SignedGenesets</span>
 <span class="va">genesets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSignedGmt.html">readSignedGmt</a></span><span class="op">(</span><span class="va">gmtFile</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">genesets</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">genesets</span><span class="op">)</span></code></pre></div>
 <pre><code>## A list of 5 signed gene-sets
 ##   GS_A (no genes)
 ##   GS_B (no genes)
@@ -136,7 +138,7 @@
 <p>Note that in its current form, no genes are reported for GS_A and GS_B, because the names of both sets do not match the patterns. User can decide how to handle such genesets that match patterns of neither positive nor negative sets (GS_A and GS_B in this case). By default, such genesets are ignored; however, user can decide to treat them as either positive or negative genesets. For the purpose of this tutorial, we treat these genesets as positive.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">genesets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSignedGmt.html">readSignedGmt</a></span><span class="op">(</span><span class="va">gmtFile</span>, nomatch<span class="op">=</span><span class="st">"pos"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">genesets</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">genesets</span><span class="op">)</span></code></pre></div>
 <pre><code>## A list of 5 signed gene-sets
 ##   GS_A[n=3]
 ##     positive[n=3]:AKT1,AKT2,AKT3
@@ -156,15 +158,15 @@
 </div>
 <div id="expression-object-construction" class="section level2">
 <h2 class="hasAnchor">
-<a href="#expression-object-construction" class="anchor"></a>Expression object construction</h2>
+<a href="#expression-object-construction" class="anchor" aria-hidden="true"></a>Expression object construction</h2>
 <p>Next we construct an ExpressionSet object containing 100 genes, with some of the genes in the GMT file present.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1887</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1887</span><span class="op">)</span>
 <span class="va">testN</span> <span class="op">&lt;-</span> <span class="fl">100L</span>
 <span class="va">testSampleCount</span> <span class="op">&lt;-</span> <span class="fl">3L</span>
-<span class="va">testGenes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AKT1"</span>, <span class="st">"AKT2"</span>, <span class="st">"ERBB2"</span>, <span class="st">"ERBB3"</span>, <span class="st">"EGFR"</span>,<span class="st">"TSC1"</span>, <span class="st">"TSC2"</span>, <span class="st">"GATA2"</span>, <span class="st">"GATA4"</span>, <span class="st">"GATA1"</span>, <span class="st">"GATA3"</span><span class="op">)</span>
-<span class="va">testRows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">testGenes</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">testGenes</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">testN</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span><span class="op">)</span>
-<span class="va">testMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">testN</span><span class="op">*</span><span class="va">testSampleCount</span>, sd<span class="op">=</span><span class="fl">0.1</span><span class="op">)</span>, nrow<span class="op">=</span><span class="va">testN</span>, dimnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">testRows</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>
+<span class="va">testGenes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AKT1"</span>, <span class="st">"AKT2"</span>, <span class="st">"ERBB2"</span>, <span class="st">"ERBB3"</span>, <span class="st">"EGFR"</span>,<span class="st">"TSC1"</span>, <span class="st">"TSC2"</span>, <span class="st">"GATA2"</span>, <span class="st">"GATA4"</span>, <span class="st">"GATA1"</span>, <span class="st">"GATA3"</span><span class="op">)</span>
+<span class="va">testRows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">testGenes</span>, <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">testGenes</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">testN</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span><span class="op">)</span>
+<span class="va">testMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">testN</span><span class="op">*</span><span class="va">testSampleCount</span>, sd<span class="op">=</span><span class="fl">0.1</span><span class="op">)</span>, nrow<span class="op">=</span><span class="va">testN</span>, dimnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">testRows</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>
 <span class="va">testMatrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">testMatrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="op">]</span><span class="op">+</span><span class="fl">10</span>
 <span class="va">testMatrix</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">7</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">testMatrix</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">7</span>,<span class="op">]</span><span class="op">-</span><span class="fl">10</span>
 <span class="va">testMatrix</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">testMatrix</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span>,<span class="op">]</span><span class="op">-</span><span class="fl">5</span>
@@ -181,11 +183,11 @@
 </div>
 <div id="match-genes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#match-genes" class="anchor"></a>Match genes</h2>
+<a href="#match-genes" class="anchor" aria-hidden="true"></a>Match genes</h2>
 <p>With both <em>SignedGenesets</em> and <em>ExpressionSet</em> objects at hand, we can query the indices of genes of genesets in the <em>ExpressionSet</em> object.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">testIndex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/matchGenes.html">matchGenes</a></span><span class="op">(</span><span class="va">genesets</span>, <span class="va">testEset</span>, col<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">testIndex</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">testIndex</span><span class="op">)</span></code></pre></div>
 <pre><code>## A list of 5 signed indices with offset=1
 ## Options: NA removed: TRUE; duplicates removed: TRUE
 ##   GS_A[n=2]
@@ -205,10 +207,10 @@
 </div>
 <div id="perform-the-analysis" class="section level2">
 <h2 class="hasAnchor">
-<a href="#perform-the-analysis" class="anchor"></a>Perform the analysis</h2>
+<a href="#perform-the-analysis" class="anchor" aria-hidden="true"></a>Perform the analysis</h2>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wmwResult.greater</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wmwTest.html">wmwTest</a></span><span class="op">(</span><span class="va">testEset</span>, <span class="va">testIndex</span>, valType<span class="op">=</span><span class="st">"p.greater"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">wmwResult.greater</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">wmwResult.greater</span><span class="op">)</span></code></pre></div>
 <pre><code>##                1           2           3
 ## GS_A 0.008185751 0.008185751 0.008185751
 ## GS_B 1.000000000 1.000000000 1.000000000
@@ -218,7 +220,7 @@
 <p>As expected, GS_A and GS_E are significant when the alternative hypothesis is <em>greater</em>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wmwResult.less</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wmwTest.html">wmwTest</a></span><span class="op">(</span><span class="va">testEset</span>, <span class="va">testIndex</span>, valType<span class="op">=</span><span class="st">"p.less"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">wmwResult.less</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">wmwResult.less</span><span class="op">)</span></code></pre></div>
 <pre><code>##                1           2           3
 ## GS_A 0.992348913 0.992348913 0.992348913
 ## GS_B 1.000000000 1.000000000 1.000000000
@@ -228,7 +230,7 @@
 <p>As expected, GS_C is significant when the alternative hypothesis is <em>less</em>.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wmwResult.two.sided</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wmwTest.html">wmwTest</a></span><span class="op">(</span><span class="va">testEset</span>, <span class="va">testIndex</span>, valType<span class="op">=</span><span class="st">"p.two.sided"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">wmwResult.two.sided</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">wmwResult.two.sided</span><span class="op">)</span></code></pre></div>
 <pre><code>##                1           2           3
 ## GS_A 0.016371502 0.016371502 0.016371502
 ## GS_B 1.000000000 1.000000000 1.000000000
@@ -239,7 +241,7 @@
 <p>A simple way to integrate the results of both alternative hypotheses into one numerical value is the <em>Q</em> value, which is defined as absolute log10 transformation of the smaller p value of the two hypotheses, times the sign defined by <em>greater</em>=1 and <em>less</em>=-1.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wmwResult.Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wmwTest.html">wmwTest</a></span><span class="op">(</span><span class="va">testEset</span>, <span class="va">testIndex</span>, valType<span class="op">=</span><span class="st">"Q"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">wmwResult.Q</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">wmwResult.Q</span><span class="op">)</span></code></pre></div>
 <pre><code>##               1          2          3
 ## GS_A  1.7859115  1.7859115  1.7859115
 ## GS_B  0.0000000  0.0000000  0.0000000
@@ -250,22 +252,22 @@
 </div>
 <div id="conclusions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#conclusions" class="anchor"></a>Conclusions</h2>
+<a href="#conclusions" class="anchor" aria-hidden="true"></a>Conclusions</h2>
 <p>In summary, <em>BioQC</em> can be used to perform gene-set enrichment analysis with signed genesets. Its speed is comparable to that of unsigned genesets.</p>
 </div>
 <div id="acknowledgement" class="section level2">
 <h2 class="hasAnchor">
-<a href="#acknowledgement" class="anchor"></a>Acknowledgement</h2>
+<a href="#acknowledgement" class="anchor" aria-hidden="true"></a>Acknowledgement</h2>
 <p>I would like to thank the authors of the gCMAP package with the idea of integrating signed genesets into the framework of Wilcoxon-Mann-Whitney test.</p>
 </div>
 <div id="r-session-info" class="section level2">
 <h2 class="hasAnchor">
-<a href="#r-session-info" class="anchor"></a>R session info</h2>
+<a href="#r-session-info" class="anchor" aria-hidden="true"></a>R session info</h2>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## R Under development (unstable) (2020-12-04 r79554)
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## R version 4.1.0 (2021-05-18)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.1 LTS
+## Running under: Ubuntu 20.04.2 LTS
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
@@ -279,22 +281,22 @@
 ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
-## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] BioQC_1.19.3        Biobase_2.51.0      BiocGenerics_0.37.0
-## [4] knitr_1.30         
+## [1] BioQC_1.21.0        Biobase_2.53.0      BiocGenerics_0.39.1
+## [4] knitr_1.33         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5         magrittr_2.0.1     edgeR_3.33.0       lattice_0.20-41   
-##  [5] R6_2.5.0           ragg_0.4.0         rlang_0.4.9        stringr_1.4.0     
-##  [9] tools_4.1.0        grid_4.1.0         xfun_0.19          htmltools_0.5.0   
-## [13] systemfonts_0.3.2  yaml_2.2.1         assertthat_0.2.1   rprojroot_2.0.2   
-## [17] digest_0.6.27      pkgdown_1.6.1.9000 crayon_1.3.4       textshaping_0.2.1 
-## [21] fs_1.5.0           memoise_1.1.0      evaluate_0.14      rmarkdown_2.5     
-## [25] limma_3.47.1       stringi_1.5.3      compiler_4.1.0     desc_1.2.0        
-## [29] locfit_1.5-9.4</code></pre>
+##  [1] Rcpp_1.0.7         edgeR_3.35.0       magrittr_2.0.1     lattice_0.20-44   
+##  [5] R6_2.5.0           ragg_1.1.3         rlang_0.4.11       fastmap_1.1.0     
+##  [9] stringr_1.4.0      tools_4.1.0        grid_4.1.0         xfun_0.24         
+## [13] jquerylib_0.1.4    htmltools_0.5.1.1  systemfonts_1.0.2  yaml_2.2.1        
+## [17] digest_0.6.27      rprojroot_2.0.2    pkgdown_1.6.1.9001 crayon_1.4.1      
+## [21] textshaping_0.3.5  sass_0.4.0         fs_1.5.0           memoise_2.0.0     
+## [25] cachem_1.0.5       evaluate_0.14      rmarkdown_2.9      limma_3.49.1      
+## [29] stringi_1.7.2      compiler_4.1.0     bslib_0.2.5.1      desc_1.3.0        
+## [33] locfit_1.5-9.4     jsonlite_1.7.2</code></pre>
 </div>
   </div>
 
@@ -309,11 +311,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
+  <p></p>
+<p>Developed by Jitao David Zhang, Laura Badi, Gregor Sturm, Roland Ambs, Iakov Davydov.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -321,6 +325,8 @@
 
   
 
+
+  
 
   </body>
 </html>
