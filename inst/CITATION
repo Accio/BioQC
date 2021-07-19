@@ -1,5 +1,5 @@
-citHeader("Please cite the paper below for the BioQC software itself")
-
+citHeader("Please cite the first publication below for the BioQC software
+itself, and the rest publications for the gene signatures.")
 
 citEntry(entry="article",
          title = "Detect tissue heterogeneity in gene expression data with {BioQC}",
@@ -12,7 +12,33 @@ citEntry(entry="article",
 	 number = 1,
          pages = 277,
          url    = "http://accio.github.io/BioQC/",
-         
          textVersion = "Zhang, J.D., Hatje, K., Sturm, G., Broger, C., Ebeling, M., Burtin, M., Terzi, F., Pomposiello, S.I., Badi, L. (2017). Detect tissue heterogeneity in gene expression data with BioQC. BMC genomics 18(1): 277."
 	)
 
+citEntry(entry="article",
+         title="Inducers of the endothelial cell barrier identified through
+	 chemogenomic screening in genome-edited {hPSC}-endothelial cells",
+	 author=personList( as.person("F. Roudnicky"),as.person("J. D.
+	 Zhang"),as.person("B. K.  Kim"),as.person("N. J. Pandya"),as.person("Y.
+	 Lan"),as.person("L.  Sach-Peltason"),as.person("H.
+	 Ragelle"),as.person("P.  Strassburger"),as.person("S.
+	 Gruener"),as.person("M.  Lazendic"),as.person("S. Uhles"),as.person("F.
+	 Revelant"),as.person("O.  Eidam"),as.person("G. Sturm"),as.person("V.
+	 Kueppers"),as.person("K.  Christensen"),as.person("L. D.
+	 Goldstein"),as.person("M.  Tzouros"),as.person("B.
+	 Banfai"),as.person("Z. Modrusan"),as.person("M.  Graf"),as.person("C.
+	 Patsch"),as.person("M. Burcin"),as.person("C. A.  Meyer"),as.person("P.
+	 D. Westenskow"),as.person("C. A. Cowan")), 
+	 journal="Proceedings of the National Academy of Sciences",
+         publisher="National Academy of Sciences",
+         url="https://www.pnas.org/content/early/2020/08/04/1911532117",
+         year=2020,
+	 volume = 117,
+	 number = 33,
+	 pages = "19854-19865",
+	 textVersion = "Roudnicky,F. et al. (2020) Inducers of the endothelial
+	 cell barrier identified through chemogenomic screening in genome-edited
+	 hPSC-endothelial cells. PNAS, 117, 19854--19865."
+	 )
+
+citFooter("Thank you for using BioQC. Please report issues at https://github.com/Accio/BioQC")
