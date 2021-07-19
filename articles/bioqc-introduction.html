@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.1</span>
       </span>
     </div>
 
@@ -164,13 +164,13 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">Cres</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wmwTest.html">wmwTest</a></span><span class="op">(</span><span class="va">exprs</span>, <span class="va">ind</span>, valType<span class="op">=</span><span class="st">"p.less"</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.082   0.001   0.082</code></pre>
+##   0.073   0.000   0.073</code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">Rres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">exprs</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
                           <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">ind</span>, <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span>
                                  <span class="fu"><a href="../reference/wmwTestInR.html">wmwTestInR</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, valType<span class="op">=</span><span class="st">"p.less"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   1.368   0.028   1.396</code></pre>
+##   1.273   0.016   1.289</code></pre>
 <p>With 22000 genes, five samples, and five gene sets, the <em>BioQC</em> implementation is about 20x faster than the R implementation (dependent on individual machines and settings). Our benchmark shows that with the same number of genes, 2000 samples and 200 gene sets (similar to the total number of tissues collected in the <em>BioQC</em> signature list), the <em>BioQC</em> implementation can be about 1000x faster than the R implementation.</p>
 </div>
 <div id="technical-notes" class="section level2">
@@ -223,7 +223,7 @@
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] BioQC_1.21.0        Biobase_2.53.0      BiocGenerics_0.39.1
+## [1] BioQC_1.21.1        Biobase_2.53.0      BiocGenerics_0.39.1
 ## [4] knitr_1.33         
 ## 
 ## loaded via a namespace (and not attached):
