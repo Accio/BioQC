@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.2</span>
       </span>
     </div>
 
@@ -123,7 +123,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">bioqcRes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wmwTest.html">wmwTest</a></span><span class="op">(</span><span class="va">eset</span>, <span class="va">gmt</span>,
                                  valType<span class="op">=</span><span class="st">"p.greater"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.704   0.052   0.756</code></pre>
+##   0.840   0.028   0.868</code></pre>
 <p>The function returns <em>one-sided</em> <span class="math inline">\(p\)</span>-values of Wilcoxon-Mann-Whitney test.</p>
 <p>For better visualization we * filter the p-value matrix (a sensible cutoff depends on the actual dataset and the expected signatures); * transform the p-values using <span class="math inline">\(|\log_{10} p|\)</span>. We refer to thse transformed values as <em>BioQC score</em>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -257,7 +257,7 @@ Log2 fold change (logFC) values reported by <em>limma</em> with one contaminated
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] limma_3.49.1        RColorBrewer_1.1-2  BioQC_1.21.1       
+## [1] limma_3.49.1        RColorBrewer_1.1-2  BioQC_1.21.2       
 ## [4] Biobase_2.53.0      BiocGenerics_0.39.1 knitr_1.33         
 ## 
 ## loaded via a namespace (and not attached):
