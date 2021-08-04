@@ -1,6 +1,4 @@
 ## test out-of-range errors
-library(BioQC)
-
 mat <- matrix(rnorm(100), nrow=10)
 
 ## well-behaving indices

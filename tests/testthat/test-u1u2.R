@@ -1,6 +1,4 @@
 # test U1 and U2 values
-library(BioQC)
-
 context("Test correspondance between U, U1, U2 and n1 * n2")
 
 set.seed(10)

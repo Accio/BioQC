@@ -1,5 +1,3 @@
-library(BioQC)
-
 context("Test IndexList")
 
 testList <- list(GS_A=c(1,2,3,4,3),
