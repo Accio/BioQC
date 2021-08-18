@@ -1,7 +1,7 @@
 Package: BioQC
 Type: Package
 Title: Detect tissue heterogeneity in expression profiles with gene sets
-Version: 1.21.3
+Version: 1.21.4
 Date: 2021-08-18
 Authors@R: c(
     person("Jitao David", "Zhang", email="jitao_david.zhang@roche.com", role = c("cre", "aut")), 
@@ -39,6 +39,7 @@ Collate:
     wmwTest.R
     readCurrentSignatures.R
     prettySigNames.R
+    leadingEdge.R
 Suggests:
     testthat,
     knitr,
