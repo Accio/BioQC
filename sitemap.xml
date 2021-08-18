@@ -85,6 +85,9 @@
     <loc>/reference/filterPmat.html</loc>
   </url>
   <url>
+    <loc>/reference/getLeadingEdgeIndexFromVector.html</loc>
+  </url>
+  <url>
     <loc>/reference/gini.html</loc>
   </url>
   <url>
@@ -185,6 +188,9 @@
   </url>
   <url>
     <loc>/reference/valTypes.html</loc>
+  </url>
+  <url>
+    <loc>/reference/wmwLeadingEdge.html</loc>
   </url>
   <url>
     <loc>/reference/wmwTest.html</loc>
