@@ -224,9 +224,9 @@ setMethod("wmwTest", c("ANY", "list"),
 #'profiling data
 #'
 #'@description
-#'We have implemented a highly efficient Wilcoxon-Mann-Whitney rank sum
-#'test for high-throughput expression profiling data. For datasets with
-#'more than 100 features (genes), the function can be more than 1,000 
+#'wmwTest is a highly efficient Wilcoxon-Mann-Whitney rank sum
+#'test for high-dimensional data, such as gene expression profiling. For datasets with
+#'more than 100 features (genes), the function can be more than 1,000
 #'times faster than its R implementations (\code{wilcox.test} in 
 #'\code{stats}, or \code{rankSumTestWithCorrelation} in \code{limma}).
 #'
@@ -242,7 +242,8 @@ setMethod("wmwTest", c("ANY", "list"),
 #'@param valType The value type to be returned, allowed values
 #'include \code{p.greater}, \code{p.less}, \code{abs.log10p.greater} and
 #'\code{abs.log10p.less} (one-sided tests),\code{p.two.sided}, and \code{U}
-#'statistic (or more specifically, either \code{U1} or \code{U2}), and their log10 transformation variants. See details below.
+#'statistic (or more specifically, either \code{U1} or \code{U2}), and a few
+#'other variants. See details below.
 #'
 #'@param col a string sometimes used with a \code{eSet}
 #'
@@ -261,7 +262,7 @@ setMethod("wmwTest", c("ANY", "list"),
 #'contain gene symbols used in the GMT file. The same applies to signed Gmt files. See the example below.
 #'
 #'Besides the conventional value types such as \sQuote{p.greater},
-#'\sQuote{p.less}, \sQuote{p.two.sided} , and \sQuote{U} (the U-statistic), 
+#'\sQuote{p.less}, \sQuote{p.two.sided} , and \sQuote{U} (the U-statistic),
 #'\code{wmwTest} (from version 0.99-1) provides further value types:
 #'\code{abs.log10p.greater} and \code{log10p.less} perform log10
 #'transformation on respective \emph{p}-values and give the
@@ -269,8 +270,8 @@ setMethod("wmwTest", c("ANY", "list"),
 #'negative for less than); \code{abs.log10p.two.sided} transforms
 #'two-sided \emph{p}-values to non-negative values; and \code{Q} score
 #'reports absolute log10-transformation of \emph{p}-value of the
-#'two-side variant,  and gives a proper sign to it, depending on whether it is
-#'rather greater than (positive) or  less than (negative). 
+#'two-side variant, and gives a proper sign to it, depending on whether it is
+#'rather greater than (positive) or  less than (negative).
 #'
 #'From version 1.19.1, the rank-biserial correlation coefficient (\sQuote{r})
 #'and the common language effect size (\sQuote{f}) are supported value types.
