@@ -42,9 +42,9 @@ profiling data — wmwTest • BioQC</title>
 
 <meta property="og:title" content="Wilcoxon-Mann-Whitney rank sum test for high-throughput expression
 profiling data — wmwTest" />
-<meta property="og:description" content="We have implemented a highly efficient Wilcoxon-Mann-Whitney rank sum
-test for high-throughput expression profiling data. For datasets with
-more than 100 features (genes), the function can be more than 1,000 
+<meta property="og:description" content="wmwTest is a highly efficient Wilcoxon-Mann-Whitney rank sum
+test for high-dimensional data, such as gene expression profiling. For datasets with
+more than 100 features (genes), the function can be more than 1,000
 times faster than its R implementations (wilcox.test in 
 stats, or rankSumTestWithCorrelation in limma)." />
 
@@ -86,7 +86,7 @@ stats, or rankSumTestWithCorrelation in limma)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.3</span>
       </span>
     </div>
 
@@ -145,9 +145,9 @@ profiling data</h1>
     </div>
 
     <div class="ref-description">
-    <p>We have implemented a highly efficient Wilcoxon-Mann-Whitney rank sum
-test for high-throughput expression profiling data. For datasets with
-more than 100 features (genes), the function can be more than 1,000 
+    <p>wmwTest is a highly efficient Wilcoxon-Mann-Whitney rank sum
+test for high-dimensional data, such as gene expression profiling. For datasets with
+more than 100 features (genes), the function can be more than 1,000
 times faster than its R implementations (<code>wilcox.test</code> in 
 <code>stats</code>, or <code>rankSumTestWithCorrelation</code> in <code>limma</code>).</p>
     </div>
@@ -157,7 +157,7 @@ times faster than its R implementations (<code>wilcox.test</code> in
   <span class='va'>indexList</span>,
   col <span class='op'>=</span> <span class='st'>"GeneSymbol"</span>,
   valType <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"p.greater"</span>, <span class='st'>"p.less"</span>, <span class='st'>"p.two.sided"</span>, <span class='st'>"U"</span>, <span class='st'>"abs.log10p.greater"</span>,
-    <span class='st'>"log10p.less"</span>, <span class='st'>"abs.log10p.two.sided"</span>, <span class='st'>"Q"</span><span class='op'>)</span>,
+    <span class='st'>"log10p.less"</span>, <span class='st'>"abs.log10p.two.sided"</span>, <span class='st'>"Q"</span>, <span class='st'>"r"</span>, <span class='st'>"f"</span>, <span class='st'>"U1"</span>, <span class='st'>"U2"</span><span class='op'>)</span>,
   simplify <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span>
 
@@ -233,7 +233,7 @@ times faster than its R implementations (<code>wilcox.test</code> in
   <span class='va'>indexList</span>,
   col <span class='op'>=</span> <span class='st'>"GeneSymbol"</span>,
   valType <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"p.greater"</span>, <span class='st'>"p.less"</span>, <span class='st'>"p.two.sided"</span>, <span class='st'>"U"</span>, <span class='st'>"abs.log10p.greater"</span>,
-    <span class='st'>"log10p.less"</span>, <span class='st'>"abs.log10p.two.sided"</span>, <span class='st'>"Q"</span><span class='op'>)</span>,
+    <span class='st'>"log10p.less"</span>, <span class='st'>"abs.log10p.two.sided"</span>, <span class='st'>"Q"</span>, <span class='st'>"r"</span>, <span class='st'>"f"</span>, <span class='st'>"U1"</span>, <span class='st'>"U2"</span><span class='op'>)</span>,
   simplify <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></code></pre></div>
 
@@ -262,7 +262,8 @@ using GMT files.</p></td>
       <td><p>The value type to be returned, allowed values
 include <code>p.greater</code>, <code>p.less</code>, <code>abs.log10p.greater</code> and
 <code>abs.log10p.less</code> (one-sided tests),<code>p.two.sided</code>, and <code>U</code>
-statistic (or more specifically, either <code>U1</code> or <code>U2</code>), and their log10 transformation variants. See details below.</p></td>
+statistic (or more specifically, either <code>U1</code> or <code>U2</code>), and a few
+other variants. See details below.</p></td>
     </tr>
     <tr>
       <th>simplify</th>
@@ -286,7 +287,7 @@ from <code>readGmt</code> function. In this case, the only requirement is
 that one column named <code>GeneSymbol</code> in the <code>featureData</code>
 contain gene symbols used in the GMT file. The same applies to signed Gmt files. See the example below.</p>
 <p>Besides the conventional value types such as &#8216;p.greater&#8217;,
-&#8216;p.less&#8217;, &#8216;p.two.sided&#8217; , and &#8216;U&#8217; (the U-statistic), 
+&#8216;p.less&#8217;, &#8216;p.two.sided&#8217; , and &#8216;U&#8217; (the U-statistic),
 <code>wmwTest</code> (from version 0.99-1) provides further value types:
 <code>abs.log10p.greater</code> and <code>log10p.less</code> perform log10
 transformation on respective <em>p</em>-values and give the
@@ -294,7 +295,7 @@ transformed value a proper sign (positive for greater than, and
 negative for less than); <code>abs.log10p.two.sided</code> transforms
 two-sided <em>p</em>-values to non-negative values; and <code>Q</code> score
 reports absolute log10-transformation of <em>p</em>-value of the
-two-side variant,  and gives a proper sign to it, depending on whether it is
+two-side variant, and gives a proper sign to it, depending on whether it is
 rather greater than (positive) or  less than (negative).</p>
 <p>From version 1.19.1, the rank-biserial correlation coefficient (&#8216;r&#8217;)
 and the common language effect size (&#8216;f&#8217;) are supported value types.</p>
