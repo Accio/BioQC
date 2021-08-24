@@ -25,7 +25,9 @@ setGeneric("matchGenes", function(list, object, ...) standardGeneric("matchGenes
 
 #'@rdname wmwTest
 #'@exportMethod wmwTest
-setGeneric("wmwTest", function(x, indexList, col = "GeneSymbol", valType = c("p.greater", "p.less", "p.two.sided","U","abs.log10p.greater","log10p.less","abs.log10p.two.sided","Q","r","f","U1","U2"), simplify = TRUE) standardGeneric("wmwTest"))
+setGeneric("wmwTest", function(x, indexList, col = "GeneSymbol", valType = c("p.greater", "p.less",
+    "p.two.sided", "U", "abs.log10p.greater", "log10p.less",
+    "abs.log10p.two.sided", "Q", "r", "f", "U1", "U2"), simplify = TRUE) standardGeneric("wmwTest"))
 
 
 ##--------------------##
