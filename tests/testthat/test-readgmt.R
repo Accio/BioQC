@@ -1,5 +1,3 @@
-library(BioQC)
-
 ## readGmt
 context("Read gmt file into a GmtList object")
 testFile <- system.file("extdata/test.gmt", package="BioQC")

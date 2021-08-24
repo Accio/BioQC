@@ -1,6 +1,4 @@
 # test rank-biserial correlation and common language effect size
-library(BioQC)
-
 context("Test correspondance between U and rank-biserial correlation")
 n1 <- 300
 n2 <- 200

@@ -1,6 +1,4 @@
 ## test wmwTest
-library(BioQC)
-
 context("Non-exact wilcoxon test in R")
 testNums <- 1:10
 testSub <- rep_len(c(TRUE, FALSE), length.out=length(testNums))
