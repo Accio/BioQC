@@ -62,6 +62,6 @@ LinkingTo: Rcpp
 VignetteBuilder: knitr
 License: GPL (>=3) + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: https://accio.github.io/BioQC
 BugReports: https://accio.github.io/BioQC/issues
