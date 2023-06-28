@@ -218,12 +218,10 @@ setMethod("wmwTest", c("ANY", "list"),
 ##----------------------------------------##
 ## wmwTestSignedGenesets
 ##----------------------------------------##
-#'@title
-#' 
-#'Wilcoxon-Mann-Whitney rank sum test for high-throughput expression
-#'profiling data
+#'@title An efficient Wilcoxon-Mann-Whitney rank sum test
 #'
 #'@description
+#'
 #'wmwTest is a highly efficient Wilcoxon-Mann-Whitney rank sum
 #'test for high-dimensional data, such as gene expression profiling. For datasets with
 #'more than 100 features (genes), the function can be more than 1,000
