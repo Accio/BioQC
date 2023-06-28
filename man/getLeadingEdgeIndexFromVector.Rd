@@ -36,9 +36,9 @@ Getting leading-edge indices from a vector
 }
 \section{Functions}{
 \itemize{
-\item \code{getLeadingEdgeIndexFromMatrix}: \code{x} is a \code{matrix}.
-}}
+\item \code{getLeadingEdgeIndexFromMatrix()}: \code{x} is a \code{matrix}.
 
+}}
 \examples{
 myProfile <- c(rnorm(5, 3), rnorm(15, -3), rnorm(100, 0))
 getLeadingEdgeIndexFromVector(myProfile, 1:20)

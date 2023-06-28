@@ -17,8 +17,7 @@
 \alias{wmwTest,numeric,SignedIndexList-method}
 \alias{wmwTest,eSet,SignedIndexList-method}
 \alias{wmwTest,eSet,SignedGenesets-method}
-\title{Wilcoxon-Mann-Whitney rank sum test for high-throughput expression
-profiling data}
+\title{An efficient Wilcoxon-Mann-Whitney rank sum test}
 \usage{
 wmwTest(
   x,
@@ -156,42 +155,42 @@ sizes of two vectors to be compared.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{x = matrix,indexList = IndexList}: \code{x} is a \code{matrix} and \code{indexList} is a \code{IndexList}
+\item \code{wmwTest(x = matrix, indexList = IndexList)}: \code{x} is a \code{matrix} and \code{indexList} is a \code{IndexList}
 
-\item \code{x = numeric,indexList = IndexList}: \code{x} is a \code{numeric} and \code{indexList} is a \code{IndexList}
+\item \code{wmwTest(x = numeric, indexList = IndexList)}: \code{x} is a \code{numeric} and \code{indexList} is a \code{IndexList}
 
-\item \code{x = matrix,indexList = GmtList}: \code{x} is a \code{matrix} and \code{indexList} is a \code{GmtList}
+\item \code{wmwTest(x = matrix, indexList = GmtList)}: \code{x} is a \code{matrix} and \code{indexList} is a \code{GmtList}
 
-\item \code{x = eSet,indexList = GmtList}: \code{x} is a \code{eSet} and \code{indexList} is a \code{GmtList}
+\item \code{wmwTest(x = eSet, indexList = GmtList)}: \code{x} is a \code{eSet} and \code{indexList} is a \code{GmtList}
 
-\item \code{x = eSet,indexList = numeric}: \code{x} is a \code{eSet} and \code{indexList} is a \code{numeric}
+\item \code{wmwTest(x = eSet, indexList = numeric)}: \code{x} is a \code{eSet} and \code{indexList} is a \code{numeric}
 
-\item \code{x = eSet,indexList = logical}: \code{x} is a \code{eSet} and \code{indexList} is a \code{logical}
+\item \code{wmwTest(x = eSet, indexList = logical)}: \code{x} is a \code{eSet} and \code{indexList} is a \code{logical}
 
-\item \code{x = eSet,indexList = list}: \code{x} is a \code{eSet} and \code{indexList} is a \code{list}
+\item \code{wmwTest(x = eSet, indexList = list)}: \code{x} is a \code{eSet} and \code{indexList} is a \code{list}
 
-\item \code{x = ANY,indexList = numeric}: \code{x} is \code{ANY} and \code{indexList} is a \code{numeric}
+\item \code{wmwTest(x = ANY, indexList = numeric)}: \code{x} is \code{ANY} and \code{indexList} is a \code{numeric}
 
-\item \code{x = ANY,indexList = logical}: \code{x} is \code{ANY} and \code{indexList} is a \code{logical}
+\item \code{wmwTest(x = ANY, indexList = logical)}: \code{x} is \code{ANY} and \code{indexList} is a \code{logical}
 
-\item \code{x = ANY,indexList = list}: \code{x} is \code{ANY} and \code{indexList} is a \code{list}
+\item \code{wmwTest(x = ANY, indexList = list)}: \code{x} is \code{ANY} and \code{indexList} is a \code{list}
 
-\item \code{x = matrix,indexList = SignedIndexList}: \code{x} is a \code{matrix} and \code{indexList} is a 
+\item \code{wmwTest(x = matrix, indexList = SignedIndexList)}: \code{x} is a \code{matrix} and \code{indexList} is a 
 \code{SignedIndexList}
 
-\item \code{x = matrix,indexList = SignedGenesets}: \code{x} is a \code{eSet} and \code{indexList} is a 
+\item \code{wmwTest(x = matrix, indexList = SignedGenesets)}: \code{x} is a \code{eSet} and \code{indexList} is a 
 \code{SignedIndexList}
 
-\item \code{x = numeric,indexList = SignedIndexList}: \code{x} is a \code{numeric} and \code{indexList} is a 
+\item \code{wmwTest(x = numeric, indexList = SignedIndexList)}: \code{x} is a \code{numeric} and \code{indexList} is a 
 \code{SignedIndexList}
 
-\item \code{x = eSet,indexList = SignedIndexList}: \code{x} is a \code{eSet} and \code{indexList} is a 
+\item \code{wmwTest(x = eSet, indexList = SignedIndexList)}: \code{x} is a \code{eSet} and \code{indexList} is a 
 \code{SignedIndexList}
 
-\item \code{x = eSet,indexList = SignedGenesets}: \code{x} is a \code{eSet} and \code{indexList} is a 
+\item \code{wmwTest(x = eSet, indexList = SignedGenesets)}: \code{x} is a \code{eSet} and \code{indexList} is a 
 \code{SignedIndexList}
+
 }}
-
 \note{
 The function has been optimized for expression profiling data. It
 avoids repetitive ranking of data as done by native R implementations
