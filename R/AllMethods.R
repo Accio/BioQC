@@ -219,6 +219,14 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 `[.GmtList` <- function(x, i, drop=FALSE) {
   if(is.character(i))
     i <- match(i, names(x))
+  if(any(is.na(i))) {
+    warning(paste("NA index detected at positions, which will be removed:",
+                  paste(which(is.na(i)), collapse=",")))
+    i <- i[!is.na(i)]
+  }
+  if(length(i)<1) {
+    stop("No non-NA index.")
+  }
   res <- new("GmtList", .Data=x@.Data[i])
   if(length(res)==1 && drop)
     res <- res@.Data[[1]]
@@ -236,6 +244,14 @@ setMethod("offset<-", c("SignedIndexList", "numeric"), function(object, value) {
 `[[.GmtList` <- function(x, i) {
   if(is.character(i))
     i <- match(i, names(x))
+  if(any(is.na(i))) {
+    warning(paste("NA index detected at following positions, which will be removed:",
+                  paste(which(is.na(i)), collapse=",")))
+    i <- i[!is.na(i)]
+  }
+  if(length(i)<1) {
+    stop("No non-NA index.")
+  }
   res <- x@.Data[[i]]
   return(res)
 }
